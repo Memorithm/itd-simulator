@@ -1,0 +1,54 @@
+{
+  "coupled": {
+    "final_absolute_defect": 1.1419360894382447e-06,
+    "final_relative_defect": 7.13703429902607e-06,
+    "maximum_observed_order": 2.9437891794694275,
+    "minimum_observed_order": 2.1144104489730315,
+    "monotone_decrease": true,
+    "richardson": {
+      "extrapolated_limit": 2.917536685649307e-07,
+      "observed_order": 2.4523101649268364,
+      "status": "asymptotic"
+    },
+    "row_count": 4
+  },
+  "semilagrangian_subcell": {
+    "final_absolute_defect": 0.0002134898895523596,
+    "final_relative_defect": 0.0013298866401869791,
+    "maximum_observed_order": 2.523649636463751,
+    "minimum_observed_order": -0.2062683959516752,
+    "monotone_decrease": false,
+    "richardson": {
+      "extrapolated_limit": -5.7272646310199075e-05,
+      "observed_order": 2.24657189743099,
+      "status": "asymptotic"
+    },
+    "row_count": 4
+  },
+  "spatial": {
+    "final_absolute_defect": 3.880096233199737e-08,
+    "final_relative_defect": 2.425059371075588e-07,
+    "maximum_observed_order": 3.9915482666443776,
+    "minimum_observed_order": 3.3446286384814883,
+    "monotone_decrease": true,
+    "richardson": {
+      "extrapolated_limit": 1.5075951372515316e-08,
+      "observed_order": 3.9980491546498196,
+      "status": "asymptotic"
+    },
+    "row_count": 4
+  },
+  "temporal": {
+    "final_absolute_defect": 1.5108226675553116e-06,
+    "final_relative_defect": 9.442525674213335e-06,
+    "maximum_observed_order": 2.147619735594533,
+    "minimum_observed_order": 2.0041896646213058,
+    "monotone_decrease": true,
+    "richardson": {
+      "extrapolated_limit": 1.890335760985011e-08,
+      "observed_order": 2.0178478069087658,
+      "status": "asymptotic"
+    },
+    "row_count": 5
+  }
+}

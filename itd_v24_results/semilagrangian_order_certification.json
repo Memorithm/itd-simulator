@@ -1,0 +1,451 @@
+{
+  "accelerated:0.31": {
+    "final_increment_coefficient": 0.07259813499877046,
+    "final_rate_coefficient": 0.23418753225409827,
+    "increment_is_second_order": true,
+    "increment_orders": [
+      2.0184598396212414,
+      2.0087754381294163,
+      2.00427078427412
+    ],
+    "maximum_final_increment_order": 2.0087754381294163,
+    "maximum_final_rate_order": 1.0087754381294165,
+    "minimum_final_increment_order": 2.00427078427412,
+    "minimum_final_rate_order": 1.00427078427412,
+    "rate_is_first_order": true,
+    "rate_orders": [
+      1.0184598396212414,
+      1.0087754381294165,
+      1.00427078427412
+    ],
+    "rows": [
+      {
+        "delta_time": 0.060868357663302244,
+        "frame_mode": "accelerated",
+        "grid_size": 32.0,
+        "increment_coefficient_e_over_h2": 0.07420099582027061,
+        "increment_defect": 0.0028606815426287335,
+        "increment_order": null,
+        "rate_coefficient_e_over_h": 0.23935805103313096,
+        "rate_defect": 0.04699784341895344,
+        "rate_order": null,
+        "ratio": 0.31,
+        "spacing": 0.19634954084936207
+      },
+      {
+        "delta_time": 0.030434178831651122,
+        "frame_mode": "accelerated",
+        "grid_size": 64.0,
+        "increment_coefficient_e_over_h2": 0.07325761379245156,
+        "increment_defect": 0.0007060778002922699,
+        "increment_order": 2.0184598396212414,
+        "rate_coefficient_e_over_h": 0.23631488320145663,
+        "rate_defect": 0.02320015940623832,
+        "rate_order": 1.0184598396212414,
+        "ratio": 0.31,
+        "spacing": 0.09817477042468103
+      },
+      {
+        "delta_time": 0.015217089415825561,
+        "frame_mode": "accelerated",
+        "grid_size": 128.0,
+        "increment_coefficient_e_over_h2": 0.07281336436937978,
+        "increment_defect": 0.00017544899937454927,
+        "increment_order": 2.0087754381294163,
+        "rate_coefficient_e_over_h": 0.2348818205463864,
+        "rate_defect": 0.011529734404536307,
+        "rate_order": 1.0087754381294165,
+        "ratio": 0.31,
+        "spacing": 0.04908738521234052
+      },
+      {
+        "delta_time": 0.0076085447079127805,
+        "frame_mode": "accelerated",
+        "grid_size": 256.0,
+        "increment_coefficient_e_over_h2": 0.07259813499877046,
+        "increment_defect": 4.373259721037258e-05,
+        "increment_order": 2.00427078427412,
+        "rate_coefficient_e_over_h": 0.23418753225409827,
+        "rate_defect": 0.005747826803842171,
+        "rate_order": 1.00427078427412,
+        "ratio": 0.31,
+        "spacing": 0.02454369260617026
+      }
+    ]
+  },
+  "accelerated:0.47": {
+    "final_increment_coefficient": 0.08190368592311419,
+    "final_rate_coefficient": 0.17426316153854082,
+    "increment_is_second_order": true,
+    "increment_orders": [
+      2.031980857736831,
+      2.0152629623185776,
+      2.007438615471038
+    ],
+    "maximum_final_increment_order": 2.0152629623185776,
+    "maximum_final_rate_order": 1.0152629623185774,
+    "minimum_final_increment_order": 2.007438615471038,
+    "minimum_final_rate_order": 1.0074386154710382,
+    "rate_is_first_order": true,
+    "rate_orders": [
+      1.0319808577368308,
+      1.0152629623185774,
+      1.0074386154710382
+    ],
+    "rows": [
+      {
+        "delta_time": 0.09228428419920016,
+        "frame_mode": "accelerated",
+        "grid_size": 32.0,
+        "increment_coefficient_e_over_h2": 0.08506766265185867,
+        "increment_defect": 0.0032796256941373795,
+        "increment_order": null,
+        "rate_coefficient_e_over_h": 0.18099502691884825,
+        "rate_defect": 0.03553829043153378,
+        "rate_order": null,
+        "ratio": 0.47,
+        "spacing": 0.19634954084936207
+      },
+      {
+        "delta_time": 0.04614214209960008,
+        "frame_mode": "accelerated",
+        "grid_size": 64.0,
+        "increment_coefficient_e_over_h2": 0.08320267757088459,
+        "increment_defect": 0.0008019311647812709,
+        "increment_order": 2.031980857736831,
+        "rate_coefficient_e_over_h": 0.1770269735550736,
+        "rate_defect": 0.017379582487745432,
+        "rate_order": 1.0319808577368308,
+        "ratio": 0.47,
+        "spacing": 0.09817477042468103
+      },
+      {
+        "delta_time": 0.02307107104980004,
+        "frame_mode": "accelerated",
+        "grid_size": 128.0,
+        "increment_coefficient_e_over_h2": 0.08232707643483923,
+        "increment_defect": 0.0001983729677514915,
+        "increment_order": 2.0152629623185776,
+        "rate_coefficient_e_over_h": 0.17516399241455158,
+        "rate_defect": 0.008598342370984585,
+        "rate_order": 1.0152629623185774,
+        "ratio": 0.47,
+        "spacing": 0.04908738521234052
+      },
+      {
+        "delta_time": 0.01153553552490002,
+        "frame_mode": "accelerated",
+        "grid_size": 256.0,
+        "increment_coefficient_e_over_h2": 0.08190368592311419,
+        "increment_defect": 4.933819452222951e-05,
+        "increment_order": 2.007438615471038,
+        "rate_coefficient_e_over_h": 0.17426316153854082,
+        "rate_defect": 0.004277061469381338,
+        "rate_order": 1.0074386154710382,
+        "ratio": 0.47,
+        "spacing": 0.02454369260617026
+      }
+    ]
+  },
+  "accelerated:0.73": {
+    "final_increment_coefficient": 0.05596339904868503,
+    "final_rate_coefficient": 0.07666219047765073,
+    "increment_is_second_order": true,
+    "increment_orders": [
+      2.07616537393782,
+      2.0376391723920717,
+      2.0186947392825076
+    ],
+    "maximum_final_increment_order": 2.0376391723920717,
+    "maximum_final_rate_order": 1.037639172392072,
+    "minimum_final_increment_order": 2.0186947392825076,
+    "minimum_final_rate_order": 1.0186947392825076,
+    "rate_is_first_order": true,
+    "rate_orders": [
+      1.0761653739378199,
+      1.037639172392072,
+      1.0186947392825076
+    ],
+    "rows": [
+      {
+        "delta_time": 0.1433351648200343,
+        "frame_mode": "accelerated",
+        "grid_size": 32.0,
+        "increment_coefficient_e_over_h2": 0.06134657822115979,
+        "increment_defect": 0.0023651033531380127,
+        "increment_order": null,
+        "rate_coefficient_e_over_h": 0.0840364085221367,
+        "rate_defect": 0.01650051022795096,
+        "rate_order": null,
+        "ratio": 0.73,
+        "spacing": 0.19634954084936207
+      },
+      {
+        "delta_time": 0.07166758241001715,
+        "frame_mode": "accelerated",
+        "grid_size": 64.0,
+        "increment_coefficient_e_over_h2": 0.058191865718582925,
+        "increment_defect": 0.0005608698183630146,
+        "increment_order": 2.07616537393782,
+        "rate_coefficient_e_over_h": 0.079714884546004,
+        "rate_defect": 0.007825990489733897,
+        "rate_order": 1.0761653739378199,
+        "ratio": 0.73,
+        "spacing": 0.09817477042468103
+      },
+      {
+        "delta_time": 0.035833791205008576,
+        "frame_mode": "accelerated",
+        "grid_size": 128.0,
+        "increment_coefficient_e_over_h2": 0.05669330320288895,
+        "increment_defect": 0.00013660656123132964,
+        "increment_order": 2.0376391723920717,
+        "rate_coefficient_e_over_h": 0.07766205918203967,
+        "rate_defect": 0.0038122274154523683,
+        "rate_order": 1.037639172392072,
+        "ratio": 0.73,
+        "spacing": 0.04908738521234052
+      },
+      {
+        "delta_time": 0.017916895602504288,
+        "frame_mode": "accelerated",
+        "grid_size": 256.0,
+        "increment_coefficient_e_over_h2": 0.05596339904868503,
+        "increment_defect": 3.371195126652965e-05,
+        "increment_order": 2.0186947392825076,
+        "rate_coefficient_e_over_h": 0.07666219047765073,
+        "rate_defect": 0.0018815732375991323,
+        "rate_order": 1.0186947392825076,
+        "ratio": 0.73,
+        "spacing": 0.02454369260617026
+      }
+    ]
+  },
+  "galilean:0.31": {
+    "final_increment_coefficient": 0.0723896093198174,
+    "final_rate_coefficient": 0.2335148687736045,
+    "increment_is_second_order": true,
+    "increment_orders": [
+      2.002091174592425,
+      2.0005249029725,
+      2.0001304045935466
+    ],
+    "maximum_final_increment_order": 2.0005249029725,
+    "maximum_final_rate_order": 1.0005249029724999,
+    "minimum_final_increment_order": 2.0001304045935466,
+    "minimum_final_rate_order": 1.0001304045935466,
+    "rate_is_first_order": true,
+    "rate_orders": [
+      1.0020911745924252,
+      1.0005249029724999,
+      1.0001304045935466
+    ],
+    "rows": [
+      {
+        "delta_time": 0.060868357663302244,
+        "frame_mode": "galilean",
+        "grid_size": 32.0,
+        "increment_coefficient_e_over_h2": 0.07252754986188077,
+        "increment_defect": 0.002796164942644712,
+        "increment_order": null,
+        "rate_coefficient_e_over_h": 0.2339598382641315,
+        "rate_defect": 0.04593790682035323,
+        "rate_order": null,
+        "ratio": 0.31,
+        "spacing": 0.19634954084936207
+      },
+      {
+        "delta_time": 0.030434178831651122,
+        "frame_mode": "galilean",
+        "grid_size": 64.0,
+        "increment_coefficient_e_over_h2": 0.07242249792940376,
+        "increment_defect": 0.0006980287151386018,
+        "increment_order": 2.002091174592425,
+        "rate_coefficient_e_over_h": 0.23362096106259278,
+        "rate_defect": 0.022935684218713392,
+        "rate_order": 1.0020911745924252,
+        "ratio": 0.31,
+        "spacing": 0.09817477042468103
+      },
+      {
+        "delta_time": 0.015217089415825561,
+        "frame_mode": "galilean",
+        "grid_size": 128.0,
+        "increment_coefficient_e_over_h2": 0.07239615288166631,
+        "increment_defect": 0.00017444369851143355,
+        "increment_order": 2.0005249029725,
+        "rate_coefficient_e_over_h": 0.23353597703763324,
+        "rate_defect": 0.011463670465786613,
+        "rate_order": 1.0005249029724999,
+        "ratio": 0.31,
+        "spacing": 0.04908738521234052
+      },
+      {
+        "delta_time": 0.0076085447079127805,
+        "frame_mode": "galilean",
+        "grid_size": 256.0,
+        "increment_coefficient_e_over_h2": 0.0723896093198174,
+        "increment_defect": 4.360698283300836e-05,
+        "increment_order": 2.0001304045935466,
+        "rate_coefficient_e_over_h": 0.2335148687736045,
+        "rate_defect": 0.005731317158149535,
+        "rate_order": 1.0001304045935466,
+        "ratio": 0.31,
+        "spacing": 0.02454369260617026
+      }
+    ]
+  },
+  "galilean:0.47": {
+    "final_increment_coefficient": 0.0814944307082613,
+    "final_rate_coefficient": 0.17339240576225812,
+    "increment_is_second_order": true,
+    "increment_orders": [
+      2.0036223801530726,
+      2.0009283468676746,
+      2.000234933104634
+    ],
+    "maximum_final_increment_order": 2.0009283468676746,
+    "maximum_final_rate_order": 1.0009283468676748,
+    "minimum_final_increment_order": 2.000234933104634,
+    "minimum_final_rate_order": 1.0002349331046338,
+    "rate_is_first_order": true,
+    "rate_orders": [
+      1.0036223801530721,
+      1.0009283468676748,
+      1.0002349331046338
+    ],
+    "rows": [
+      {
+        "delta_time": 0.09228428419920016,
+        "frame_mode": "galilean",
+        "grid_size": 32.0,
+        "increment_coefficient_e_over_h2": 0.08176521019213265,
+        "increment_defect": 0.00315230577487605,
+        "increment_order": null,
+        "rate_coefficient_e_over_h": 0.1739685323236865,
+        "rate_defect": 0.03415864144399325,
+        "rate_order": null,
+        "ratio": 0.47,
+        "spacing": 0.19634954084936207
+      },
+      {
+        "delta_time": 0.04614214209960008,
+        "frame_mode": "galilean",
+        "grid_size": 64.0,
+        "increment_coefficient_e_over_h2": 0.08156016814187776,
+        "increment_defect": 0.000786100189889321,
+        "increment_order": 2.0036223801530726,
+        "rate_coefficient_e_over_h": 0.17353227264229312,
+        "rate_defect": 0.017036491027930284,
+        "rate_order": 1.0036223801530721,
+        "ratio": 0.47,
+        "spacing": 0.09817477042468103
+      },
+      {
+        "delta_time": 0.02307107104980004,
+        "frame_mode": "galilean",
+        "grid_size": 128.0,
+        "increment_coefficient_e_over_h2": 0.08150770260428614,
+        "increment_defect": 0.00019639862801414673,
+        "increment_order": 2.0009283468676746,
+        "rate_coefficient_e_over_h": 0.17342064383890668,
+        "rate_defect": 0.00851276594789252,
+        "rate_order": 1.0009283468676748,
+        "ratio": 0.47,
+        "spacing": 0.04908738521234052
+      },
+      {
+        "delta_time": 0.01153553552490002,
+        "frame_mode": "galilean",
+        "grid_size": 256.0,
+        "increment_coefficient_e_over_h2": 0.0814944307082613,
+        "increment_defect": 4.9091662108308564e-05,
+        "increment_order": 2.000234933104634,
+        "rate_coefficient_e_over_h": 0.17339240576225812,
+        "rate_defect": 0.004255689907273208,
+        "rate_order": 1.0002349331046338,
+        "ratio": 0.47,
+        "spacing": 0.02454369260617026
+      }
+    ]
+  },
+  "galilean:0.73": {
+    "final_increment_coefficient": 0.055250357155886706,
+    "final_rate_coefficient": 0.07568542076148864,
+    "increment_is_second_order": true,
+    "increment_orders": [
+      2.0047879973553866,
+      2.0012358968658517,
+      2.000314248149672
+    ],
+    "maximum_final_increment_order": 2.0012358968658517,
+    "maximum_final_rate_order": 1.0012358968658515,
+    "minimum_final_increment_order": 2.000314248149672,
+    "minimum_final_rate_order": 1.0003142481496718,
+    "rate_is_first_order": true,
+    "rate_orders": [
+      1.0047879973553868,
+      1.0012358968658515,
+      1.0003142481496718
+    ],
+    "rows": [
+      {
+        "delta_time": 0.1433351648200343,
+        "frame_mode": "galilean",
+        "grid_size": 32.0,
+        "increment_coefficient_e_over_h2": 0.05549362061385299,
+        "increment_defect": 0.0021394534462611976,
+        "increment_order": null,
+        "rate_coefficient_e_over_h": 0.07601865837514109,
+        "rate_defect": 0.014926228667943464,
+        "rate_order": null,
+        "ratio": 0.73,
+        "spacing": 0.19634954084936207
+      },
+      {
+        "delta_time": 0.07166758241001715,
+        "frame_mode": "galilean",
+        "grid_size": 64.0,
+        "increment_coefficient_e_over_h2": 0.0553097543897033,
+        "increment_defect": 0.0005330912063943234,
+        "increment_order": 2.0047879973553866,
+        "rate_coefficient_e_over_h": 0.07576678683521,
+        "rate_defect": 0.007438386903362487,
+        "rate_order": 1.0047879973553868,
+        "ratio": 0.73,
+        "spacing": 0.09817477042468103
+      },
+      {
+        "delta_time": 0.035833791205008576,
+        "frame_mode": "galilean",
+        "grid_size": 128.0,
+        "increment_coefficient_e_over_h2": 0.05526239311156864,
+        "increment_defect": 0.00013315868121793655,
+        "increment_order": 2.0012358968658517,
+        "rate_coefficient_e_over_h": 0.07570190837201184,
+        "rate_defect": 0.003716008737566251,
+        "rate_order": 1.0012358968658515,
+        "ratio": 0.73,
+        "spacing": 0.04908738521234052
+      },
+      {
+        "delta_time": 0.017916895602504288,
+        "frame_mode": "galilean",
+        "grid_size": 256.0,
+        "increment_coefficient_e_over_h2": 0.055250357155886706,
+        "increment_defect": 3.3282419930877585e-05,
+        "increment_order": 2.000314248149672,
+        "rate_coefficient_e_over_h": 0.07568542076148864,
+        "rate_defect": 0.0018575997019386337,
+        "rate_order": 1.0003142481496718,
+        "ratio": 0.73,
+        "spacing": 0.02454369260617026
+      }
+    ]
+  },
+  "global": {
+    "all_increment_defects_second_order": true,
+    "all_rate_defects_first_order": true,
+    "interpretation": "L'interpolation bilinéaire produit un défaut d'incrément O(h^2). La division par delta_t = lambda*h transforme le défaut du taux en O(h)."
+  }
+}

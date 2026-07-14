@@ -1,0 +1,120 @@
+{
+  "controlled_phase": {
+    "accelerated": {
+      "0.31": {
+        "error_over_h_squared": [
+          1.219040543704478,
+          2.4070836344125266,
+          4.784973156144756,
+          9.541658462395498
+        ],
+        "final_absolute_defect": 0.005747826803842171,
+        "final_error_over_h_squared": 9.541658462395498,
+        "final_relative_defect": 0.033173835429152344,
+        "monotone_decrease": true,
+        "orders": [
+          1.0184598396212414,
+          1.0087754381294165,
+          1.00427078427412
+        ],
+        "row_count": 4
+      },
+      "0.47": {
+        "error_over_h_squared": [
+          0.9218001026939314,
+          1.803181945720845,
+          3.568411551294354,
+          7.100119950766139
+        ],
+        "final_absolute_defect": 0.004277061469381338,
+        "final_error_over_h_squared": 7.100119950766139,
+        "final_relative_defect": 0.024967407003756013,
+        "monotone_decrease": true,
+        "orders": [
+          1.0319808577368308,
+          1.0152629623185774,
+          1.0074386154710382
+        ],
+        "row_count": 4
+      },
+      "0.73": {
+        "error_over_h_squared": [
+          0.42799391411161397,
+          0.8119691464637616,
+          1.5821184780181672,
+          3.123498640069259
+        ],
+        "final_absolute_defect": 0.0018815732375991323,
+        "final_error_over_h_squared": 3.123498640069259,
+        "final_relative_defect": 0.011191602688980477,
+        "monotone_decrease": true,
+        "orders": [
+          1.0761653739378199,
+          1.037639172392072,
+          1.0186947392825076
+        ],
+        "row_count": 4
+      }
+    },
+    "galilean": {
+      "0.31": {
+        "error_over_h_squared": [
+          1.1915476718309403,
+          2.3796435688314146,
+          4.757555857322841,
+          9.514251686598254
+        ],
+        "final_absolute_defect": 0.005731317158149535,
+        "final_error_over_h_squared": 9.514251686598254,
+        "final_relative_defect": 0.03307854928224983,
+        "monotone_decrease": true,
+        "orders": [
+          1.0020911745924252,
+          1.0005249029724999,
+          1.0001304045935466
+        ],
+        "row_count": 4
+      },
+      "0.47": {
+        "error_over_h_squared": [
+          0.8860144595762202,
+          1.7675852145274513,
+          3.5328963457460536,
+          7.064642168744708
+        ],
+        "final_absolute_defect": 0.004255689907273208,
+        "final_error_over_h_squared": 7.064642168744708,
+        "final_relative_defect": 0.02484265020676359,
+        "monotone_decrease": true,
+        "orders": [
+          1.0036223801530721,
+          1.0009283468676748,
+          1.0002349331046338
+        ],
+        "row_count": 4
+      },
+      "0.73": {
+        "error_over_h_squared": [
+          0.38715984792377,
+          0.7717541534088712,
+          1.5421866136186138,
+          3.0837014615503047
+        ],
+        "final_absolute_defect": 0.0018575997019386337,
+        "final_error_over_h_squared": 3.0837014615503047,
+        "final_relative_defect": 0.011049008034251673,
+        "monotone_decrease": true,
+        "orders": [
+          1.0047879973553868,
+          1.0012358968658515,
+          1.0003142481496718
+        ],
+        "row_count": 4
+      }
+    }
+  },
+  "fixed_physical_dt": {
+    "delta_time": 0.173,
+    "interpretation": "La phase interpolationnelle change avec la résolution."
+  }
+}
