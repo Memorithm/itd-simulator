@@ -1,11 +1,11 @@
 # ITD Simulator — Model Status
 
-Current published snapshot: ITD V29.7.
+Current published snapshot: ITD V29.8.
 
-- Constants, temporal geometry and spatial geometry remain modularized.
-- Orthogonal transforms, rotations and bilinear transform plans moved to `itd_v29_core/geometric_transforms.py`.
+- Constants, temporal geometry, spatial geometry and geometric transforms remain modularized.
+- Spatial scaling operations moved to `itd_v29_core/spatial_scaling.py`.
 - Historical public imports remain available from `itd_v29`.
 - Main numerical summary remains identical bit for bit.
-- Arbitrary rotations, D4 invariance and exact permutation cases passed.
+- Spatial-scaling validation passed against the declared V17 suite.
 - The published snapshot is source-clean and contains no Python bytecode cache.
 - Certification is relative to the declared validation suite.
