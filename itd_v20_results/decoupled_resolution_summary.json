@@ -1,0 +1,13 @@
+{
+  "maximum_combined_estimated_relative_fine_error": 0.0027611316658307503,
+  "maximum_spatial_order": 2.1964547754238803,
+  "maximum_temporal_order": 2.00578005685161,
+  "minimum_spatial_order": 1.7305664341910882,
+  "minimum_temporal_order": 1.9246832047455338,
+  "row_count": 42,
+  "status_counts": {
+    "certified": 42
+  },
+  "worst_metric": "coupled_index",
+  "worst_structural_length": 0.5
+}
