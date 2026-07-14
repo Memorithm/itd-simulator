@@ -21,29 +21,25 @@ from compare_scenarios import (
     numerical_vorticity,
 )
 
+from itd_v29_core.constants import (
+    BOUNDARY_MODES,
+    DEFAULT_STRUCTURAL_WEIGHTS,
+    STRUCTURAL_COMPONENT_NAMES,
+    STRUCTURAL_LENGTH,
+    TEMPORAL_DEFORMATION_MODES,
+    TRANSPORT_INTERPOLATIONS,
+    TRANSPORT_TRAJECTORY_METHODS,
+    ZERO_THRESHOLD,
+)
 
-ZERO_THRESHOLD = 1.0e-12
+
+
 
 # Longueur physique de référence utilisée pour rendre
 # la rugosité adimensionnelle. Elle est indépendante
 # du pas numérique de la grille.
-STRUCTURAL_LENGTH = 0.5
 
-STRUCTURAL_COMPONENT_NAMES = (
-    "heterogeneity",
-    "localization",
-    "roughness",
-    "sign_mixing",
-    "temporal_deformation",
-)
 
-DEFAULT_STRUCTURAL_WEIGHTS = (
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-    1.0,
-)
 
 
 def validate_orthogonal_matrix(
@@ -3451,10 +3447,6 @@ def summarize_decoupled_convergence_rows(
         ),
     }
 
-TEMPORAL_DEFORMATION_MODES = (
-    "eulerian",
-    "transport_compensated",
-)
 
 
 def validate_temporal_deformation_mode(
@@ -5765,17 +5757,7 @@ def translating_frame_metadata(
     }
 
 
-TRANSPORT_INTERPOLATIONS = (
-    "bilinear_periodic",
-    "cubic_periodic",
-    "cubic_local_bounded_periodic",
-    "cubic_local_sum_preserving_periodic",
-)
 
-TRANSPORT_TRAJECTORY_METHODS = (
-    "midpoint_time_velocity",
-    "rk4_backtrace",
-)
 
 
 def validate_transport_interpolation(
@@ -7969,10 +7951,6 @@ def periodic_backtrace(
 
 
 
-BOUNDARY_MODES = (
-    "finite",
-    "periodic",
-)
 
 
 def validate_boundary_mode(
