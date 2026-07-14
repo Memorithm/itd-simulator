@@ -1,0 +1,6 @@
+__pycache__/
+*.py[cod]
+.venv/
+itd_v10_results/
+*.log
+.DS_Store
