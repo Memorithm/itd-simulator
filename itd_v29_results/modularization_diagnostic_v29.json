@@ -1,0 +1,2234 @@
+{
+  "claims": {
+    "classification_requires_human_review": true,
+    "function_graph_acyclic": true,
+    "module_extraction_performed": false,
+    "source_modified": false
+  },
+  "counts": {
+    "cycle_edges": 31,
+    "first_extraction_candidates": 18,
+    "leaf_functions": 40,
+    "topological_layers": 8,
+    "unclassified_assignments": 0,
+    "unclassified_classes": 0,
+    "unclassified_functions": 45,
+    "unclassified_symbols": 45
+  },
+  "cycle_components": [
+    [
+      "geometry",
+      "quadrature",
+      "unclassified"
+    ],
+    [
+      "differential_operators",
+      "simulation",
+      "structural_metrics"
+    ]
+  ],
+  "cycle_edges": [
+    {
+      "callee": "validate_spatial_scale_factor",
+      "callee_module": "unclassified",
+      "caller": "scale_spatial_geometry",
+      "caller_module": "geometry"
+    },
+    {
+      "callee": "validate_transform_origin",
+      "callee_module": "unclassified",
+      "caller": "scale_spatial_geometry",
+      "caller_module": "geometry"
+    },
+    {
+      "callee": "normalize_spatial_geometry",
+      "callee_module": "geometry",
+      "caller": "validate_periodic_transport_mesh",
+      "caller_module": "unclassified"
+    },
+    {
+      "callee": "spatial_mean",
+      "callee_module": "quadrature",
+      "caller": "normalized_field_rate",
+      "caller_module": "unclassified"
+    },
+    {
+      "callee": "normalize_spatial_geometry",
+      "callee_module": "geometry",
+      "caller": "material_vorticity_interval",
+      "caller_module": "differential_operators"
+    },
+    {
+      "callee": "normalized_field_rate",
+      "callee_module": "unclassified",
+      "caller": "material_vorticity_interval",
+      "caller_module": "differential_operators"
+    },
+    {
+      "callee": "spatial_mean",
+      "callee_module": "quadrature",
+      "caller": "material_vorticity_interval",
+      "caller_module": "differential_operators"
+    },
+    {
+      "callee": "validate_field_shape_for_geometry",
+      "callee_module": "unclassified",
+      "caller": "material_vorticity_interval",
+      "caller_module": "differential_operators"
+    },
+    {
+      "callee": "validate_positive_time_interval",
+      "callee_module": "unclassified",
+      "caller": "material_vorticity_interval",
+      "caller_module": "differential_operators"
+    },
+    {
+      "callee": "interpolate_interval_series_to_nodes",
+      "callee_module": "unclassified",
+      "caller": "simulate_material_deformation",
+      "caller_module": "differential_operators"
+    },
+    {
+      "callee": "normalize_spatial_geometry",
+      "callee_module": "geometry",
+      "caller": "simulate_material_deformation",
+      "caller_module": "differential_operators"
+    },
+    {
+      "callee": "simulate",
+      "callee_module": "simulation",
+      "caller": "simulate_material_deformation",
+      "caller_module": "differential_operators"
+    },
+    {
+      "callee": "validate_mesh_geometry",
+      "callee_module": "geometry",
+      "caller": "simulate_material_deformation",
+      "caller_module": "differential_operators"
+    },
+    {
+      "callee": "validate_axis_spacing",
+      "callee_module": "unclassified",
+      "caller": "normalize_spatial_geometry",
+      "caller_module": "geometry"
+    },
+    {
+      "callee": "normalize_spatial_geometry",
+      "callee_module": "geometry",
+      "caller": "numerical_vorticity_with_boundary",
+      "caller_module": "differential_operators"
+    },
+    {
+      "callee": "validate_field_shape_for_geometry",
+      "callee_module": "unclassified",
+      "caller": "numerical_vorticity_with_boundary",
+      "caller_module": "differential_operators"
+    },
+    {
+      "callee": "normalize_spatial_geometry",
+      "callee_module": "geometry",
+      "caller": "scalar_gradient_with_boundary",
+      "caller_module": "differential_operators"
+    },
+    {
+      "callee": "validate_field_shape_for_geometry",
+      "callee_module": "unclassified",
+      "caller": "scalar_gradient_with_boundary",
+      "caller_module": "differential_operators"
+    },
+    {
+      "callee": "normalize_spatial_geometry",
+      "callee_module": "geometry",
+      "caller": "spatial_mean",
+      "caller_module": "quadrature"
+    },
+    {
+      "callee": "validate_field_shape_for_geometry",
+      "callee_module": "unclassified",
+      "caller": "spatial_mean",
+      "caller_module": "quadrature"
+    },
+    {
+      "callee": "normalize_spatial_geometry",
+      "callee_module": "geometry",
+      "caller": "structural_metrics",
+      "caller_module": "structural_metrics"
+    },
+    {
+      "callee": "scalar_gradient_with_boundary",
+      "callee_module": "differential_operators",
+      "caller": "structural_metrics",
+      "caller_module": "structural_metrics"
+    },
+    {
+      "callee": "spatial_mean",
+      "callee_module": "quadrature",
+      "caller": "structural_metrics",
+      "caller_module": "structural_metrics"
+    },
+    {
+      "callee": "normalize_spatial_geometry",
+      "callee_module": "geometry",
+      "caller": "simulate",
+      "caller_module": "simulation"
+    },
+    {
+      "callee": "normalize_structural_weights",
+      "callee_module": "structural_metrics",
+      "caller": "simulate",
+      "caller_module": "simulation"
+    },
+    {
+      "callee": "numerical_vorticity_with_boundary",
+      "callee_module": "differential_operators",
+      "caller": "simulate",
+      "caller_module": "simulation"
+    },
+    {
+      "callee": "spatial_geometry_metadata",
+      "callee_module": "geometry",
+      "caller": "simulate",
+      "caller_module": "simulation"
+    },
+    {
+      "callee": "spatial_mean",
+      "callee_module": "quadrature",
+      "caller": "simulate",
+      "caller_module": "simulation"
+    },
+    {
+      "callee": "structural_metrics",
+      "callee_module": "structural_metrics",
+      "caller": "simulate",
+      "caller_module": "simulation"
+    },
+    {
+      "callee": "validate_mesh_geometry",
+      "callee_module": "geometry",
+      "caller": "simulate",
+      "caller_module": "simulation"
+    },
+    {
+      "callee": "validate_periodic_transport_mesh",
+      "callee_module": "unclassified",
+      "caller": "simulate",
+      "caller_module": "simulation"
+    }
+  ],
+  "leaf_candidates": [
+    {
+      "caller_count": 1,
+      "caller_modules": [
+        "structural_metrics"
+      ],
+      "callers": [
+        "structural_metrics"
+      ],
+      "line_end": 8844,
+      "line_start": 8837,
+      "local_globals": [],
+      "module": "limiting_conservation",
+      "name": "bounded"
+    },
+    {
+      "caller_count": 1,
+      "caller_modules": [
+        "unclassified"
+      ],
+      "callers": [
+        "combine_decoupled_convergence_rows"
+      ],
+      "line_end": 2912,
+      "line_start": 2899,
+      "local_globals": [],
+      "module": "unclassified",
+      "name": "convergence_error_is_estimable"
+    },
+    {
+      "caller_count": 1,
+      "caller_modules": [
+        "unclassified"
+      ],
+      "callers": [
+        "combine_decoupled_convergence_rows"
+      ],
+      "line_end": 2896,
+      "line_start": 2850,
+      "local_globals": [],
+      "module": "unclassified",
+      "name": "convergence_row_key"
+    },
+    {
+      "caller_count": 4,
+      "caller_modules": [
+        "interpolation"
+      ],
+      "callers": [
+        "periodic_cubic_local_bounded_backtrace",
+        "periodic_cubic_local_bounded_sample_at_departures",
+        "periodic_cubic_local_sum_preserving_backtrace",
+        "periodic_cubic_local_sum_preserving_sample_at_departures"
+      ],
+      "line_end": 7281,
+      "line_start": 7054,
+      "local_globals": [],
+      "module": "limiting_conservation",
+      "name": "convex_local_bound_limiter"
+    },
+    {
+      "caller_count": 1,
+      "caller_modules": [
+        "interpolation"
+      ],
+      "callers": [
+        "periodic_cubic_sample_at_departures"
+      ],
+      "line_end": 6695,
+      "line_start": 6645,
+      "local_globals": [],
+      "module": "interpolation",
+      "name": "cubic_lagrange_weights_at_fraction"
+    },
+    {
+      "caller_count": 3,
+      "caller_modules": [
+        "unclassified"
+      ],
+      "callers": [
+        "translating_frame_metadata",
+        "translating_frame_source_coordinates",
+        "translating_frame_transform_velocity_function"
+      ],
+      "line_end": 5511,
+      "line_start": 5446,
+      "local_globals": [],
+      "module": "unclassified",
+      "name": "evaluate_translating_frame_vector"
+    },
+    {
+      "caller_count": 1,
+      "caller_modules": [
+        "unclassified"
+      ],
+      "callers": [
+        "analyze_result_triplet"
+      ],
+      "line_end": 2439,
+      "line_start": 2375,
+      "local_globals": [
+        "STRUCTURAL_COMPONENT_NAMES"
+      ],
+      "module": "unclassified",
+      "name": "extract_single_scale_diagnostics"
+    },
+    {
+      "caller_count": 0,
+      "caller_modules": [],
+      "callers": [],
+      "line_end": 908,
+      "line_start": 862,
+      "local_globals": [],
+      "module": "unclassified",
+      "name": "make_sampled_transformed_scalar_function"
+    },
+    {
+      "caller_count": 0,
+      "caller_modules": [],
+      "callers": [],
+      "line_end": 859,
+      "line_start": 805,
+      "local_globals": [],
+      "module": "unclassified",
+      "name": "make_sampled_transformed_velocity_function"
+    },
+    {
+      "caller_count": 2,
+      "caller_modules": [
+        "simulation",
+        "structural_metrics"
+      ],
+      "callers": [
+        "simulate",
+        "structural_metrics"
+      ],
+      "line_end": 256,
+      "line_start": 213,
+      "local_globals": [],
+      "module": "structural_metrics",
+      "name": "normalize_structural_weights"
+    },
+    {
+      "caller_count": 3,
+      "caller_modules": [
+        "differential_operators",
+        "simulation",
+        "unclassified"
+      ],
+      "callers": [
+        "interpolate_interval_series_to_nodes",
+        "simulate",
+        "simulate_material_deformation"
+      ],
+      "line_end": 1102,
+      "line_start": 1093,
+      "local_globals": [],
+      "module": "time_geometry",
+      "name": "normalize_time_grid"
+    },
+    {
+      "caller_count": 3,
+      "caller_modules": [
+        "departure_geometry",
+        "interpolation",
+        "trajectory"
+      ],
+      "callers": [
+        "normalize_periodic_departure_geometry",
+        "periodic_bilinear_departure_bounds",
+        "rk4_periodic_departure_points"
+      ],
+      "line_end": 4070,
+      "line_start": 3991,
+      "local_globals": [],
+      "module": "geometry",
+      "name": "periodic_coordinate_geometry"
+    },
+    {
+      "caller_count": 1,
+      "caller_modules": [
+        "interpolation"
+      ],
+      "callers": [
+        "periodic_cubic_backtrace"
+      ],
+      "line_end": 5899,
+      "line_start": 5840,
+      "local_globals": [],
+      "module": "interpolation",
+      "name": "periodic_cubic_lagrange_weights"
+    },
+    {
+      "caller_count": 1,
+      "caller_modules": [
+        "limiting_conservation"
+      ],
+      "callers": [
+        "restore_sum_with_local_bounds"
+      ],
+      "line_end": 7406,
+      "line_start": 7366,
+      "local_globals": [],
+      "module": "limiting_conservation",
+      "name": "periodic_expand_mask"
+    },
+    {
+      "caller_count": 3,
+      "caller_modules": [
+        "interpolation",
+        "limiting_conservation"
+      ],
+      "callers": [
+        "periodic_cubic_local_sum_preserving_backtrace",
+        "periodic_cubic_local_sum_preserving_sample_at_departures",
+        "restore_sum_with_local_bounds"
+      ],
+      "line_end": 7363,
+      "line_start": 7338,
+      "local_globals": [],
+      "module": "limiting_conservation",
+      "name": "precise_discrete_sum"
+    },
+    {
+      "caller_count": 1,
+      "caller_modules": [
+        "simulation"
+      ],
+      "callers": [
+        "simulate"
+      ],
+      "line_end": 8483,
+      "line_start": 8468,
+      "local_globals": [],
+      "module": "geometry",
+      "name": "spatial_geometry_metadata"
+    },
+    {
+      "caller_count": 0,
+      "caller_modules": [],
+      "callers": [],
+      "line_end": 2847,
+      "line_start": 2761,
+      "local_globals": [],
+      "module": "unclassified",
+      "name": "summarize_convergence_rows"
+    },
+    {
+      "caller_count": 0,
+      "caller_modules": [],
+      "callers": [],
+      "line_end": 3452,
+      "line_start": 3224,
+      "local_globals": [],
+      "module": "unclassified",
+      "name": "summarize_decoupled_convergence_rows"
+    },
+    {
+      "caller_count": 2,
+      "caller_modules": [
+        "geometry",
+        "unclassified"
+      ],
+      "callers": [
+        "normalize_spatial_geometry",
+        "validate_spacing"
+      ],
+      "line_end": 8095,
+      "line_start": 8070,
+      "local_globals": [],
+      "module": "unclassified",
+      "name": "validate_axis_spacing"
+    },
+    {
+      "caller_count": 7,
+      "caller_modules": [
+        "differential_operators",
+        "quadrature",
+        "simulation",
+        "structural_metrics"
+      ],
+      "callers": [
+        "material_vorticity_interval",
+        "numerical_vorticity_with_boundary",
+        "scalar_gradient_with_boundary",
+        "simulate",
+        "simulate_material_deformation",
+        "spatial_mean",
+        "structural_metrics"
+      ],
+      "line_end": 8008,
+      "line_start": 7978,
+      "local_globals": [
+        "BOUNDARY_MODES"
+      ],
+      "module": "limiting_conservation",
+      "name": "validate_boundary_mode"
+    },
+    {
+      "caller_count": 2,
+      "caller_modules": [
+        "unclassified"
+      ],
+      "callers": [
+        "combine_decoupled_convergence_rows",
+        "richardson_triplet"
+      ],
+      "line_end": 2139,
+      "line_start": 2113,
+      "local_globals": [],
+      "module": "unclassified",
+      "name": "validate_convergence_tolerance"
+    },
+    {
+      "caller_count": 4,
+      "caller_modules": [
+        "differential_operators",
+        "quadrature"
+      ],
+      "callers": [
+        "material_vorticity_interval",
+        "numerical_vorticity_with_boundary",
+        "scalar_gradient_with_boundary",
+        "spatial_mean"
+      ],
+      "line_end": 8501,
+      "line_start": 8486,
+      "local_globals": [],
+      "module": "unclassified",
+      "name": "validate_field_shape_for_geometry"
+    },
+    {
+      "caller_count": 4,
+      "caller_modules": [
+        "unclassified"
+      ],
+      "callers": [
+        "galilean_metadata",
+        "galilean_source_coordinates",
+        "galilean_transform_scalar_function",
+        "galilean_transform_velocity_function"
+      ],
+      "line_end": 5162,
+      "line_start": 5123,
+      "local_globals": [],
+      "module": "unclassified",
+      "name": "validate_galilean_frame_velocity"
+    },
+    {
+      "caller_count": 4,
+      "caller_modules": [
+        "unclassified"
+      ],
+      "callers": [
+        "galilean_metadata",
+        "galilean_source_coordinates",
+        "galilean_transform_scalar_function",
+        "galilean_transform_velocity_function"
+      ],
+      "line_end": 5188,
+      "line_start": 5165,
+      "local_globals": [],
+      "module": "unclassified",
+      "name": "validate_galilean_reference_time"
+    },
+    {
+      "caller_count": 1,
+      "caller_modules": [
+        "differential_operators"
+      ],
+      "callers": [
+        "material_vorticity_interval"
+      ],
+      "line_end": 4575,
+      "line_start": 4504,
+      "local_globals": [],
+      "module": "differential_operators",
+      "name": "validate_material_interval_fields"
+    },
+    {
+      "caller_count": 2,
+      "caller_modules": [
+        "differential_operators",
+        "simulation"
+      ],
+      "callers": [
+        "simulate",
+        "simulate_material_deformation"
+      ],
+      "line_end": 8597,
+      "line_start": 8504,
+      "local_globals": [],
+      "module": "geometry",
+      "name": "validate_mesh_geometry"
+    },
+    {
+      "caller_count": 1,
+      "caller_modules": [
+        "unclassified"
+      ],
+      "callers": [
+        "scale_length"
+      ],
+      "line_end": 1157,
+      "line_start": 1132,
+      "local_globals": [],
+      "module": "unclassified",
+      "name": "validate_nonnegative_length"
+    },
+    {
+      "caller_count": 3,
+      "caller_modules": [
+        "unclassified"
+      ],
+      "callers": [
+        "transform_coordinates",
+        "transform_scalar_function",
+        "transform_velocity_function"
+      ],
+      "line_end": 104,
+      "line_start": 49,
+      "local_globals": [],
+      "module": "unclassified",
+      "name": "validate_orthogonal_matrix"
+    },
+    {
+      "caller_count": 1,
+      "caller_modules": [
+        "differential_operators"
+      ],
+      "callers": [
+        "material_vorticity_interval"
+      ],
+      "line_end": 4501,
+      "line_start": 4477,
+      "local_globals": [],
+      "module": "unclassified",
+      "name": "validate_positive_time_interval"
+    },
+    {
+      "caller_count": 0,
+      "caller_modules": [],
+      "callers": [],
+      "line_end": 8180,
+      "line_start": 8110,
+      "local_globals": [],
+      "module": "unclassified",
+      "name": "validate_rectilinear_axis_coordinates"
+    },
+    {
+      "caller_count": 1,
+      "caller_modules": [
+        "unclassified"
+      ],
+      "callers": [
+        "richardson_triplet"
+      ],
+      "line_end": 2110,
+      "line_start": 2086,
+      "local_globals": [],
+      "module": "unclassified",
+      "name": "validate_refinement_ratio"
+    },
+    {
+      "caller_count": 1,
+      "caller_modules": [
+        "unclassified"
+      ],
+      "callers": [
+        "rotation_matrix"
+      ],
+      "line_end": 279,
+      "line_start": 259,
+      "local_globals": [],
+      "module": "unclassified",
+      "name": "validate_rotation_angle"
+    },
+    {
+      "caller_count": 5,
+      "caller_modules": [
+        "geometry",
+        "unclassified"
+      ],
+      "callers": [
+        "inverse_scale_coordinates",
+        "scale_curvature_function",
+        "scale_length",
+        "scale_spatial_geometry",
+        "scale_velocity_function"
+      ],
+      "line_end": 1129,
+      "line_start": 1105,
+      "local_globals": [],
+      "module": "unclassified",
+      "name": "validate_spatial_scale_factor"
+    },
+    {
+      "caller_count": 2,
+      "caller_modules": [
+        "multiscale"
+      ],
+      "callers": [
+        "derive_multiscale_profile",
+        "simulate_multiscale"
+      ],
+      "line_end": 1531,
+      "line_start": 1460,
+      "local_globals": [],
+      "module": "multiscale",
+      "name": "validate_structural_length_grid"
+    },
+    {
+      "caller_count": 1,
+      "caller_modules": [
+        "simulation"
+      ],
+      "callers": [
+        "simulate"
+      ],
+      "line_end": 3488,
+      "line_start": 3460,
+      "local_globals": [
+        "TEMPORAL_DEFORMATION_MODES"
+      ],
+      "module": "time_geometry",
+      "name": "validate_temporal_deformation_mode"
+    },
+    {
+      "caller_count": 4,
+      "caller_modules": [
+        "geometry",
+        "unclassified"
+      ],
+      "callers": [
+        "inverse_scale_coordinates",
+        "scale_curvature_function",
+        "scale_spatial_geometry",
+        "scale_velocity_function"
+      ],
+      "line_end": 403,
+      "line_start": 374,
+      "local_globals": [],
+      "module": "unclassified",
+      "name": "validate_transform_origin"
+    },
+    {
+      "caller_count": 3,
+      "caller_modules": [
+        "interpolation",
+        "simulation"
+      ],
+      "callers": [
+        "periodic_backtrace",
+        "periodic_sample_at_departures",
+        "simulate"
+      ],
+      "line_end": 5811,
+      "line_start": 5781,
+      "local_globals": [
+        "TRANSPORT_INTERPOLATIONS"
+      ],
+      "module": "interpolation",
+      "name": "validate_transport_interpolation"
+    },
+    {
+      "caller_count": 2,
+      "caller_modules": [
+        "simulation",
+        "trajectory"
+      ],
+      "callers": [
+        "simulate",
+        "transport_previous_vorticity_periodic"
+      ],
+      "line_end": 5836,
+      "line_start": 5813,
+      "local_globals": [
+        "TRANSPORT_TRAJECTORY_METHODS"
+      ],
+      "module": "trajectory",
+      "name": "validate_transport_trajectory_method"
+    },
+    {
+      "caller_count": 3,
+      "caller_modules": [
+        "interpolation",
+        "unclassified"
+      ],
+      "callers": [
+        "periodic_bilinear_backtrace",
+        "periodic_cubic_backtrace",
+        "validate_periodic_transport_mesh"
+      ],
+      "line_end": 371,
+      "line_start": 307,
+      "local_globals": [],
+      "module": "unclassified",
+      "name": "validate_uniform_axis_coordinates"
+    },
+    {
+      "caller_count": 3,
+      "caller_modules": [
+        "departure_geometry",
+        "interpolation",
+        "trajectory"
+      ],
+      "callers": [
+        "evaluate_periodic_transport_velocity",
+        "normalize_periodic_departure_geometry",
+        "periodic_bilinear_departure_bounds"
+      ],
+      "line_end": 4089,
+      "line_start": 4073,
+      "local_globals": [],
+      "module": "geometry",
+      "name": "wrap_periodic_points"
+    }
+  ],
+  "module_layer_ranges": {
+    "constants": {
+      "function_count": 0,
+      "functions": [],
+      "maximum_layer": null,
+      "minimum_layer": null
+    },
+    "departure_geometry": {
+      "function_count": 2,
+      "functions": [
+        "normalize_periodic_departure_geometry",
+        "periodic_departure_bounds"
+      ],
+      "maximum_layer": 2,
+      "minimum_layer": 1
+    },
+    "differential_operators": {
+      "function_count": 5,
+      "functions": [
+        "material_vorticity_interval",
+        "numerical_vorticity_with_boundary",
+        "scalar_gradient_with_boundary",
+        "simulate_material_deformation",
+        "validate_material_interval_fields"
+      ],
+      "maximum_layer": 7,
+      "minimum_layer": 0
+    },
+    "geometry": {
+      "function_count": 6,
+      "functions": [
+        "normalize_spatial_geometry",
+        "periodic_coordinate_geometry",
+        "scale_spatial_geometry",
+        "spatial_geometry_metadata",
+        "validate_mesh_geometry",
+        "wrap_periodic_points"
+      ],
+      "maximum_layer": 2,
+      "minimum_layer": 0
+    },
+    "interpolation": {
+      "function_count": 14,
+      "functions": [
+        "cubic_lagrange_weights_at_fraction",
+        "periodic_backtrace",
+        "periodic_bilinear_backtrace",
+        "periodic_bilinear_departure_bounds",
+        "periodic_bilinear_sample_at_departures",
+        "periodic_cubic_backtrace",
+        "periodic_cubic_lagrange_weights",
+        "periodic_cubic_local_bounded_backtrace",
+        "periodic_cubic_local_bounded_sample_at_departures",
+        "periodic_cubic_local_sum_preserving_backtrace",
+        "periodic_cubic_local_sum_preserving_sample_at_departures",
+        "periodic_cubic_sample_at_departures",
+        "periodic_sample_at_departures",
+        "validate_transport_interpolation"
+      ],
+      "maximum_layer": 4,
+      "minimum_layer": 0
+    },
+    "limiting_conservation": {
+      "function_count": 6,
+      "functions": [
+        "bounded",
+        "convex_local_bound_limiter",
+        "periodic_expand_mask",
+        "precise_discrete_sum",
+        "restore_sum_with_local_bounds",
+        "validate_boundary_mode"
+      ],
+      "maximum_layer": 1,
+      "minimum_layer": 0
+    },
+    "multiscale": {
+      "function_count": 4,
+      "functions": [
+        "analyze_multiscale_profile_triplet",
+        "derive_multiscale_profile",
+        "simulate_multiscale",
+        "validate_structural_length_grid"
+      ],
+      "maximum_layer": 7,
+      "minimum_layer": 0
+    },
+    "quadrature": {
+      "function_count": 1,
+      "functions": [
+        "spatial_mean"
+      ],
+      "maximum_layer": 2,
+      "minimum_layer": 2
+    },
+    "scenarios_io": {
+      "function_count": 1,
+      "functions": [
+        "main"
+      ],
+      "maximum_layer": 7,
+      "minimum_layer": 7
+    },
+    "simulation": {
+      "function_count": 1,
+      "functions": [
+        "simulate"
+      ],
+      "maximum_layer": 6,
+      "minimum_layer": 6
+    },
+    "structural_metrics": {
+      "function_count": 2,
+      "functions": [
+        "normalize_structural_weights",
+        "structural_metrics"
+      ],
+      "maximum_layer": 3,
+      "minimum_layer": 0
+    },
+    "time_geometry": {
+      "function_count": 2,
+      "functions": [
+        "normalize_time_grid",
+        "validate_temporal_deformation_mode"
+      ],
+      "maximum_layer": 0,
+      "minimum_layer": 0
+    },
+    "trajectory": {
+      "function_count": 4,
+      "functions": [
+        "evaluate_periodic_transport_velocity",
+        "rk4_periodic_departure_points",
+        "transport_previous_vorticity_periodic",
+        "validate_transport_trajectory_method"
+      ],
+      "maximum_layer": 5,
+      "minimum_layer": 0
+    },
+    "unclassified": {
+      "function_count": 45,
+      "functions": [
+        "analyze_result_triplet",
+        "combine_decoupled_convergence_rows",
+        "convergence_error_is_estimable",
+        "convergence_row_key",
+        "evaluate_translating_frame_vector",
+        "extract_single_scale_diagnostics",
+        "galilean_metadata",
+        "galilean_source_coordinates",
+        "galilean_transform_scalar_function",
+        "galilean_transform_velocity_function",
+        "interpolate_interval_series_to_nodes",
+        "inverse_scale_coordinates",
+        "make_sampled_transformed_scalar_function",
+        "make_sampled_transformed_velocity_function",
+        "normalized_field_rate",
+        "richardson_triplet",
+        "rotation_matrix",
+        "scale_curvature_function",
+        "scale_length",
+        "scale_velocity_function",
+        "summarize_convergence_rows",
+        "summarize_decoupled_convergence_rows",
+        "transform_coordinates",
+        "transform_scalar_function",
+        "transform_velocity_function",
+        "translating_frame_metadata",
+        "translating_frame_source_coordinates",
+        "translating_frame_transform_scalar_function",
+        "translating_frame_transform_velocity_function",
+        "validate_axis_spacing",
+        "validate_convergence_tolerance",
+        "validate_field_shape_for_geometry",
+        "validate_galilean_frame_velocity",
+        "validate_galilean_reference_time",
+        "validate_nonnegative_length",
+        "validate_orthogonal_matrix",
+        "validate_periodic_transport_mesh",
+        "validate_positive_time_interval",
+        "validate_rectilinear_axis_coordinates",
+        "validate_refinement_ratio",
+        "validate_rotation_angle",
+        "validate_spacing",
+        "validate_spatial_scale_factor",
+        "validate_transform_origin",
+        "validate_uniform_axis_coordinates"
+      ],
+      "maximum_layer": 3,
+      "minimum_layer": 0
+    }
+  },
+  "proposed_first_extraction": [
+    {
+      "caller_count": 1,
+      "caller_modules": [
+        "differential_operators"
+      ],
+      "callers": [
+        "material_vorticity_interval"
+      ],
+      "line_end": 4575,
+      "line_start": 4504,
+      "local_globals": [],
+      "module": "differential_operators",
+      "name": "validate_material_interval_fields"
+    },
+    {
+      "caller_count": 1,
+      "caller_modules": [
+        "simulation"
+      ],
+      "callers": [
+        "simulate"
+      ],
+      "line_end": 8483,
+      "line_start": 8468,
+      "local_globals": [],
+      "module": "geometry",
+      "name": "spatial_geometry_metadata"
+    },
+    {
+      "caller_count": 2,
+      "caller_modules": [
+        "differential_operators",
+        "simulation"
+      ],
+      "callers": [
+        "simulate",
+        "simulate_material_deformation"
+      ],
+      "line_end": 8597,
+      "line_start": 8504,
+      "local_globals": [],
+      "module": "geometry",
+      "name": "validate_mesh_geometry"
+    },
+    {
+      "caller_count": 3,
+      "caller_modules": [
+        "departure_geometry",
+        "interpolation",
+        "trajectory"
+      ],
+      "callers": [
+        "normalize_periodic_departure_geometry",
+        "periodic_bilinear_departure_bounds",
+        "rk4_periodic_departure_points"
+      ],
+      "line_end": 4070,
+      "line_start": 3991,
+      "local_globals": [],
+      "module": "geometry",
+      "name": "periodic_coordinate_geometry"
+    },
+    {
+      "caller_count": 3,
+      "caller_modules": [
+        "departure_geometry",
+        "interpolation",
+        "trajectory"
+      ],
+      "callers": [
+        "evaluate_periodic_transport_velocity",
+        "normalize_periodic_departure_geometry",
+        "periodic_bilinear_departure_bounds"
+      ],
+      "line_end": 4089,
+      "line_start": 4073,
+      "local_globals": [],
+      "module": "geometry",
+      "name": "wrap_periodic_points"
+    },
+    {
+      "caller_count": 1,
+      "caller_modules": [
+        "interpolation"
+      ],
+      "callers": [
+        "periodic_cubic_sample_at_departures"
+      ],
+      "line_end": 6695,
+      "line_start": 6645,
+      "local_globals": [],
+      "module": "interpolation",
+      "name": "cubic_lagrange_weights_at_fraction"
+    },
+    {
+      "caller_count": 1,
+      "caller_modules": [
+        "interpolation"
+      ],
+      "callers": [
+        "periodic_cubic_backtrace"
+      ],
+      "line_end": 5899,
+      "line_start": 5840,
+      "local_globals": [],
+      "module": "interpolation",
+      "name": "periodic_cubic_lagrange_weights"
+    },
+    {
+      "caller_count": 3,
+      "caller_modules": [
+        "interpolation",
+        "simulation"
+      ],
+      "callers": [
+        "periodic_backtrace",
+        "periodic_sample_at_departures",
+        "simulate"
+      ],
+      "line_end": 5811,
+      "line_start": 5781,
+      "local_globals": [
+        "TRANSPORT_INTERPOLATIONS"
+      ],
+      "module": "interpolation",
+      "name": "validate_transport_interpolation"
+    },
+    {
+      "caller_count": 1,
+      "caller_modules": [
+        "structural_metrics"
+      ],
+      "callers": [
+        "structural_metrics"
+      ],
+      "line_end": 8844,
+      "line_start": 8837,
+      "local_globals": [],
+      "module": "limiting_conservation",
+      "name": "bounded"
+    },
+    {
+      "caller_count": 1,
+      "caller_modules": [
+        "limiting_conservation"
+      ],
+      "callers": [
+        "restore_sum_with_local_bounds"
+      ],
+      "line_end": 7406,
+      "line_start": 7366,
+      "local_globals": [],
+      "module": "limiting_conservation",
+      "name": "periodic_expand_mask"
+    },
+    {
+      "caller_count": 3,
+      "caller_modules": [
+        "interpolation",
+        "limiting_conservation"
+      ],
+      "callers": [
+        "periodic_cubic_local_sum_preserving_backtrace",
+        "periodic_cubic_local_sum_preserving_sample_at_departures",
+        "restore_sum_with_local_bounds"
+      ],
+      "line_end": 7363,
+      "line_start": 7338,
+      "local_globals": [],
+      "module": "limiting_conservation",
+      "name": "precise_discrete_sum"
+    },
+    {
+      "caller_count": 4,
+      "caller_modules": [
+        "interpolation"
+      ],
+      "callers": [
+        "periodic_cubic_local_bounded_backtrace",
+        "periodic_cubic_local_bounded_sample_at_departures",
+        "periodic_cubic_local_sum_preserving_backtrace",
+        "periodic_cubic_local_sum_preserving_sample_at_departures"
+      ],
+      "line_end": 7281,
+      "line_start": 7054,
+      "local_globals": [],
+      "module": "limiting_conservation",
+      "name": "convex_local_bound_limiter"
+    },
+    {
+      "caller_count": 7,
+      "caller_modules": [
+        "differential_operators",
+        "quadrature",
+        "simulation",
+        "structural_metrics"
+      ],
+      "callers": [
+        "material_vorticity_interval",
+        "numerical_vorticity_with_boundary",
+        "scalar_gradient_with_boundary",
+        "simulate",
+        "simulate_material_deformation",
+        "spatial_mean",
+        "structural_metrics"
+      ],
+      "line_end": 8008,
+      "line_start": 7978,
+      "local_globals": [
+        "BOUNDARY_MODES"
+      ],
+      "module": "limiting_conservation",
+      "name": "validate_boundary_mode"
+    },
+    {
+      "caller_count": 2,
+      "caller_modules": [
+        "multiscale"
+      ],
+      "callers": [
+        "derive_multiscale_profile",
+        "simulate_multiscale"
+      ],
+      "line_end": 1531,
+      "line_start": 1460,
+      "local_globals": [],
+      "module": "multiscale",
+      "name": "validate_structural_length_grid"
+    },
+    {
+      "caller_count": 2,
+      "caller_modules": [
+        "simulation",
+        "structural_metrics"
+      ],
+      "callers": [
+        "simulate",
+        "structural_metrics"
+      ],
+      "line_end": 256,
+      "line_start": 213,
+      "local_globals": [],
+      "module": "structural_metrics",
+      "name": "normalize_structural_weights"
+    },
+    {
+      "caller_count": 1,
+      "caller_modules": [
+        "simulation"
+      ],
+      "callers": [
+        "simulate"
+      ],
+      "line_end": 3488,
+      "line_start": 3460,
+      "local_globals": [
+        "TEMPORAL_DEFORMATION_MODES"
+      ],
+      "module": "time_geometry",
+      "name": "validate_temporal_deformation_mode"
+    },
+    {
+      "caller_count": 3,
+      "caller_modules": [
+        "differential_operators",
+        "simulation",
+        "unclassified"
+      ],
+      "callers": [
+        "interpolate_interval_series_to_nodes",
+        "simulate",
+        "simulate_material_deformation"
+      ],
+      "line_end": 1102,
+      "line_start": 1093,
+      "local_globals": [],
+      "module": "time_geometry",
+      "name": "normalize_time_grid"
+    },
+    {
+      "caller_count": 2,
+      "caller_modules": [
+        "simulation",
+        "trajectory"
+      ],
+      "callers": [
+        "simulate",
+        "transport_previous_vorticity_periodic"
+      ],
+      "line_end": 5836,
+      "line_start": 5813,
+      "local_globals": [
+        "TRANSPORT_TRAJECTORY_METHODS"
+      ],
+      "module": "trajectory",
+      "name": "validate_transport_trajectory_method"
+    }
+  ],
+  "status": "targeted_modularization_diagnostic",
+  "topological_layers": [
+    [
+      "bounded",
+      "convergence_error_is_estimable",
+      "convergence_row_key",
+      "convex_local_bound_limiter",
+      "cubic_lagrange_weights_at_fraction",
+      "evaluate_translating_frame_vector",
+      "extract_single_scale_diagnostics",
+      "make_sampled_transformed_scalar_function",
+      "make_sampled_transformed_velocity_function",
+      "normalize_structural_weights",
+      "normalize_time_grid",
+      "periodic_coordinate_geometry",
+      "periodic_cubic_lagrange_weights",
+      "periodic_expand_mask",
+      "precise_discrete_sum",
+      "spatial_geometry_metadata",
+      "summarize_convergence_rows",
+      "summarize_decoupled_convergence_rows",
+      "validate_axis_spacing",
+      "validate_boundary_mode",
+      "validate_convergence_tolerance",
+      "validate_field_shape_for_geometry",
+      "validate_galilean_frame_velocity",
+      "validate_galilean_reference_time",
+      "validate_material_interval_fields",
+      "validate_mesh_geometry",
+      "validate_nonnegative_length",
+      "validate_orthogonal_matrix",
+      "validate_positive_time_interval",
+      "validate_rectilinear_axis_coordinates",
+      "validate_refinement_ratio",
+      "validate_rotation_angle",
+      "validate_spatial_scale_factor",
+      "validate_structural_length_grid",
+      "validate_temporal_deformation_mode",
+      "validate_transform_origin",
+      "validate_transport_interpolation",
+      "validate_transport_trajectory_method",
+      "validate_uniform_axis_coordinates",
+      "wrap_periodic_points"
+    ],
+    [
+      "combine_decoupled_convergence_rows",
+      "derive_multiscale_profile",
+      "evaluate_periodic_transport_velocity",
+      "galilean_metadata",
+      "galilean_source_coordinates",
+      "interpolate_interval_series_to_nodes",
+      "inverse_scale_coordinates",
+      "normalize_periodic_departure_geometry",
+      "normalize_spatial_geometry",
+      "periodic_bilinear_backtrace",
+      "periodic_bilinear_departure_bounds",
+      "periodic_cubic_backtrace",
+      "restore_sum_with_local_bounds",
+      "richardson_triplet",
+      "rotation_matrix",
+      "scale_length",
+      "transform_coordinates",
+      "translating_frame_metadata",
+      "translating_frame_source_coordinates",
+      "validate_spacing"
+    ],
+    [
+      "analyze_multiscale_profile_triplet",
+      "analyze_result_triplet",
+      "galilean_transform_scalar_function",
+      "galilean_transform_velocity_function",
+      "numerical_vorticity_with_boundary",
+      "periodic_bilinear_sample_at_departures",
+      "periodic_cubic_local_bounded_backtrace",
+      "periodic_cubic_local_sum_preserving_backtrace",
+      "periodic_cubic_sample_at_departures",
+      "periodic_departure_bounds",
+      "rk4_periodic_departure_points",
+      "scalar_gradient_with_boundary",
+      "scale_curvature_function",
+      "scale_spatial_geometry",
+      "scale_velocity_function",
+      "spatial_mean",
+      "transform_scalar_function",
+      "transform_velocity_function",
+      "translating_frame_transform_scalar_function",
+      "translating_frame_transform_velocity_function",
+      "validate_periodic_transport_mesh"
+    ],
+    [
+      "normalized_field_rate",
+      "periodic_backtrace",
+      "periodic_cubic_local_bounded_sample_at_departures",
+      "periodic_cubic_local_sum_preserving_sample_at_departures",
+      "structural_metrics"
+    ],
+    [
+      "material_vorticity_interval",
+      "periodic_sample_at_departures"
+    ],
+    [
+      "transport_previous_vorticity_periodic"
+    ],
+    [
+      "simulate"
+    ],
+    [
+      "main",
+      "simulate_material_deformation",
+      "simulate_multiscale"
+    ]
+  ],
+  "unclassified_symbols": [
+    {
+      "call_modules": [
+        "unclassified"
+      ],
+      "called_by": [],
+      "caller_modules": [],
+      "calls": [
+        "extract_single_scale_diagnostics",
+        "richardson_triplet"
+      ],
+      "excerpt": "def analyze_result_triplet(\n    coarse_result: dict[str, object],\n    medium_result: dict[str, object],\n    fine_result: dict[str, object],\n    refinement_ratio: float = 2.0,\n    equality_tolerance: float = 1.0e-14,\n) -> tuple[dict[str, object], ...]:\n    coarse = extract_single_scale_diagnostics(\n        coarse_result\n    )\n\n    medium = extract_single_scale_diagnostics(\n        medium_result\n    )\n\n    fine = extract_single_scale_diagnostics(\n        fine_result\n    )\n\n    if not (\n        coarse.keys()\n        == medium.keys()\n        == fine.keys()\n    ):\n        raise ValueError(\n            \"Les trois résultats ne contiennent \"\n            \"pas les mêmes diagnostics.\"\n        )\n\n    rows: list[\n        dict[str, object]\n    ] = []\n\n    for metric_name in coarse:\n        estimate = richardson_triplet(\n            coarse[metric_name],\n            medium[metric_name],\n            fine[metric_name],\n            refinement_ratio=refinement_ratio,\n            equality_tolerance=equality_tolerance,\n        )\n\n        rows.append(\n            {\n                \"metric\": metric_name,\n                \"structural_length\": None,\n                **estimate,\n            }\n        )\n\n    return tuple(rows)",
+      "kind": "function",
+      "line_end": 2492,
+      "line_start": 2442,
+      "loaded_globals": [],
+      "name": "analyze_result_triplet"
+    },
+    {
+      "call_modules": [
+        "unclassified"
+      ],
+      "called_by": [],
+      "caller_modules": [],
+      "calls": [
+        "convergence_error_is_estimable",
+        "convergence_row_key",
+        "validate_convergence_tolerance"
+      ],
+      "excerpt": "def combine_decoupled_convergence_rows(\n    spatial_rows: object,\n    temporal_rows: object,\n    fine_match_tolerance: float = 1.0e-12,\n) -> tuple[dict[str, object], ...]:\n    \"\"\"\n    Combine deux études indépendantes :\n\n    - raffinement spatial à grille temporelle fixe ;\n    - raffinement temporel à grille spatiale fixe.\n\n    Les deux études doivent partager exactement le\n    même résultat fin.\n\n    Le budget conservateur est :\n\n        E_total <= E_spatial + E_temporal.\n    \"\"\"\n    tolerance = (\n        validate_convergence_tolerance(\n            fine_match_tolerance\n        )\n    )\n\n    try:\n        spatial_tuple = tuple(\n            spatial_rows\n        )\n\n        temporal_tuple = tuple(\n            temporal_rows\n        )\n    except TypeError as error:\n        raise ValueError(\n            \"Les diagnostics spatiaux et temporels \"\n            \"doivent former des séquences.\"\n        ) from error\n\n    if not spatial_tuple:\n        raise ValueError(\n            \"L'étude spatiale est vide.\"\n        )\n\n    if not temporal_tuple:\n        raise ValueError(\n            \"L'étude temporelle est vide.\"\n        )\n\n    spatial_map: dict[\n        tuple[str, float | None],\n        dict[str, object],\n    ] = {}\n\n    temporal_map: dict[\n        tuple[str, float | None],\n        dict[str, object],\n    ] = {}\n\n    for row in spatial_tuple:\n        key = convergence_row_key(\n            row\n        )\n\n        if key in spatial_map:\n            raise ValueError(\n                \"L'étude spatiale contient un \"\n                \"diagnostic dupliqué.\"\n            )\n\n        spatial_map[key] = \n... [extrait tronqué]",
+      "kind": "function",
+      "line_end": 3221,
+      "line_start": 2915,
+      "loaded_globals": [],
+      "name": "combine_decoupled_convergence_rows"
+    },
+    {
+      "call_modules": [],
+      "called_by": [
+        "combine_decoupled_convergence_rows"
+      ],
+      "caller_modules": [
+        "unclassified"
+      ],
+      "calls": [],
+      "excerpt": "def convergence_error_is_estimable(\n    row: dict[str, object],\n) -> bool:\n    status = str(\n        row.get(\n            \"status\",\n            \"\",\n        )\n    )\n\n    return status in (\n        \"resolved\",\n        \"asymptotic\",\n    )",
+      "kind": "function",
+      "line_end": 2912,
+      "line_start": 2899,
+      "loaded_globals": [],
+      "name": "convergence_error_is_estimable"
+    },
+    {
+      "call_modules": [],
+      "called_by": [
+        "combine_decoupled_convergence_rows"
+      ],
+      "caller_modules": [
+        "unclassified"
+      ],
+      "calls": [],
+      "excerpt": "def convergence_row_key(\n    row: dict[str, object],\n) -> tuple[str, float | None]:\n    if not isinstance(row, dict):\n        raise ValueError(\n            \"Un diagnostic de convergence doit être \"\n            \"représenté par un dictionnaire.\"\n        )\n\n    if \"metric\" not in row:\n        raise ValueError(\n            \"Le diagnostic ne contient pas \"\n            \"de nom de métrique.\"\n        )\n\n    metric = str(\n        row[\"metric\"]\n    )\n\n    structural_length = row.get(\n        \"structural_length\"\n    )\n\n    if structural_length is None:\n        length_value = None\n    else:\n        try:\n            length_value = float(\n                structural_length\n            )\n        except (\n            TypeError,\n            ValueError,\n            OverflowError,\n        ) as error:\n            raise ValueError(\n                \"La longueur structurelle du \"\n                \"diagnostic doit être réelle.\"\n            ) from error\n\n        if not np.isfinite(length_value):\n            raise ValueError(\n                \"La longueur structurelle du \"\n                \"diagnostic doit être finie.\"\n            )\n\n    return metric, length_value",
+      "kind": "function",
+      "line_end": 2896,
+      "line_start": 2850,
+      "loaded_globals": [],
+      "name": "convergence_row_key"
+    },
+    {
+      "call_modules": [],
+      "called_by": [
+        "translating_frame_metadata",
+        "translating_frame_source_coordinates",
+        "translating_frame_transform_velocity_function"
+      ],
+      "caller_modules": [
+        "unclassified"
+      ],
+      "calls": [],
+      "excerpt": "def evaluate_translating_frame_vector(\n    vector_function: Callable,\n    time: object,\n    quantity_name: str,\n) -> np.ndarray:\n    if not callable(vector_function):\n        raise ValueError(\n            f\"La fonction de {quantity_name} du \"\n            \"référentiel doit être appelable.\"\n        )\n\n    try:\n        time_value = float(time)\n    except (\n        TypeError,\n        ValueError,\n        OverflowError,\n    ) as error:\n        raise ValueError(\n            \"L'instant du référentiel doit être \"\n            \"un nombre réel.\"\n        ) from error\n\n    if not np.isfinite(time_value):\n        raise ValueError(\n            \"L'instant du référentiel doit être fini.\"\n        )\n\n    try:\n        vector = np.asarray(\n            vector_function(time_value),\n            dtype=np.float64,\n        )\n    except (\n        TypeError,\n        ValueError,\n        OverflowError,\n    ) as error:\n        raise ValueError(\n            f\"La fonction de {quantity_name} doit \"\n            \"retourner un vecteur réel.\"\n        ) from error\n\n    if vector.shape != (2,):\n        raise ValueError(\n            f\"La fonction de {quantity_name} doit \"\n            \"retourner un vecteur de dimension deux.\"\n        )\n\n    if not np.all(np.isfinite(vector)):\n        raise ValueError(\n            f\"Le vecteur de {quantity_name} doit \"\n            \"être fini.\"\n        )\n\n    copied = np.array(\n        vector,\n        dtype=np.float64,\n        copy=True,\n    )\n\n    copied.setflags(\n        write=False\n    )\n\n    return copied",
+      "kind": "function",
+      "line_end": 5511,
+      "line_start": 5446,
+      "loaded_globals": [],
+      "name": "evaluate_translating_frame_vector"
+    },
+    {
+      "call_modules": [],
+      "called_by": [
+        "analyze_result_triplet"
+      ],
+      "caller_modules": [
+        "unclassified"
+      ],
+      "calls": [],
+      "excerpt": "def extract_single_scale_diagnostics(\n    result: dict[str, object],\n) -> dict[str, float]:\n    required_scalar_keys = (\n        \"intensity_index\",\n        \"structure_index\",\n        \"coupled_index\",\n        \"temporal_deformation_index\",\n    )\n\n    missing = tuple(\n        key\n        for key in required_scalar_keys\n        if key not in result\n    )\n\n    if missing:\n        raise ValueError(\n            \"Le résultat ne contient pas les \"\n            \"diagnostics requis : \"\n            + \", \".join(missing)\n        )\n\n    if \"component_indices\" not in result:\n        raise ValueError(\n            \"Le résultat ne contient pas la \"\n            \"signature structurelle.\"\n        )\n\n    diagnostics = {\n        key: float(result[key])\n        for key in required_scalar_keys\n    }\n\n    components = dict(\n        result[\"component_indices\"]\n    )\n\n    for component_name in (\n        STRUCTURAL_COMPONENT_NAMES\n    ):\n        if component_name not in components:\n            raise ValueError(\n                \"La signature ne contient pas la \"\n                f\"composante {component_name!r}.\"\n            )\n\n        diagnostics[\n            f\"component:{component_name}\"\n        ] = float(\n            components[component_name]\n        )\n\n    values = np.asarray(\n        tuple(diagnostics.values()),\n        dtype=np.float64,\n    )\n\n    if not np.all(np.isfinite(values)):\n        raise ValueError(\n            \"Les diagnostics contiennent une \"\n            \"valeur non finie.\"\n        )\n\n    return diagnostics",
+      "kind": "function",
+      "line_end": 2439,
+      "line_start": 2375,
+      "loaded_globals": [
+        "STRUCTURAL_COMPONENT_NAMES"
+      ],
+      "name": "extract_single_scale_diagnostics"
+    },
+    {
+      "call_modules": [
+        "unclassified"
+      ],
+      "called_by": [],
+      "caller_modules": [],
+      "calls": [
+        "validate_galilean_frame_velocity",
+        "validate_galilean_reference_time"
+      ],
+      "excerpt": "def galilean_metadata(\n    frame_velocity: object,\n    reference_time: object = 0.0,\n) -> dict[str, object]:\n    velocity = validate_galilean_frame_velocity(\n        frame_velocity\n    )\n\n    reference = validate_galilean_reference_time(\n        reference_time\n    )\n\n    return {\n        \"transformation\": \"galilean\",\n        \"frame_velocity_x\": float(\n            velocity[0]\n        ),\n        \"frame_velocity_y\": float(\n            velocity[1]\n        ),\n        \"reference_time\": reference,\n        \"coordinate_law\": (\n            \"x_prime = x - c * (t - t0)\"\n        ),\n        \"velocity_law\": (\n            \"v_prime = v - c\"\n        ),\n    }",
+      "kind": "function",
+      "line_end": 5443,
+      "line_start": 5416,
+      "loaded_globals": [],
+      "name": "galilean_metadata"
+    },
+    {
+      "call_modules": [
+        "unclassified"
+      ],
+      "called_by": [
+        "galilean_transform_scalar_function",
+        "galilean_transform_velocity_function"
+      ],
+      "caller_modules": [
+        "unclassified"
+      ],
+      "calls": [
+        "validate_galilean_frame_velocity",
+        "validate_galilean_reference_time"
+      ],
+      "excerpt": "def galilean_source_coordinates(\n    x: object,\n    y: object,\n    time: object,\n    frame_velocity: object,\n    reference_time: object = 0.0,\n) -> tuple[np.ndarray, np.ndarray]:\n    \"\"\"\n    Calcule les coordonnées de l'ancien référentiel :\n\n        x = x' + c (t - t0).\n    \"\"\"\n    velocity = validate_galilean_frame_velocity(\n        frame_velocity\n    )\n\n    reference = validate_galilean_reference_time(\n        reference_time\n    )\n\n    try:\n        time_value = float(time)\n    except (\n        TypeError,\n        ValueError,\n        OverflowError,\n    ) as error:\n        raise ValueError(\n            \"L'instant galiléen doit être réel.\"\n        ) from error\n\n    if not np.isfinite(time_value):\n        raise ValueError(\n            \"L'instant galiléen doit être fini.\"\n        )\n\n    x_array = np.asarray(\n        x,\n        dtype=np.float64,\n    )\n\n    y_array = np.asarray(\n        y,\n        dtype=np.float64,\n    )\n\n    if x_array.shape != y_array.shape:\n        raise ValueError(\n            \"Les coordonnées galiléennes x et y \"\n            \"doivent avoir la même forme.\"\n        )\n\n    if not (\n        np.all(np.isfinite(x_array))\n        and np.all(np.isfinite(y_array))\n    ):\n        raise ValueError(\n            \"Les coordonnées galiléennes contiennent \"\n            \"une valeur non finie.\"\n        )\n\n    elapsed = (\n        time_value - reference\n    )\n\n    source_x = (\n        x_array\n        + velocity[0] * elapsed\n    )\n\n    source_y = (\n        y_array\n        + velocity[1] * elapsed\n    )\n\n    return source_x, source_y",
+      "kind": "function",
+      "line_end": 5266,
+      "line_start": 5191,
+      "loaded_globals": [],
+      "name": "galilean_source_coordinates"
+    },
+    {
+      "call_modules": [
+        "unclassified"
+      ],
+      "called_by": [],
+      "caller_modules": [],
+      "calls": [
+        "galilean_source_coordinates",
+        "validate_galilean_frame_velocity",
+        "validate_galilean_reference_time"
+      ],
+      "excerpt": "def galilean_transform_scalar_function(\n    scalar_function: Callable,\n    frame_velocity: object,\n    reference_time: object = 0.0,\n) -> Callable:\n    \"\"\"\n    Transforme un champ scalaire selon :\n\n        f'(x',t) = f(x' + c(t-t0),t).\n    \"\"\"\n    if not callable(scalar_function):\n        raise ValueError(\n            \"Le champ scalaire galiléen doit être \"\n            \"appelable.\"\n        )\n\n    velocity = validate_galilean_frame_velocity(\n        frame_velocity\n    )\n\n    reference = validate_galilean_reference_time(\n        reference_time\n    )\n\n    def transformed(\n        x: np.ndarray,\n        y: np.ndarray,\n        time: float,\n    ) -> np.ndarray:\n        source_x, source_y = (\n            galilean_source_coordinates(\n                x,\n                y,\n                time,\n                velocity,\n                reference,\n            )\n        )\n\n        value = np.asarray(\n            scalar_function(\n                source_x,\n                source_y,\n                time,\n            ),\n            dtype=np.float64,\n        )\n\n        if value.shape != source_x.shape:\n            raise ValueError(\n                \"Le champ scalaire transformé doit \"\n                \"avoir la forme de la grille.\"\n            )\n\n        if not np.all(np.isfinite(value)):\n            raise ValueError(\n                \"Le champ scalaire transformé contient \"\n                \"une valeur non finie.\"\n            )\n\n        return value\n\n    return transformed",
+      "kind": "function",
+      "line_end": 5331,
+      "line_start": 5269,
+      "loaded_globals": [],
+      "name": "galilean_transform_scalar_function"
+    },
+    {
+      "call_modules": [
+        "unclassified"
+      ],
+      "called_by": [],
+      "caller_modules": [],
+      "calls": [
+        "galilean_source_coordinates",
+        "validate_galilean_frame_velocity",
+        "validate_galilean_reference_time"
+      ],
+      "excerpt": "def galilean_transform_velocity_function(\n    velocity_function: Callable,\n    frame_velocity: object,\n    reference_time: object = 0.0,\n) -> Callable:\n    \"\"\"\n    Transforme un champ de vitesse selon :\n\n        v'(x',t)\n            = v(x' + c(t-t0),t) - c.\n    \"\"\"\n    if not callable(velocity_function):\n        raise ValueError(\n            \"Le champ de vitesse galiléen doit être \"\n            \"appelable.\"\n        )\n\n    velocity = validate_galilean_frame_velocity(\n        frame_velocity\n    )\n\n    reference = validate_galilean_reference_time(\n        reference_time\n    )\n\n    def transformed(\n        x: np.ndarray,\n        y: np.ndarray,\n        time: float,\n    ) -> tuple[np.ndarray, np.ndarray]:\n        source_x, source_y = (\n            galilean_source_coordinates(\n                x,\n                y,\n                time,\n                velocity,\n                reference,\n            )\n        )\n\n        source_vx, source_vy = velocity_function(\n            source_x,\n            source_y,\n            time,\n        )\n\n        source_vx = np.asarray(\n            source_vx,\n            dtype=np.float64,\n        )\n\n        source_vy = np.asarray(\n            source_vy,\n            dtype=np.float64,\n        )\n\n        if (\n            source_vx.shape != source_x.shape\n            or source_vy.shape != source_x.shape\n        ):\n            raise ValueError(\n                \"Le champ de vitesse transformé doit \"\n                \"avoir la forme de la grille.\"\n            )\n\n        if not (\n            np.all(np.isfinite(source_vx))\n            and np.all(np.isfinite(sourc\n... [extrait tronqué]",
+      "kind": "function",
+      "line_end": 5413,
+      "line_start": 5334,
+      "loaded_globals": [],
+      "name": "galilean_transform_velocity_function"
+    },
+    {
+      "call_modules": [
+        "time_geometry"
+      ],
+      "called_by": [
+        "simulate_material_deformation"
+      ],
+      "caller_modules": [
+        "differential_operators"
+      ],
+      "calls": [
+        "normalize_time_grid"
+      ],
+      "excerpt": "def interpolate_interval_series_to_nodes(\n    times: object,\n    interval_values: object,\n) -> np.ndarray:\n    temporal_geometry = normalize_time_grid(\n        times\n    )\n\n    values = np.asarray(\n        interval_values,\n        dtype=np.float64,\n    )\n\n    expected_shape = (\n        temporal_geometry.interval_count,\n    )\n\n    if values.shape != expected_shape:\n        raise ValueError(\n            \"La série d'intervalle doit avoir la \"\n            f\"forme {expected_shape}, obtenue \"\n            f\"{values.shape}.\"\n        )\n\n    if not np.all(np.isfinite(values)):\n        raise ValueError(\n            \"La série d'intervalle contient une \"\n            \"valeur non finie.\"\n        )\n\n    midpoints = 0.5 * (\n        temporal_geometry.times[:-1]\n        + temporal_geometry.times[1:]\n    )\n\n    return np.interp(\n        temporal_geometry.times,\n        midpoints,\n        values,\n        left=float(values[0]),\n        right=float(values[-1]),\n    )",
+      "kind": "function",
+      "line_end": 4808,
+      "line_start": 4767,
+      "loaded_globals": [],
+      "name": "interpolate_interval_series_to_nodes"
+    },
+    {
+      "call_modules": [
+        "unclassified"
+      ],
+      "called_by": [
+        "scale_curvature_function",
+        "scale_velocity_function"
+      ],
+      "caller_modules": [
+        "unclassified"
+      ],
+      "calls": [
+        "validate_spatial_scale_factor",
+        "validate_transform_origin"
+      ],
+      "excerpt": "def inverse_scale_coordinates(\n    x: object,\n    y: object,\n    scale_factor: float,\n    origin: object = (0.0, 0.0),\n) -> tuple[np.ndarray, np.ndarray]:\n    \"\"\"\n    Calcule les coordonnées sources associées à :\n\n        x' = o + a (x - o).\n\n    Donc :\n\n        x = o + (x' - o) / a.\n    \"\"\"\n    factor = validate_spatial_scale_factor(\n        scale_factor\n    )\n\n    origin_array = validate_transform_origin(\n        origin\n    )\n\n    x_array = np.asarray(\n        x,\n        dtype=np.float64,\n    )\n\n    y_array = np.asarray(\n        y,\n        dtype=np.float64,\n    )\n\n    if x_array.shape != y_array.shape:\n        raise ValueError(\n            \"Les coordonnées x et y doivent avoir \"\n            \"la même forme.\"\n        )\n\n    if not (\n        np.all(np.isfinite(x_array))\n        and np.all(np.isfinite(y_array))\n    ):\n        raise ValueError(\n            \"Les coordonnées contiennent une \"\n            \"valeur non finie.\"\n        )\n\n    source_x = (\n        origin_array[0]\n        + (\n            x_array\n            - origin_array[0]\n        ) / factor\n    )\n\n    source_y = (\n        origin_array[1]\n        + (\n            y_array\n            - origin_array[1]\n        ) / factor\n    )\n\n    return source_x, source_y",
+      "kind": "function",
+      "line_end": 1241,
+      "line_start": 1177,
+      "loaded_globals": [],
+      "name": "inverse_scale_coordinates"
+    },
+    {
+      "call_modules": [],
+      "called_by": [],
+      "caller_modules": [],
+      "calls": [],
+      "excerpt": "def make_sampled_transformed_scalar_function(\n    scalar_function: Callable,\n    x_coordinates: object,\n    y_coordinates: object,\n    matrix: object,\n    origin: object = (0.0, 0.0),\n    fill_value: float = 0.0,\n) -> Callable:\n    plan = BilinearTransformPlan(\n        x_coordinates,\n        y_coordinates,\n        matrix,\n        origin=origin,\n        fill_value=fill_value,\n    )\n\n    source_x, source_y = np.meshgrid(\n        plan.x_coordinates,\n        plan.y_coordinates,\n        indexing=\"xy\",\n    )\n\n    def transformed(\n        x: np.ndarray,\n        y: np.ndarray,\n        time: float,\n    ) -> np.ndarray:\n        if (\n            np.asarray(x).shape != plan.shape\n            or np.asarray(y).shape != plan.shape\n        ):\n            raise ValueError(\n                \"La grille fournie à la fonction \"\n                \"transformée ne correspond pas au plan.\"\n            )\n\n        source_field = scalar_function(\n            source_x,\n            source_y,\n            time,\n        )\n\n        return plan.transform_scalar(\n            source_field\n        )\n\n    return transformed",
+      "kind": "function",
+      "line_end": 908,
+      "line_start": 862,
+      "loaded_globals": [],
+      "name": "make_sampled_transformed_scalar_function"
+    },
+    {
+      "call_modules": [],
+      "called_by": [],
+      "caller_modules": [],
+      "calls": [],
+      "excerpt": "def make_sampled_transformed_velocity_function(\n    velocity_function: Callable,\n    x_coordinates: object,\n    y_coordinates: object,\n    matrix: object,\n    origin: object = (0.0, 0.0),\n    fill_value: float = 0.0,\n) -> Callable:\n    \"\"\"\n    Transforme un champ continu après l'avoir\n    échantillonné sur la grille source.\n\n    Cette fonction simule le cas réaliste où seules\n    les valeurs discrètes du champ sont disponibles.\n    \"\"\"\n    plan = BilinearTransformPlan(\n        x_coordinates,\n        y_coordinates,\n        matrix,\n        origin=origin,\n        fill_value=fill_value,\n    )\n\n    source_x, source_y = np.meshgrid(\n        plan.x_coordinates,\n        plan.y_coordinates,\n        indexing=\"xy\",\n    )\n\n    def transformed(\n        x: np.ndarray,\n        y: np.ndarray,\n        time: float,\n    ) -> tuple[np.ndarray, np.ndarray]:\n        if (\n            np.asarray(x).shape != plan.shape\n            or np.asarray(y).shape != plan.shape\n        ):\n            raise ValueError(\n                \"La grille fournie à la fonction \"\n                \"transformée ne correspond pas au plan.\"\n            )\n\n        source_vx, source_vy = velocity_function(\n            source_x,\n            source_y,\n            time,\n        )\n\n        return plan.transform_vector(\n            source_vx,\n            source_vy,\n        )\n\n    return transformed",
+      "kind": "function",
+      "line_end": 859,
+      "line_start": 805,
+      "loaded_globals": [],
+      "name": "make_sampled_transformed_velocity_function"
+    },
+    {
+      "call_modules": [
+        "quadrature"
+      ],
+      "called_by": [
+        "material_vorticity_interval"
+      ],
+      "caller_modules": [
+        "differential_operators"
+      ],
+      "calls": [
+        "spatial_mean"
+      ],
+      "excerpt": "def normalized_field_rate(\n    field: object,\n    reference_rms: float,\n    spacing: object,\n    boundary_mode: str,\n) -> float:\n    array = np.asarray(\n        field,\n        dtype=np.float64,\n    )\n\n    if (\n        not np.isfinite(reference_rms)\n        or reference_rms < 0.0\n    ):\n        raise ValueError(\n            \"La RMS de référence doit être finie \"\n            \"et positive ou nulle.\"\n        )\n\n    if reference_rms < ZERO_THRESHOLD:\n        return 0.0\n\n    mean_square = spatial_mean(\n        array**2,\n        spacing,\n        boundary_mode,\n    )\n\n    return float(\n        np.sqrt(\n            max(\n                mean_square,\n                0.0,\n            )\n        )\n        / reference_rms\n    )",
+      "kind": "function",
+      "line_end": 4615,
+      "line_start": 4578,
+      "loaded_globals": [
+        "ZERO_THRESHOLD"
+      ],
+      "name": "normalized_field_rate"
+    },
+    {
+      "call_modules": [
+        "unclassified"
+      ],
+      "called_by": [
+        "analyze_multiscale_profile_triplet",
+        "analyze_result_triplet"
+      ],
+      "caller_modules": [
+        "multiscale",
+        "unclassified"
+      ],
+      "calls": [
+        "validate_convergence_tolerance",
+        "validate_refinement_ratio"
+      ],
+      "excerpt": "def richardson_triplet(\n    coarse: float,\n    medium: float,\n    fine: float,\n    refinement_ratio: float = 2.0,\n    equality_tolerance: float = 1.0e-14,\n) -> dict[str, object]:\n    \"\"\"\n    Analyse trois approximations obtenues avec :\n\n        h, h/r, h/r².\n\n    Statuts possibles :\n\n    resolved\n        Les trois valeurs sont égales à la tolérance\n        numérique choisie.\n\n    asymptotic\n        Les différences sont monotones et permettent\n        d'estimer un ordre strictement positif.\n\n    non_monotone\n        Les deux différences changent de signe ou\n        l'ordre observé n'est pas positif.\n\n    degenerate\n        Une seule différence est numériquement nulle ;\n        aucun ordre fiable ne peut être calculé.\n    \"\"\"\n    ratio = validate_refinement_ratio(\n        refinement_ratio\n    )\n\n    tolerance = validate_convergence_tolerance(\n        equality_tolerance\n    )\n\n    try:\n        values = np.asarray(\n            (\n                coarse,\n                medium,\n                fine,\n            ),\n            dtype=np.float64,\n        )\n    except (\n        TypeError,\n        ValueError,\n        OverflowError,\n    ) as error:\n        raise ValueError(\n            \"Les trois approximations doivent être \"\n            \"des nombres réels.\"\n        ) from error\n\n    if not np.all(np.isfinite(values)):\n        raise ValueError(\n            \"Les trois approximations doivent \"\n            \"être finies.\"\n        )\n\n    coarse_value = float(values[0])\n    medium_value = float(values[1])\n    fine_value = float(values[2])\n\n    coarse_medium_difference = (\n        coarse_valu\n... [extrait tronqué]",
+      "kind": "function",
+      "line_end": 2372,
+      "line_start": 2142,
+      "loaded_globals": [],
+      "name": "richardson_triplet"
+    },
+    {
+      "call_modules": [
+        "unclassified"
+      ],
+      "called_by": [],
+      "caller_modules": [],
+      "calls": [
+        "validate_rotation_angle"
+      ],
+      "excerpt": "def rotation_matrix(\n    angle_radians: float,\n) -> np.ndarray:\n    \"\"\"\n    Retourne la matrice de rotation directe :\n\n        Q = [[cos(theta), -sin(theta)],\n             [sin(theta),  cos(theta)]]\n    \"\"\"\n    angle = validate_rotation_angle(\n        angle_radians\n    )\n\n    cosine = float(np.cos(angle))\n    sine = float(np.sin(angle))\n\n    return np.asarray(\n        (\n            (cosine, -sine),\n            (sine, cosine),\n        ),\n        dtype=np.float64,\n    )",
+      "kind": "function",
+      "line_end": 304,
+      "line_start": 282,
+      "loaded_globals": [],
+      "name": "rotation_matrix"
+    },
+    {
+      "call_modules": [
+        "unclassified"
+      ],
+      "called_by": [],
+      "caller_modules": [],
+      "calls": [
+        "inverse_scale_coordinates",
+        "validate_spatial_scale_factor",
+        "validate_transform_origin"
+      ],
+      "excerpt": "def scale_curvature_function(\n    curvature_function: Callable,\n    scale_factor: float,\n    origin: object = (0.0, 0.0),\n) -> Callable:\n    \"\"\"\n    Construit un champ de courbure transformé selon :\n\n        R_a(x',t) = R(x,t) / a².\n    \"\"\"\n    if not callable(curvature_function):\n        raise ValueError(\n            \"Le champ de courbure doit être appelable.\"\n        )\n\n    factor = validate_spatial_scale_factor(\n        scale_factor\n    )\n\n    inverse_square = 1.0 / (\n        factor**2\n    )\n\n    origin_array = validate_transform_origin(\n        origin\n    )\n\n    def transformed(\n        x: np.ndarray,\n        y: np.ndarray,\n        time: float,\n    ) -> np.ndarray:\n        source_x, source_y = (\n            inverse_scale_coordinates(\n                x,\n                y,\n                factor,\n                origin_array,\n            )\n        )\n\n        source_curvature = np.asarray(\n            curvature_function(\n                source_x,\n                source_y,\n                time,\n            ),\n            dtype=np.float64,\n        )\n\n        if source_curvature.shape != source_x.shape:\n            raise ValueError(\n                \"Le champ de courbure redimensionné \"\n                \"doit avoir la forme de la grille.\"\n            )\n\n        if not np.all(\n            np.isfinite(source_curvature)\n        ):\n            raise ValueError(\n                \"Le champ de courbure redimensionné \"\n                \"contient une valeur non finie.\"\n            )\n\n        return (\n            inverse_square\n            * source_curvature\n        )\n\n    return transform\n... [extrait tronqué]",
+      "kind": "function",
+      "line_end": 1398,
+      "line_start": 1329,
+      "loaded_globals": [],
+      "name": "scale_curvature_function"
+    },
+    {
+      "call_modules": [
+        "unclassified"
+      ],
+      "called_by": [],
+      "caller_modules": [],
+      "calls": [
+        "validate_nonnegative_length",
+        "validate_spatial_scale_factor"
+      ],
+      "excerpt": "def scale_length(\n    length: float,\n    scale_factor: float,\n    name: str = \"spatiale\",\n) -> float:\n    factor = validate_spatial_scale_factor(\n        scale_factor\n    )\n\n    value = validate_nonnegative_length(\n        length,\n        name,\n    )\n\n    return factor * value",
+      "kind": "function",
+      "line_end": 1174,
+      "line_start": 1160,
+      "loaded_globals": [],
+      "name": "scale_length"
+    },
+    {
+      "call_modules": [
+        "unclassified"
+      ],
+      "called_by": [],
+      "caller_modules": [],
+      "calls": [
+        "inverse_scale_coordinates",
+        "validate_spatial_scale_factor",
+        "validate_transform_origin"
+      ],
+      "excerpt": "def scale_velocity_function(\n    velocity_function: Callable,\n    scale_factor: float,\n    origin: object = (0.0, 0.0),\n) -> Callable:\n    \"\"\"\n    Construit le champ :\n\n        v_a(x',t) = a v(x,t),\n\n    avec :\n\n        x = o + (x' - o) / a.\n\n    Le temps n'est pas redimensionné.\n    \"\"\"\n    if not callable(velocity_function):\n        raise ValueError(\n            \"Le champ de vitesse doit être appelable.\"\n        )\n\n    factor = validate_spatial_scale_factor(\n        scale_factor\n    )\n\n    origin_array = validate_transform_origin(\n        origin\n    )\n\n    def transformed(\n        x: np.ndarray,\n        y: np.ndarray,\n        time: float,\n    ) -> tuple[np.ndarray, np.ndarray]:\n        source_x, source_y = (\n            inverse_scale_coordinates(\n                x,\n                y,\n                factor,\n                origin_array,\n            )\n        )\n\n        source_vx, source_vy = velocity_function(\n            source_x,\n            source_y,\n            time,\n        )\n\n        source_vx = np.asarray(\n            source_vx,\n            dtype=np.float64,\n        )\n\n        source_vy = np.asarray(\n            source_vy,\n            dtype=np.float64,\n        )\n\n        if (\n            source_vx.shape != source_x.shape\n            or source_vy.shape != source_x.shape\n        ):\n            raise ValueError(\n                \"Le champ de vitesse redimensionné \"\n                \"doit avoir la forme de la grille.\"\n            )\n\n        if not (\n            np.all(np.isfinite(source_vx))\n            and np.all(np.isfinite(source_vy))\n        ):\n            raise Valu\n... [extrait tronqué]",
+      "kind": "function",
+      "line_end": 1326,
+      "line_start": 1244,
+      "loaded_globals": [],
+      "name": "scale_velocity_function"
+    },
+    {
+      "call_modules": [],
+      "called_by": [],
+      "caller_modules": [],
+      "calls": [],
+      "excerpt": "def summarize_convergence_rows(\n    rows: object,\n) -> dict[str, object]:\n    try:\n        row_tuple = tuple(rows)\n    except TypeError as error:\n        raise ValueError(\n            \"Les diagnostics de convergence doivent \"\n            \"former une séquence.\"\n        ) from error\n\n    if not row_tuple:\n        raise ValueError(\n            \"Le résumé exige au moins un diagnostic.\"\n        )\n\n    status_counts: dict[str, int] = {}\n\n    finite_orders: list[float] = []\n    relative_errors: list[float] = []\n\n    for row in row_tuple:\n        if not isinstance(row, dict):\n            raise ValueError(\n                \"Chaque diagnostic doit être \"\n                \"représenté par un dictionnaire.\"\n            )\n\n        status = str(\n            row.get(\n                \"status\",\n                \"missing\",\n            )\n        )\n\n        status_counts[status] = (\n            status_counts.get(status, 0)\n            + 1\n        )\n\n        order = row.get(\n            \"observed_order\"\n        )\n\n        if order is not None:\n            order_value = float(order)\n\n            if np.isfinite(order_value):\n                finite_orders.append(\n                    order_value\n                )\n\n        relative_error = row.get(\n            \"estimated_relative_fine_error\"\n        )\n\n        if relative_error is not None:\n            relative_error_value = float(\n                relative_error\n            )\n\n            if np.isfinite(\n                relative_error_value\n            ):\n                relative_errors.append(\n                    relative_error_value\n                )\n\n... [extrait tronqué]",
+      "kind": "function",
+      "line_end": 2847,
+      "line_start": 2761,
+      "loaded_globals": [],
+      "name": "summarize_convergence_rows"
+    },
+    {
+      "call_modules": [],
+      "called_by": [],
+      "caller_modules": [],
+      "calls": [],
+      "excerpt": "def summarize_decoupled_convergence_rows(\n    rows: object,\n) -> dict[str, object]:\n    \"\"\"\n    Résume une étude spatio-temporelle découplée.\n\n    Un ordre observé n'est statistiquement publié\n    que lorsque l'axe correspondant possède le statut\n    \"asymptotic\".\n\n    Les ordres associés aux statuts :\n\n    - resolved ;\n    - non_monotone ;\n    - degenerate ;\n\n    ne doivent pas entrer dans les minima et maxima.\n    \"\"\"\n    try:\n        row_tuple = tuple(rows)\n    except TypeError as error:\n        raise ValueError(\n            \"Les diagnostics découplés doivent \"\n            \"former une séquence.\"\n        ) from error\n\n    if not row_tuple:\n        raise ValueError(\n            \"Le résumé découplé exige au moins \"\n            \"un diagnostic.\"\n        )\n\n    status_counts: dict[str, int] = {}\n    spatial_status_counts: dict[str, int] = {}\n    temporal_status_counts: dict[str, int] = {}\n\n    spatial_orders: list[float] = []\n    temporal_orders: list[float] = []\n\n    combined_relative_errors: list[\n        tuple[\n            float,\n            str,\n            float | None,\n        ]\n    ] = []\n\n    for row in row_tuple:\n        if not isinstance(row, dict):\n            raise ValueError(\n                \"Chaque diagnostic découplé doit \"\n                \"être un dictionnaire.\"\n            )\n\n        certification_status = str(\n            row.get(\n                \"certification_status\",\n                \"missing\",\n            )\n        )\n\n        spatial_status = str(\n            row.get(\n                \"spatial_status\",\n                \"missing\",\n            )\n        )\n\n   \n... [extrait tronqué]",
+      "kind": "function",
+      "line_end": 3452,
+      "line_start": 3224,
+      "loaded_globals": [],
+      "name": "summarize_decoupled_convergence_rows"
+    },
+    {
+      "call_modules": [
+        "unclassified"
+      ],
+      "called_by": [
+        "transform_scalar_function",
+        "transform_velocity_function"
+      ],
+      "caller_modules": [
+        "unclassified"
+      ],
+      "calls": [
+        "validate_orthogonal_matrix"
+      ],
+      "excerpt": "def transform_coordinates(\n    x: np.ndarray,\n    y: np.ndarray,\n    matrix: object,\n) -> tuple[np.ndarray, np.ndarray]:\n    \"\"\"\n    Calcule les coordonnées sources Qᵀx.\n    \"\"\"\n    orthogonal = validate_orthogonal_matrix(\n        matrix\n    )\n\n    source_x = (\n        orthogonal[0, 0] * x\n        + orthogonal[1, 0] * y\n    )\n\n    source_y = (\n        orthogonal[0, 1] * x\n        + orthogonal[1, 1] * y\n    )\n\n    return source_x, source_y",
+      "kind": "function",
+      "line_end": 129,
+      "line_start": 107,
+      "loaded_globals": [],
+      "name": "transform_coordinates"
+    },
+    {
+      "call_modules": [
+        "unclassified"
+      ],
+      "called_by": [],
+      "caller_modules": [],
+      "calls": [
+        "transform_coordinates",
+        "validate_orthogonal_matrix"
+      ],
+      "excerpt": "def transform_scalar_function(\n    scalar_function: Callable,\n    matrix: object,\n) -> Callable:\n    \"\"\"\n    Construit le champ scalaire transformé :\n\n        f_Q(x,t) = f(Qᵀx,t).\n    \"\"\"\n    orthogonal = validate_orthogonal_matrix(\n        matrix\n    )\n\n    def transformed(\n        x: np.ndarray,\n        y: np.ndarray,\n        time: float,\n    ) -> np.ndarray:\n        source_x, source_y = transform_coordinates(\n            x,\n            y,\n            orthogonal,\n        )\n\n        return np.asarray(\n            scalar_function(\n                source_x,\n                source_y,\n                time,\n            ),\n            dtype=np.float64,\n        )\n\n    return transformed",
+      "kind": "function",
+      "line_end": 210,
+      "line_start": 177,
+      "loaded_globals": [],
+      "name": "transform_scalar_function"
+    },
+    {
+      "call_modules": [
+        "unclassified"
+      ],
+      "called_by": [],
+      "caller_modules": [],
+      "calls": [
+        "transform_coordinates",
+        "validate_orthogonal_matrix"
+      ],
+      "excerpt": "def transform_velocity_function(\n    velocity_function: Callable,\n    matrix: object,\n) -> Callable:\n    \"\"\"\n    Construit le champ vectoriel transformé :\n\n        v_Q(x,t) = Q v(Qᵀx,t).\n    \"\"\"\n    orthogonal = validate_orthogonal_matrix(\n        matrix\n    )\n\n    def transformed(\n        x: np.ndarray,\n        y: np.ndarray,\n        time: float,\n    ) -> tuple[np.ndarray, np.ndarray]:\n        source_x, source_y = transform_coordinates(\n            x,\n            y,\n            orthogonal,\n        )\n\n        source_vx, source_vy = velocity_function(\n            source_x,\n            source_y,\n            time,\n        )\n\n        transformed_vx = (\n            orthogonal[0, 0] * source_vx\n            + orthogonal[0, 1] * source_vy\n        )\n\n        transformed_vy = (\n            orthogonal[1, 0] * source_vx\n            + orthogonal[1, 1] * source_vy\n        )\n\n        return transformed_vx, transformed_vy\n\n    return transformed",
+      "kind": "function",
+      "line_end": 174,
+      "line_start": 132,
+      "loaded_globals": [],
+      "name": "transform_velocity_function"
+    },
+    {
+      "call_modules": [
+        "unclassified"
+      ],
+      "called_by": [],
+      "caller_modules": [],
+      "calls": [
+        "evaluate_translating_frame_vector"
+      ],
+      "excerpt": "def translating_frame_metadata(\n    displacement_function: Callable,\n    frame_velocity_function: Callable,\n    reference_time: object = 0.0,\n) -> dict[str, object]:\n    displacement = (\n        evaluate_translating_frame_vector(\n            displacement_function,\n            reference_time,\n            \"déplacement\",\n        )\n    )\n\n    velocity = (\n        evaluate_translating_frame_vector(\n            frame_velocity_function,\n            reference_time,\n            \"vitesse\",\n        )\n    )\n\n    return {\n        \"transformation\": (\n            \"time_dependent_translation\"\n        ),\n        \"reference_time\": float(\n            reference_time\n        ),\n        \"reference_displacement_x\": float(\n            displacement[0]\n        ),\n        \"reference_displacement_y\": float(\n            displacement[1]\n        ),\n        \"reference_velocity_x\": float(\n            velocity[0]\n        ),\n        \"reference_velocity_y\": float(\n            velocity[1]\n        ),\n        \"coordinate_law\": (\n            \"x_prime = x - b(t)\"\n        ),\n        \"velocity_law\": (\n            \"v_prime = v - db/dt\"\n        ),\n    }",
+      "kind": "function",
+      "line_end": 5765,
+      "line_start": 5719,
+      "loaded_globals": [],
+      "name": "translating_frame_metadata"
+    },
+    {
+      "call_modules": [
+        "unclassified"
+      ],
+      "called_by": [
+        "translating_frame_transform_scalar_function",
+        "translating_frame_transform_velocity_function"
+      ],
+      "caller_modules": [
+        "unclassified"
+      ],
+      "calls": [
+        "evaluate_translating_frame_vector"
+      ],
+      "excerpt": "def translating_frame_source_coordinates(\n    x: object,\n    y: object,\n    time: object,\n    displacement_function: Callable,\n) -> tuple[np.ndarray, np.ndarray]:\n    \"\"\"\n    Calcule les coordonnées de l'ancien référentiel :\n\n        x = x' + b(t).\n    \"\"\"\n    displacement = (\n        evaluate_translating_frame_vector(\n            displacement_function,\n            time,\n            \"déplacement\",\n        )\n    )\n\n    x_array = np.asarray(\n        x,\n        dtype=np.float64,\n    )\n\n    y_array = np.asarray(\n        y,\n        dtype=np.float64,\n    )\n\n    if x_array.shape != y_array.shape:\n        raise ValueError(\n            \"Les coordonnées x et y doivent avoir \"\n            \"la même forme.\"\n        )\n\n    if not (\n        np.all(np.isfinite(x_array))\n        and np.all(np.isfinite(y_array))\n    ):\n        raise ValueError(\n            \"Les coordonnées du référentiel \"\n            \"contiennent une valeur non finie.\"\n        )\n\n    return (\n        x_array + displacement[0],\n        y_array + displacement[1],\n    )",
+      "kind": "function",
+      "line_end": 5561,
+      "line_start": 5514,
+      "loaded_globals": [],
+      "name": "translating_frame_source_coordinates"
+    },
+    {
+      "call_modules": [
+        "unclassified"
+      ],
+      "called_by": [],
+      "caller_modules": [],
+      "calls": [
+        "translating_frame_source_coordinates"
+      ],
+      "excerpt": "def translating_frame_transform_scalar_function(\n    scalar_function: Callable,\n    displacement_function: Callable,\n) -> Callable:\n    \"\"\"\n    Transforme un scalaire selon :\n\n        f'(x',t) = f(x' + b(t),t).\n    \"\"\"\n    if not callable(scalar_function):\n        raise ValueError(\n            \"Le champ scalaire à transformer doit \"\n            \"être appelable.\"\n        )\n\n    if not callable(displacement_function):\n        raise ValueError(\n            \"La fonction de déplacement doit être \"\n            \"appelable.\"\n        )\n\n    def transformed(\n        x: np.ndarray,\n        y: np.ndarray,\n        time: float,\n    ) -> np.ndarray:\n        source_x, source_y = (\n            translating_frame_source_coordinates(\n                x,\n                y,\n                time,\n                displacement_function,\n            )\n        )\n\n        values = np.asarray(\n            scalar_function(\n                source_x,\n                source_y,\n                time,\n            ),\n            dtype=np.float64,\n        )\n\n        if values.shape != source_x.shape:\n            raise ValueError(\n                \"Le champ scalaire transformé doit \"\n                \"avoir la forme de la grille.\"\n            )\n\n        if not np.all(np.isfinite(values)):\n            raise ValueError(\n                \"Le champ scalaire transformé \"\n                \"contient une valeur non finie.\"\n            )\n\n        return values\n\n    return transformed",
+      "kind": "function",
+      "line_end": 5622,
+      "line_start": 5564,
+      "loaded_globals": [],
+      "name": "translating_frame_transform_scalar_function"
+    },
+    {
+      "call_modules": [
+        "unclassified"
+      ],
+      "called_by": [],
+      "caller_modules": [],
+      "calls": [
+        "evaluate_translating_frame_vector",
+        "translating_frame_source_coordinates"
+      ],
+      "excerpt": "def translating_frame_transform_velocity_function(\n    velocity_function: Callable,\n    displacement_function: Callable,\n    frame_velocity_function: Callable,\n) -> Callable:\n    \"\"\"\n    Transforme une vitesse sous une translation\n    temporelle générale :\n\n        v'(x',t)\n            = v(x' + b(t),t) - db/dt.\n    \"\"\"\n    if not callable(velocity_function):\n        raise ValueError(\n            \"Le champ de vitesse à transformer doit \"\n            \"être appelable.\"\n        )\n\n    if not callable(displacement_function):\n        raise ValueError(\n            \"La fonction de déplacement doit être \"\n            \"appelable.\"\n        )\n\n    if not callable(frame_velocity_function):\n        raise ValueError(\n            \"La vitesse du référentiel doit être \"\n            \"appelable.\"\n        )\n\n    def transformed(\n        x: np.ndarray,\n        y: np.ndarray,\n        time: float,\n    ) -> tuple[np.ndarray, np.ndarray]:\n        source_x, source_y = (\n            translating_frame_source_coordinates(\n                x,\n                y,\n                time,\n                displacement_function,\n            )\n        )\n\n        frame_velocity = (\n            evaluate_translating_frame_vector(\n                frame_velocity_function,\n                time,\n                \"vitesse\",\n            )\n        )\n\n        source_vx, source_vy = velocity_function(\n            source_x,\n            source_y,\n            time,\n        )\n\n        source_vx = np.asarray(\n            source_vx,\n            dtype=np.float64,\n        )\n\n        source_vy = np.asarray(\n            source_vy,\n     \n... [extrait tronqué]",
+      "kind": "function",
+      "line_end": 5716,
+      "line_start": 5625,
+      "loaded_globals": [],
+      "name": "translating_frame_transform_velocity_function"
+    },
+    {
+      "call_modules": [],
+      "called_by": [
+        "normalize_spatial_geometry",
+        "validate_spacing"
+      ],
+      "caller_modules": [
+        "geometry",
+        "unclassified"
+      ],
+      "calls": [],
+      "excerpt": "def validate_axis_spacing(\n    value: float,\n    axis_name: str,\n) -> float:\n    try:\n        spacing = float(value)\n    except (\n        TypeError,\n        ValueError,\n        OverflowError,\n    ) as error:\n        raise ValueError(\n            f\"Le pas {axis_name} doit être \"\n            \"un nombre réel.\"\n        ) from error\n\n    if (\n        not np.isfinite(spacing)\n        or spacing <= 0.0\n    ):\n        raise ValueError(\n            f\"Le pas {axis_name} doit être fini \"\n            \"et strictement positif.\"\n        )\n\n    return spacing",
+      "kind": "function",
+      "line_end": 8095,
+      "line_start": 8070,
+      "loaded_globals": [],
+      "name": "validate_axis_spacing"
+    },
+    {
+      "call_modules": [],
+      "called_by": [
+        "combine_decoupled_convergence_rows",
+        "richardson_triplet"
+      ],
+      "caller_modules": [
+        "unclassified"
+      ],
+      "calls": [],
+      "excerpt": "def validate_convergence_tolerance(\n    equality_tolerance: float,\n) -> float:\n    try:\n        tolerance = float(\n            equality_tolerance\n        )\n    except (\n        TypeError,\n        ValueError,\n        OverflowError,\n    ) as error:\n        raise ValueError(\n            \"La tolérance d'égalité doit être \"\n            \"un nombre réel.\"\n        ) from error\n\n    if (\n        not np.isfinite(tolerance)\n        or tolerance < 0.0\n    ):\n        raise ValueError(\n            \"La tolérance d'égalité doit être \"\n            \"finie et positive ou nulle.\"\n        )\n\n    return tolerance",
+      "kind": "function",
+      "line_end": 2139,
+      "line_start": 2113,
+      "loaded_globals": [],
+      "name": "validate_convergence_tolerance"
+    },
+    {
+      "call_modules": [],
+      "called_by": [
+        "material_vorticity_interval",
+        "numerical_vorticity_with_boundary",
+        "scalar_gradient_with_boundary",
+        "spatial_mean"
+      ],
+      "caller_modules": [
+        "differential_operators",
+        "quadrature"
+      ],
+      "calls": [],
+      "excerpt": "def validate_field_shape_for_geometry(\n    field: np.ndarray,\n    geometry: SpatialGeometry | RectilinearGeometry,\n) -> None:\n    if (\n        isinstance(\n            geometry,\n            RectilinearGeometry,\n        )\n        and field.shape != geometry.shape\n    ):\n        raise ValueError(\n            \"La forme du champ ne correspond pas \"\n            \"à la géométrie rectiligne : \"\n            f\"{field.shape} contre {geometry.shape}.\"\n        )",
+      "kind": "function",
+      "line_end": 8501,
+      "line_start": 8486,
+      "loaded_globals": [],
+      "name": "validate_field_shape_for_geometry"
+    },
+    {
+      "call_modules": [],
+      "called_by": [
+        "galilean_metadata",
+        "galilean_source_coordinates",
+        "galilean_transform_scalar_function",
+        "galilean_transform_velocity_function"
+      ],
+      "caller_modules": [
+        "unclassified"
+      ],
+      "calls": [],
+      "excerpt": "def validate_galilean_frame_velocity(\n    frame_velocity: object,\n) -> np.ndarray:\n    try:\n        array = np.asarray(\n            frame_velocity,\n            dtype=np.float64,\n        )\n    except (\n        TypeError,\n        ValueError,\n        OverflowError,\n    ) as error:\n        raise ValueError(\n            \"La vitesse du référentiel doit former \"\n            \"un vecteur réel de dimension deux.\"\n        ) from error\n\n    if array.shape != (2,):\n        raise ValueError(\n            \"La vitesse du référentiel doit former \"\n            \"un vecteur de dimension deux.\"\n        )\n\n    if not np.all(np.isfinite(array)):\n        raise ValueError(\n            \"La vitesse du référentiel doit être finie.\"\n        )\n\n    copied = np.array(\n        array,\n        dtype=np.float64,\n        copy=True,\n    )\n\n    copied.setflags(\n        write=False\n    )\n\n    return copied",
+      "kind": "function",
+      "line_end": 5162,
+      "line_start": 5123,
+      "loaded_globals": [],
+      "name": "validate_galilean_frame_velocity"
+    },
+    {
+      "call_modules": [],
+      "called_by": [
+        "galilean_metadata",
+        "galilean_source_coordinates",
+        "galilean_transform_scalar_function",
+        "galilean_transform_velocity_function"
+      ],
+      "caller_modules": [
+        "unclassified"
+      ],
+      "calls": [],
+      "excerpt": "def validate_galilean_reference_time(\n    reference_time: object,\n) -> float:\n    try:\n        value = float(\n            reference_time\n        )\n    except (\n        TypeError,\n        ValueError,\n        OverflowError,\n    ) as error:\n        raise ValueError(\n            \"L'instant de référence galiléen doit \"\n            \"être un nombre réel.\"\n        ) from error\n\n    if not np.isfinite(value):\n        raise ValueError(\n            \"L'instant de référence galiléen doit \"\n            \"être fini.\"\n        )\n\n    return value",
+      "kind": "function",
+      "line_end": 5188,
+      "line_start": 5165,
+      "loaded_globals": [],
+      "name": "validate_galilean_reference_time"
+    },
+    {
+      "call_modules": [],
+      "called_by": [
+        "scale_length"
+      ],
+      "caller_modules": [
+        "unclassified"
+      ],
+      "calls": [],
+      "excerpt": "def validate_nonnegative_length(\n    length: float,\n    name: str,\n) -> float:\n    try:\n        value = float(length)\n    except (\n        TypeError,\n        ValueError,\n        OverflowError,\n    ) as error:\n        raise ValueError(\n            f\"La longueur {name} doit être \"\n            \"un nombre réel.\"\n        ) from error\n\n    if (\n        not np.isfinite(value)\n        or value < 0.0\n    ):\n        raise ValueError(\n            f\"La longueur {name} doit être finie \"\n            \"et positive ou nulle.\"\n        )\n\n    return value",
+      "kind": "function",
+      "line_end": 1157,
+      "line_start": 1132,
+      "loaded_globals": [],
+      "name": "validate_nonnegative_length"
+    },
+    {
+      "call_modules": [],
+      "called_by": [
+        "transform_coordinates",
+        "transform_scalar_function",
+        "transform_velocity_function"
+      ],
+      "caller_modules": [
+        "unclassified"
+      ],
+      "calls": [],
+      "excerpt": "def validate_orthogonal_matrix(\n    matrix: object,\n    tolerance: float = 1.0e-12,\n) -> np.ndarray:\n    \"\"\"\n    Valide une transformation orthogonale réelle 2 × 2.\n\n    Les rotations ont un déterminant +1.\n    Les réflexions ont un déterminant -1.\n    \"\"\"\n    array = np.asarray(\n        matrix,\n        dtype=np.float64,\n    )\n\n    if array.shape != (2, 2):\n        raise ValueError(\n            \"La transformation géométrique doit être \"\n            \"une matrice 2 × 2.\"\n        )\n\n    if not np.all(np.isfinite(array)):\n        raise ValueError(\n            \"La transformation géométrique doit \"\n            \"contenir uniquement des valeurs finies.\"\n        )\n\n    gram = array.T @ array\n\n    if not np.allclose(\n        gram,\n        np.eye(2, dtype=np.float64),\n        rtol=0.0,\n        atol=tolerance,\n    ):\n        raise ValueError(\n            \"La matrice doit être orthogonale : \"\n            \"QᵀQ = I.\"\n        )\n\n    determinant = float(\n        np.linalg.det(array)\n    )\n\n    if not np.isclose(\n        abs(determinant),\n        1.0,\n        rtol=0.0,\n        atol=tolerance,\n    ):\n        raise ValueError(\n            \"Le déterminant d'une transformation \"\n            \"orthogonale doit valoir +1 ou -1.\"\n        )\n\n    return array",
+      "kind": "function",
+      "line_end": 104,
+      "line_start": 49,
+      "loaded_globals": [],
+      "name": "validate_orthogonal_matrix"
+    },
+    {
+      "call_modules": [
+        "geometry",
+        "unclassified"
+      ],
+      "called_by": [
+        "simulate"
+      ],
+      "caller_modules": [
+        "simulation"
+      ],
+      "calls": [
+        "normalize_spatial_geometry",
+        "validate_uniform_axis_coordinates"
+      ],
+      "excerpt": "def validate_periodic_transport_mesh(\n    x: object,\n    y: object,\n    geometry: object,\n    boundary_mode: str,\n) -> tuple[\n    np.ndarray,\n    np.ndarray,\n    float,\n    float,\n]:\n    \"\"\"\n    Valide une grille périodique cartésienne uniforme.\n\n    La compensation de transport V21 ne possède\n    volontairement aucune convention de remplissage\n    aux frontières finies.\n    \"\"\"\n    if boundary_mode != \"periodic\":\n        raise ValueError(\n            \"La compensation de transport V21 \"\n            \"exige le mode périodique.\"\n        )\n\n    normalized_geometry = (\n        normalize_spatial_geometry(\n            geometry\n        )\n    )\n\n    if isinstance(\n        normalized_geometry,\n        RectilinearGeometry,\n    ):\n        if not normalized_geometry.uniform:\n            raise ValueError(\n                \"La compensation de transport V21 \"\n                \"exige une grille uniforme.\"\n            )\n\n        geometry_dx = float(\n            normalized_geometry.dx\n        )\n\n        geometry_dy = float(\n            normalized_geometry.dy\n        )\n    else:\n        geometry_dx = float(\n            normalized_geometry.dx\n        )\n\n        geometry_dy = float(\n            normalized_geometry.dy\n        )\n\n    x_array = np.asarray(\n        x,\n        dtype=np.float64,\n    )\n\n    y_array = np.asarray(\n        y,\n        dtype=np.float64,\n    )\n\n    if (\n        x_array.ndim != 2\n        or y_array.ndim != 2\n        or x_array.shape != y_array.shape\n    ):\n        raise ValueError(\n            \"Le maillage périodique doit être formé \"\n            \"de deux tableaux 2D de même fo\n... [extrait tronqué]",
+      "kind": "function",
+      "line_end": 3691,
+      "line_start": 3491,
+      "loaded_globals": [],
+      "name": "validate_periodic_transport_mesh"
+    },
+    {
+      "call_modules": [],
+      "called_by": [
+        "material_vorticity_interval"
+      ],
+      "caller_modules": [
+        "differential_operators"
+      ],
+      "calls": [],
+      "excerpt": "def validate_positive_time_interval(\n    delta_time: object,\n) -> float:\n    try:\n        value = float(delta_time)\n    except (\n        TypeError,\n        ValueError,\n        OverflowError,\n    ) as error:\n        raise ValueError(\n            \"L'intervalle temporel doit être \"\n            \"un nombre réel.\"\n        ) from error\n\n    if (\n        not np.isfinite(value)\n        or value <= 0.0\n    ):\n        raise ValueError(\n            \"L'intervalle temporel doit être fini \"\n            \"et strictement positif.\"\n        )\n\n    return value",
+      "kind": "function",
+      "line_end": 4501,
+      "line_start": 4477,
+      "loaded_globals": [],
+      "name": "validate_positive_time_interval"
+    },
+    {
+      "call_modules": [],
+      "called_by": [],
+      "caller_modules": [],
+      "calls": [],
+      "excerpt": "def validate_rectilinear_axis_coordinates(\n    coordinates: object,\n    axis_name: str,\n) -> np.ndarray:\n    \"\"\"\n    Valide un axe rectiligne strictement croissant.\n\n    Contrairement à validate_uniform_axis_coordinates(),\n    aucune uniformité du pas n'est exigée.\n    \"\"\"\n    if isinstance(\n        coordinates,\n        (str, bytes),\n    ):\n        raise ValueError(\n            f\"Les coordonnées {axis_name} doivent \"\n            \"former une séquence numérique.\"\n        )\n\n    try:\n        array = np.asarray(\n            coordinates,\n            dtype=np.float64,\n        )\n    except (\n        TypeError,\n        ValueError,\n        OverflowError,\n    ) as error:\n        raise ValueError(\n            f\"Les coordonnées {axis_name} doivent \"\n            \"être numériques.\"\n        ) from error\n\n    if array.ndim != 1:\n        raise ValueError(\n            f\"Les coordonnées {axis_name} doivent \"\n            \"former un tableau unidimensionnel.\"\n        )\n\n    if array.size < 3:\n        raise ValueError(\n            f\"L'axe {axis_name} doit contenir \"\n            \"au moins trois coordonnées.\"\n        )\n\n    if not np.all(np.isfinite(array)):\n        raise ValueError(\n            f\"Les coordonnées {axis_name} \"\n            \"contiennent une valeur non finie.\"\n        )\n\n    differences = np.diff(array)\n\n    if not np.all(differences > 0.0):\n        raise ValueError(\n            f\"Les coordonnées {axis_name} doivent \"\n            \"être strictement croissantes.\"\n        )\n\n    copied = np.array(\n        array,\n        dtype=np.float64,\n        copy=True,\n    )\n\n    copied.setflags(\n   \n... [extrait tronqué]",
+      "kind": "function",
+      "line_end": 8180,
+      "line_start": 8110,
+      "loaded_globals": [],
+      "name": "validate_rectilinear_axis_coordinates"
+    },
+    {
+      "call_modules": [],
+      "called_by": [
+        "richardson_triplet"
+      ],
+      "caller_modules": [
+        "unclassified"
+      ],
+      "calls": [],
+      "excerpt": "def validate_refinement_ratio(\n    refinement_ratio: float,\n) -> float:\n    try:\n        ratio = float(refinement_ratio)\n    except (\n        TypeError,\n        ValueError,\n        OverflowError,\n    ) as error:\n        raise ValueError(\n            \"Le rapport de raffinement doit être \"\n            \"un nombre réel.\"\n        ) from error\n\n    if (\n        not np.isfinite(ratio)\n        or ratio <= 1.0\n    ):\n        raise ValueError(\n            \"Le rapport de raffinement doit être \"\n            \"fini et strictement supérieur à un.\"\n        )\n\n    return ratio",
+      "kind": "function",
+      "line_end": 2110,
+      "line_start": 2086,
+      "loaded_globals": [],
+      "name": "validate_refinement_ratio"
+    },
+    {
+      "call_modules": [],
+      "called_by": [
+        "rotation_matrix"
+      ],
+      "caller_modules": [
+        "unclassified"
+      ],
+      "calls": [],
+      "excerpt": "def validate_rotation_angle(\n    angle_radians: float,\n) -> float:\n    try:\n        angle = float(angle_radians)\n    except (\n        TypeError,\n        ValueError,\n        OverflowError,\n    ) as error:\n        raise ValueError(\n            \"L'angle de rotation doit être \"\n            \"un nombre réel.\"\n        ) from error\n\n    if not np.isfinite(angle):\n        raise ValueError(\n            \"L'angle de rotation doit être fini.\"\n        )\n\n    return angle",
+      "kind": "function",
+      "line_end": 279,
+      "line_start": 259,
+      "loaded_globals": [],
+      "name": "validate_rotation_angle"
+    },
+    {
+      "call_modules": [
+        "unclassified"
+      ],
+      "called_by": [],
+      "caller_modules": [],
+      "calls": [
+        "validate_axis_spacing"
+      ],
+      "excerpt": "def validate_spacing(\n    spacing: float,\n) -> float:\n    \"\"\"\n    API historique isotrope conservée pour compatibilité.\n    \"\"\"\n    return validate_axis_spacing(\n        spacing,\n        \"spatial\",\n    )",
+      "kind": "function",
+      "line_end": 8107,
+      "line_start": 8098,
+      "loaded_globals": [],
+      "name": "validate_spacing"
+    },
+    {
+      "call_modules": [],
+      "called_by": [
+        "inverse_scale_coordinates",
+        "scale_curvature_function",
+        "scale_length",
+        "scale_spatial_geometry",
+        "scale_velocity_function"
+      ],
+      "caller_modules": [
+        "geometry",
+        "unclassified"
+      ],
+      "calls": [],
+      "excerpt": "def validate_spatial_scale_factor(\n    scale_factor: float,\n) -> float:\n    try:\n        factor = float(scale_factor)\n    except (\n        TypeError,\n        ValueError,\n        OverflowError,\n    ) as error:\n        raise ValueError(\n            \"Le facteur d'échelle spatiale doit \"\n            \"être un nombre réel.\"\n        ) from error\n\n    if (\n        not np.isfinite(factor)\n        or factor <= 0.0\n    ):\n        raise ValueError(\n            \"Le facteur d'échelle spatiale doit \"\n            \"être fini et strictement positif.\"\n        )\n\n    return factor",
+      "kind": "function",
+      "line_end": 1129,
+      "line_start": 1105,
+      "loaded_globals": [],
+      "name": "validate_spatial_scale_factor"
+    },
+    {
+      "call_modules": [],
+      "called_by": [
+        "inverse_scale_coordinates",
+        "scale_curvature_function",
+        "scale_spatial_geometry",
+        "scale_velocity_function"
+      ],
+      "caller_modules": [
+        "geometry",
+        "unclassified"
+      ],
+      "calls": [],
+      "excerpt": "def validate_transform_origin(\n    origin: object,\n) -> np.ndarray:\n    try:\n        array = np.asarray(\n            origin,\n            dtype=np.float64,\n        )\n    except (\n        TypeError,\n        ValueError,\n        OverflowError,\n    ) as error:\n        raise ValueError(\n            \"L'origine doit être un couple réel.\"\n        ) from error\n\n    if array.shape != (2,):\n        raise ValueError(\n            \"L'origine doit contenir exactement \"\n            \"deux coordonnées.\"\n        )\n\n    if not np.all(np.isfinite(array)):\n        raise ValueError(\n            \"L'origine doit contenir uniquement \"\n            \"des valeurs finies.\"\n        )\n\n    return array.copy()",
+      "kind": "function",
+      "line_end": 403,
+      "line_start": 374,
+      "loaded_globals": [],
+      "name": "validate_transform_origin"
+    },
+    {
+      "call_modules": [],
+      "called_by": [
+        "periodic_bilinear_backtrace",
+        "periodic_cubic_backtrace",
+        "validate_periodic_transport_mesh"
+      ],
+      "caller_modules": [
+        "interpolation",
+        "unclassified"
+      ],
+      "calls": [],
+      "excerpt": "def validate_uniform_axis_coordinates(\n    coordinates: object,\n    axis_name: str,\n) -> tuple[np.ndarray, float]:\n    try:\n        array = np.asarray(\n            coordinates,\n            dtype=np.float64,\n        )\n    except (\n        TypeError,\n        ValueError,\n        OverflowError,\n    ) as error:\n        raise ValueError(\n            f\"Les coordonnées {axis_name} doivent \"\n            \"être numériques.\"\n        ) from error\n\n    if array.ndim != 1:\n        raise ValueError(\n            f\"Les coordonnées {axis_name} doivent \"\n            \"former un tableau unidimensionnel.\"\n        )\n\n    if array.size < 2:\n        raise ValueError(\n            f\"L'axe {axis_name} doit contenir \"\n            \"au moins deux coordonnées.\"\n        )\n\n    if not np.all(np.isfinite(array)):\n        raise ValueError(\n            f\"Les coordonnées {axis_name} \"\n            \"contiennent une valeur non finie.\"\n        )\n\n    differences = np.diff(array)\n\n    if not np.all(differences > 0.0):\n        raise ValueError(\n            f\"Les coordonnées {axis_name} doivent \"\n            \"être strictement croissantes.\"\n        )\n\n    spacing = float(differences[0])\n\n    absolute_tolerance = (\n        64.0\n        * np.finfo(np.float64).eps\n        * max(1.0, abs(spacing))\n    )\n\n    if not np.allclose(\n        differences,\n        spacing,\n        rtol=1.0e-12,\n        atol=absolute_tolerance,\n    ):\n        raise ValueError(\n            f\"L'axe {axis_name} doit être \"\n            \"uniformément échantillonné.\"\n        )\n\n    return array.copy(), spacing",
+      "kind": "function",
+      "line_end": 371,
+      "line_start": 307,
+      "loaded_globals": [],
+      "name": "validate_uniform_axis_coordinates"
+    }
+  ],
+  "version": "ITD V29.2"
+}

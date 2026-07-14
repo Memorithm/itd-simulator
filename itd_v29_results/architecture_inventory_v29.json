@@ -1,0 +1,1047 @@
+{
+  "call_graph": {
+    "analyze_multiscale_profile_triplet": [
+      "richardson_triplet"
+    ],
+    "analyze_result_triplet": [
+      "extract_single_scale_diagnostics",
+      "richardson_triplet"
+    ],
+    "bounded": [],
+    "combine_decoupled_convergence_rows": [
+      "convergence_error_is_estimable",
+      "convergence_row_key",
+      "validate_convergence_tolerance"
+    ],
+    "convergence_error_is_estimable": [],
+    "convergence_row_key": [],
+    "convex_local_bound_limiter": [],
+    "cubic_lagrange_weights_at_fraction": [],
+    "derive_multiscale_profile": [
+      "validate_structural_length_grid"
+    ],
+    "evaluate_periodic_transport_velocity": [
+      "wrap_periodic_points"
+    ],
+    "evaluate_translating_frame_vector": [],
+    "extract_single_scale_diagnostics": [],
+    "galilean_metadata": [
+      "validate_galilean_frame_velocity",
+      "validate_galilean_reference_time"
+    ],
+    "galilean_source_coordinates": [
+      "validate_galilean_frame_velocity",
+      "validate_galilean_reference_time"
+    ],
+    "galilean_transform_scalar_function": [
+      "galilean_source_coordinates",
+      "validate_galilean_frame_velocity",
+      "validate_galilean_reference_time"
+    ],
+    "galilean_transform_velocity_function": [
+      "galilean_source_coordinates",
+      "validate_galilean_frame_velocity",
+      "validate_galilean_reference_time"
+    ],
+    "interpolate_interval_series_to_nodes": [
+      "normalize_time_grid"
+    ],
+    "inverse_scale_coordinates": [
+      "validate_spatial_scale_factor",
+      "validate_transform_origin"
+    ],
+    "main": [
+      "simulate"
+    ],
+    "make_sampled_transformed_scalar_function": [],
+    "make_sampled_transformed_velocity_function": [],
+    "material_vorticity_interval": [
+      "normalize_spatial_geometry",
+      "normalized_field_rate",
+      "scalar_gradient_with_boundary",
+      "spatial_mean",
+      "validate_boundary_mode",
+      "validate_field_shape_for_geometry",
+      "validate_material_interval_fields",
+      "validate_positive_time_interval"
+    ],
+    "normalize_periodic_departure_geometry": [
+      "periodic_coordinate_geometry",
+      "wrap_periodic_points"
+    ],
+    "normalize_spatial_geometry": [
+      "validate_axis_spacing"
+    ],
+    "normalize_structural_weights": [],
+    "normalize_time_grid": [],
+    "normalized_field_rate": [
+      "spatial_mean"
+    ],
+    "numerical_vorticity_with_boundary": [
+      "normalize_spatial_geometry",
+      "validate_boundary_mode",
+      "validate_field_shape_for_geometry"
+    ],
+    "periodic_backtrace": [
+      "periodic_bilinear_backtrace",
+      "periodic_cubic_backtrace",
+      "periodic_cubic_local_bounded_backtrace",
+      "periodic_cubic_local_sum_preserving_backtrace",
+      "validate_transport_interpolation"
+    ],
+    "periodic_bilinear_backtrace": [
+      "validate_uniform_axis_coordinates"
+    ],
+    "periodic_bilinear_departure_bounds": [
+      "periodic_coordinate_geometry",
+      "wrap_periodic_points"
+    ],
+    "periodic_bilinear_sample_at_departures": [
+      "normalize_periodic_departure_geometry"
+    ],
+    "periodic_coordinate_geometry": [],
+    "periodic_cubic_backtrace": [
+      "periodic_cubic_lagrange_weights",
+      "validate_uniform_axis_coordinates"
+    ],
+    "periodic_cubic_lagrange_weights": [],
+    "periodic_cubic_local_bounded_backtrace": [
+      "convex_local_bound_limiter",
+      "periodic_bilinear_backtrace",
+      "periodic_bilinear_departure_bounds",
+      "periodic_cubic_backtrace"
+    ],
+    "periodic_cubic_local_bounded_sample_at_departures": [
+      "convex_local_bound_limiter",
+      "periodic_bilinear_sample_at_departures",
+      "periodic_cubic_sample_at_departures",
+      "periodic_departure_bounds"
+    ],
+    "periodic_cubic_local_sum_preserving_backtrace": [
+      "convex_local_bound_limiter",
+      "periodic_bilinear_backtrace",
+      "periodic_bilinear_departure_bounds",
+      "periodic_cubic_backtrace",
+      "precise_discrete_sum",
+      "restore_sum_with_local_bounds"
+    ],
+    "periodic_cubic_local_sum_preserving_sample_at_departures": [
+      "convex_local_bound_limiter",
+      "periodic_bilinear_sample_at_departures",
+      "periodic_cubic_sample_at_departures",
+      "periodic_departure_bounds",
+      "precise_discrete_sum",
+      "restore_sum_with_local_bounds"
+    ],
+    "periodic_cubic_sample_at_departures": [
+      "cubic_lagrange_weights_at_fraction",
+      "normalize_periodic_departure_geometry"
+    ],
+    "periodic_departure_bounds": [
+      "normalize_periodic_departure_geometry"
+    ],
+    "periodic_expand_mask": [],
+    "periodic_sample_at_departures": [
+      "periodic_bilinear_sample_at_departures",
+      "periodic_cubic_local_bounded_sample_at_departures",
+      "periodic_cubic_local_sum_preserving_sample_at_departures",
+      "periodic_cubic_sample_at_departures",
+      "validate_transport_interpolation"
+    ],
+    "precise_discrete_sum": [],
+    "restore_sum_with_local_bounds": [
+      "periodic_expand_mask",
+      "precise_discrete_sum"
+    ],
+    "richardson_triplet": [
+      "validate_convergence_tolerance",
+      "validate_refinement_ratio"
+    ],
+    "rk4_periodic_departure_points": [
+      "evaluate_periodic_transport_velocity",
+      "periodic_coordinate_geometry"
+    ],
+    "rotation_matrix": [
+      "validate_rotation_angle"
+    ],
+    "scalar_gradient_with_boundary": [
+      "normalize_spatial_geometry",
+      "validate_boundary_mode",
+      "validate_field_shape_for_geometry"
+    ],
+    "scale_curvature_function": [
+      "inverse_scale_coordinates",
+      "validate_spatial_scale_factor",
+      "validate_transform_origin"
+    ],
+    "scale_length": [
+      "validate_nonnegative_length",
+      "validate_spatial_scale_factor"
+    ],
+    "scale_spatial_geometry": [
+      "normalize_spatial_geometry",
+      "validate_spatial_scale_factor",
+      "validate_transform_origin"
+    ],
+    "scale_velocity_function": [
+      "inverse_scale_coordinates",
+      "validate_spatial_scale_factor",
+      "validate_transform_origin"
+    ],
+    "simulate": [
+      "normalize_spatial_geometry",
+      "normalize_structural_weights",
+      "normalize_time_grid",
+      "numerical_vorticity_with_boundary",
+      "spatial_geometry_metadata",
+      "spatial_mean",
+      "structural_metrics",
+      "transport_previous_vorticity_periodic",
+      "validate_boundary_mode",
+      "validate_mesh_geometry",
+      "validate_periodic_transport_mesh",
+      "validate_temporal_deformation_mode",
+      "validate_transport_interpolation",
+      "validate_transport_trajectory_method"
+    ],
+    "simulate_material_deformation": [
+      "interpolate_interval_series_to_nodes",
+      "material_vorticity_interval",
+      "normalize_spatial_geometry",
+      "normalize_time_grid",
+      "numerical_vorticity_with_boundary",
+      "simulate",
+      "validate_boundary_mode",
+      "validate_mesh_geometry"
+    ],
+    "simulate_multiscale": [
+      "derive_multiscale_profile",
+      "simulate",
+      "validate_structural_length_grid"
+    ],
+    "spatial_geometry_metadata": [],
+    "spatial_mean": [
+      "normalize_spatial_geometry",
+      "validate_boundary_mode",
+      "validate_field_shape_for_geometry"
+    ],
+    "structural_metrics": [
+      "bounded",
+      "normalize_spatial_geometry",
+      "normalize_structural_weights",
+      "scalar_gradient_with_boundary",
+      "spatial_mean",
+      "validate_boundary_mode"
+    ],
+    "summarize_convergence_rows": [],
+    "summarize_decoupled_convergence_rows": [],
+    "transform_coordinates": [
+      "validate_orthogonal_matrix"
+    ],
+    "transform_scalar_function": [
+      "transform_coordinates",
+      "validate_orthogonal_matrix"
+    ],
+    "transform_velocity_function": [
+      "transform_coordinates",
+      "validate_orthogonal_matrix"
+    ],
+    "translating_frame_metadata": [
+      "evaluate_translating_frame_vector"
+    ],
+    "translating_frame_source_coordinates": [
+      "evaluate_translating_frame_vector"
+    ],
+    "translating_frame_transform_scalar_function": [
+      "translating_frame_source_coordinates"
+    ],
+    "translating_frame_transform_velocity_function": [
+      "evaluate_translating_frame_vector",
+      "translating_frame_source_coordinates"
+    ],
+    "transport_previous_vorticity_periodic": [
+      "periodic_backtrace",
+      "periodic_sample_at_departures",
+      "rk4_periodic_departure_points",
+      "validate_transport_trajectory_method"
+    ],
+    "validate_axis_spacing": [],
+    "validate_boundary_mode": [],
+    "validate_convergence_tolerance": [],
+    "validate_field_shape_for_geometry": [],
+    "validate_galilean_frame_velocity": [],
+    "validate_galilean_reference_time": [],
+    "validate_material_interval_fields": [],
+    "validate_mesh_geometry": [],
+    "validate_nonnegative_length": [],
+    "validate_orthogonal_matrix": [],
+    "validate_periodic_transport_mesh": [
+      "normalize_spatial_geometry",
+      "validate_uniform_axis_coordinates"
+    ],
+    "validate_positive_time_interval": [],
+    "validate_rectilinear_axis_coordinates": [],
+    "validate_refinement_ratio": [],
+    "validate_rotation_angle": [],
+    "validate_spacing": [
+      "validate_axis_spacing"
+    ],
+    "validate_spatial_scale_factor": [],
+    "validate_structural_length_grid": [],
+    "validate_temporal_deformation_mode": [],
+    "validate_transform_origin": [],
+    "validate_transport_interpolation": [],
+    "validate_transport_trajectory_method": [],
+    "validate_uniform_axis_coordinates": [],
+    "wrap_periodic_points": []
+  },
+  "claims": {
+    "classification_final": false,
+    "dependency_cycles_measured": true,
+    "safe_extraction_order_final": false,
+    "source_modified": false
+  },
+  "classification": {
+    "constants": {
+      "assignments": [
+        "BOUNDARY_MODES",
+        "DEFAULT_STRUCTURAL_WEIGHTS",
+        "STRUCTURAL_COMPONENT_NAMES",
+        "STRUCTURAL_LENGTH",
+        "TEMPORAL_DEFORMATION_MODES",
+        "TRANSPORT_INTERPOLATIONS",
+        "TRANSPORT_TRAJECTORY_METHODS",
+        "ZERO_THRESHOLD"
+      ],
+      "classes": [],
+      "functions": []
+    },
+    "departure_geometry": {
+      "assignments": [],
+      "classes": [],
+      "functions": [
+        "normalize_periodic_departure_geometry",
+        "periodic_departure_bounds"
+      ]
+    },
+    "differential_operators": {
+      "assignments": [],
+      "classes": [],
+      "functions": [
+        "material_vorticity_interval",
+        "numerical_vorticity_with_boundary",
+        "scalar_gradient_with_boundary",
+        "simulate_material_deformation",
+        "validate_material_interval_fields"
+      ]
+    },
+    "geometry": {
+      "assignments": [],
+      "classes": [
+        "RectilinearGeometry",
+        "SpatialGeometry",
+        "TemporalGeometry"
+      ],
+      "functions": [
+        "normalize_spatial_geometry",
+        "periodic_coordinate_geometry",
+        "scale_spatial_geometry",
+        "spatial_geometry_metadata",
+        "validate_mesh_geometry",
+        "wrap_periodic_points"
+      ]
+    },
+    "interpolation": {
+      "assignments": [],
+      "classes": [
+        "BilinearTransformPlan"
+      ],
+      "functions": [
+        "cubic_lagrange_weights_at_fraction",
+        "periodic_backtrace",
+        "periodic_bilinear_backtrace",
+        "periodic_bilinear_departure_bounds",
+        "periodic_bilinear_sample_at_departures",
+        "periodic_cubic_backtrace",
+        "periodic_cubic_lagrange_weights",
+        "periodic_cubic_local_bounded_backtrace",
+        "periodic_cubic_local_bounded_sample_at_departures",
+        "periodic_cubic_local_sum_preserving_backtrace",
+        "periodic_cubic_local_sum_preserving_sample_at_departures",
+        "periodic_cubic_sample_at_departures",
+        "periodic_sample_at_departures",
+        "validate_transport_interpolation"
+      ]
+    },
+    "limiting_conservation": {
+      "assignments": [],
+      "classes": [],
+      "functions": [
+        "bounded",
+        "convex_local_bound_limiter",
+        "periodic_expand_mask",
+        "precise_discrete_sum",
+        "restore_sum_with_local_bounds",
+        "validate_boundary_mode"
+      ]
+    },
+    "multiscale": {
+      "assignments": [],
+      "classes": [],
+      "functions": [
+        "analyze_multiscale_profile_triplet",
+        "derive_multiscale_profile",
+        "simulate_multiscale",
+        "validate_structural_length_grid"
+      ]
+    },
+    "quadrature": {
+      "assignments": [],
+      "classes": [],
+      "functions": [
+        "spatial_mean"
+      ]
+    },
+    "scenarios_io": {
+      "assignments": [],
+      "classes": [],
+      "functions": [
+        "main"
+      ]
+    },
+    "simulation": {
+      "assignments": [],
+      "classes": [],
+      "functions": [
+        "simulate"
+      ]
+    },
+    "structural_metrics": {
+      "assignments": [],
+      "classes": [],
+      "functions": [
+        "normalize_structural_weights",
+        "structural_metrics"
+      ]
+    },
+    "time_geometry": {
+      "assignments": [],
+      "classes": [],
+      "functions": [
+        "normalize_time_grid",
+        "validate_temporal_deformation_mode"
+      ]
+    },
+    "trajectory": {
+      "assignments": [],
+      "classes": [],
+      "functions": [
+        "evaluate_periodic_transport_velocity",
+        "rk4_periodic_departure_points",
+        "transport_previous_vorticity_periodic",
+        "validate_transport_trajectory_method"
+      ]
+    },
+    "unclassified": {
+      "assignments": [],
+      "classes": [],
+      "functions": [
+        "analyze_result_triplet",
+        "combine_decoupled_convergence_rows",
+        "convergence_error_is_estimable",
+        "convergence_row_key",
+        "evaluate_translating_frame_vector",
+        "extract_single_scale_diagnostics",
+        "galilean_metadata",
+        "galilean_source_coordinates",
+        "galilean_transform_scalar_function",
+        "galilean_transform_velocity_function",
+        "interpolate_interval_series_to_nodes",
+        "inverse_scale_coordinates",
+        "make_sampled_transformed_scalar_function",
+        "make_sampled_transformed_velocity_function",
+        "normalized_field_rate",
+        "richardson_triplet",
+        "rotation_matrix",
+        "scale_curvature_function",
+        "scale_length",
+        "scale_velocity_function",
+        "summarize_convergence_rows",
+        "summarize_decoupled_convergence_rows",
+        "transform_coordinates",
+        "transform_scalar_function",
+        "transform_velocity_function",
+        "translating_frame_metadata",
+        "translating_frame_source_coordinates",
+        "translating_frame_transform_scalar_function",
+        "translating_frame_transform_velocity_function",
+        "validate_axis_spacing",
+        "validate_convergence_tolerance",
+        "validate_field_shape_for_geometry",
+        "validate_galilean_frame_velocity",
+        "validate_galilean_reference_time",
+        "validate_nonnegative_length",
+        "validate_orthogonal_matrix",
+        "validate_periodic_transport_mesh",
+        "validate_positive_time_interval",
+        "validate_rectilinear_axis_coordinates",
+        "validate_refinement_ratio",
+        "validate_rotation_angle",
+        "validate_spacing",
+        "validate_spatial_scale_factor",
+        "validate_transform_origin",
+        "validate_uniform_axis_coordinates"
+      ]
+    }
+  },
+  "counts": {
+    "assignments": 8,
+    "classes": 4,
+    "cross_module_edges": 36,
+    "cyclic_function_components": 0,
+    "cyclic_module_components": 2,
+    "direct_function_edges": 148,
+    "functions": 93,
+    "source_lines": 10031
+  },
+  "cyclic_function_components": [],
+  "cyclic_module_components": [
+    [
+      "geometry",
+      "quadrature",
+      "unclassified"
+    ],
+    [
+      "differential_operators",
+      "simulation",
+      "structural_metrics"
+    ]
+  ],
+  "edge_examples": {
+    "departure_geometry -> geometry": [
+      "normalize_periodic_departure_geometry → periodic_coordinate_geometry",
+      "normalize_periodic_departure_geometry → wrap_periodic_points"
+    ],
+    "differential_operators -> geometry": [
+      "material_vorticity_interval → normalize_spatial_geometry",
+      "simulate_material_deformation → normalize_spatial_geometry",
+      "simulate_material_deformation → validate_mesh_geometry",
+      "numerical_vorticity_with_boundary → normalize_spatial_geometry",
+      "scalar_gradient_with_boundary → normalize_spatial_geometry"
+    ],
+    "differential_operators -> limiting_conservation": [
+      "material_vorticity_interval → validate_boundary_mode",
+      "simulate_material_deformation → validate_boundary_mode",
+      "numerical_vorticity_with_boundary → validate_boundary_mode",
+      "scalar_gradient_with_boundary → validate_boundary_mode"
+    ],
+    "differential_operators -> quadrature": [
+      "material_vorticity_interval → spatial_mean"
+    ],
+    "differential_operators -> simulation": [
+      "simulate_material_deformation → simulate"
+    ],
+    "differential_operators -> time_geometry": [
+      "simulate_material_deformation → normalize_time_grid"
+    ],
+    "differential_operators -> unclassified": [
+      "material_vorticity_interval → normalized_field_rate",
+      "material_vorticity_interval → validate_positive_time_interval",
+      "material_vorticity_interval → validate_field_shape_for_geometry",
+      "simulate_material_deformation → interpolate_interval_series_to_nodes",
+      "numerical_vorticity_with_boundary → validate_field_shape_for_geometry",
+      "scalar_gradient_with_boundary → validate_field_shape_for_geometry"
+    ],
+    "geometry -> unclassified": [
+      "scale_spatial_geometry → validate_spatial_scale_factor",
+      "scale_spatial_geometry → validate_transform_origin",
+      "normalize_spatial_geometry → validate_axis_spacing"
+    ],
+    "interpolation -> departure_geometry": [
+      "periodic_bilinear_sample_at_departures → normalize_periodic_departure_geometry",
+      "periodic_cubic_sample_at_departures → normalize_periodic_departure_geometry",
+      "periodic_cubic_local_bounded_sample_at_departures → periodic_departure_bounds",
+      "periodic_cubic_local_sum_preserving_sample_at_departures → periodic_departure_bounds"
+    ],
+    "interpolation -> geometry": [
+      "periodic_bilinear_departure_bounds → periodic_coordinate_geometry",
+      "periodic_bilinear_departure_bounds → wrap_periodic_points"
+    ],
+    "interpolation -> limiting_conservation": [
+      "periodic_cubic_local_bounded_sample_at_departures → convex_local_bound_limiter",
+      "periodic_cubic_local_sum_preserving_sample_at_departures → convex_local_bound_limiter",
+      "periodic_cubic_local_sum_preserving_sample_at_departures → precise_discrete_sum",
+      "periodic_cubic_local_sum_preserving_sample_at_departures → restore_sum_with_local_bounds",
+      "periodic_cubic_local_bounded_backtrace → convex_local_bound_limiter",
+      "periodic_cubic_local_sum_preserving_backtrace → convex_local_bound_limiter",
+      "periodic_cubic_local_sum_preserving_backtrace → precise_discrete_sum",
+      "periodic_cubic_local_sum_preserving_backtrace → restore_sum_with_local_bounds"
+    ],
+    "interpolation -> unclassified": [
+      "periodic_bilinear_backtrace → validate_uniform_axis_coordinates",
+      "periodic_cubic_backtrace → validate_uniform_axis_coordinates"
+    ],
+    "multiscale -> simulation": [
+      "simulate_multiscale → simulate"
+    ],
+    "multiscale -> unclassified": [
+      "analyze_multiscale_profile_triplet → richardson_triplet"
+    ],
+    "quadrature -> geometry": [
+      "spatial_mean → normalize_spatial_geometry"
+    ],
+    "quadrature -> limiting_conservation": [
+      "spatial_mean → validate_boundary_mode"
+    ],
+    "quadrature -> unclassified": [
+      "spatial_mean → validate_field_shape_for_geometry"
+    ],
+    "scenarios_io -> simulation": [
+      "main → simulate"
+    ],
+    "simulation -> differential_operators": [
+      "simulate → numerical_vorticity_with_boundary"
+    ],
+    "simulation -> geometry": [
+      "simulate → normalize_spatial_geometry",
+      "simulate → validate_mesh_geometry",
+      "simulate → spatial_geometry_metadata"
+    ],
+    "simulation -> interpolation": [
+      "simulate → validate_transport_interpolation"
+    ],
+    "simulation -> limiting_conservation": [
+      "simulate → validate_boundary_mode"
+    ],
+    "simulation -> quadrature": [
+      "simulate → spatial_mean"
+    ],
+    "simulation -> structural_metrics": [
+      "simulate → normalize_structural_weights",
+      "simulate → structural_metrics"
+    ],
+    "simulation -> time_geometry": [
+      "simulate → validate_temporal_deformation_mode",
+      "simulate → normalize_time_grid"
+    ],
+    "simulation -> trajectory": [
+      "simulate → validate_transport_trajectory_method",
+      "simulate → transport_previous_vorticity_periodic"
+    ],
+    "simulation -> unclassified": [
+      "simulate → validate_periodic_transport_mesh"
+    ],
+    "structural_metrics -> differential_operators": [
+      "structural_metrics → scalar_gradient_with_boundary"
+    ],
+    "structural_metrics -> geometry": [
+      "structural_metrics → normalize_spatial_geometry"
+    ],
+    "structural_metrics -> limiting_conservation": [
+      "structural_metrics → bounded",
+      "structural_metrics → validate_boundary_mode"
+    ],
+    "structural_metrics -> quadrature": [
+      "structural_metrics → spatial_mean"
+    ],
+    "trajectory -> geometry": [
+      "evaluate_periodic_transport_velocity → wrap_periodic_points",
+      "rk4_periodic_departure_points → periodic_coordinate_geometry"
+    ],
+    "trajectory -> interpolation": [
+      "transport_previous_vorticity_periodic → periodic_backtrace",
+      "transport_previous_vorticity_periodic → periodic_sample_at_departures"
+    ],
+    "unclassified -> geometry": [
+      "validate_periodic_transport_mesh → normalize_spatial_geometry"
+    ],
+    "unclassified -> quadrature": [
+      "normalized_field_rate → spatial_mean"
+    ],
+    "unclassified -> time_geometry": [
+      "interpolate_interval_series_to_nodes → normalize_time_grid"
+    ]
+  },
+  "global_references": {
+    "analyze_multiscale_profile_triplet": [],
+    "analyze_result_triplet": [],
+    "bounded": [],
+    "combine_decoupled_convergence_rows": [],
+    "convergence_error_is_estimable": [],
+    "convergence_row_key": [],
+    "convex_local_bound_limiter": [],
+    "cubic_lagrange_weights_at_fraction": [],
+    "derive_multiscale_profile": [
+      "STRUCTURAL_COMPONENT_NAMES"
+    ],
+    "evaluate_periodic_transport_velocity": [],
+    "evaluate_translating_frame_vector": [],
+    "extract_single_scale_diagnostics": [
+      "STRUCTURAL_COMPONENT_NAMES"
+    ],
+    "galilean_metadata": [],
+    "galilean_source_coordinates": [],
+    "galilean_transform_scalar_function": [],
+    "galilean_transform_velocity_function": [],
+    "interpolate_interval_series_to_nodes": [],
+    "inverse_scale_coordinates": [],
+    "main": [
+      "STRUCTURAL_LENGTH"
+    ],
+    "make_sampled_transformed_scalar_function": [],
+    "make_sampled_transformed_velocity_function": [],
+    "material_vorticity_interval": [],
+    "normalize_periodic_departure_geometry": [],
+    "normalize_spatial_geometry": [],
+    "normalize_structural_weights": [],
+    "normalize_time_grid": [],
+    "normalized_field_rate": [
+      "ZERO_THRESHOLD"
+    ],
+    "numerical_vorticity_with_boundary": [],
+    "periodic_backtrace": [],
+    "periodic_bilinear_backtrace": [],
+    "periodic_bilinear_departure_bounds": [],
+    "periodic_bilinear_sample_at_departures": [],
+    "periodic_coordinate_geometry": [],
+    "periodic_cubic_backtrace": [],
+    "periodic_cubic_lagrange_weights": [],
+    "periodic_cubic_local_bounded_backtrace": [],
+    "periodic_cubic_local_bounded_sample_at_departures": [],
+    "periodic_cubic_local_sum_preserving_backtrace": [],
+    "periodic_cubic_local_sum_preserving_sample_at_departures": [],
+    "periodic_cubic_sample_at_departures": [],
+    "periodic_departure_bounds": [],
+    "periodic_expand_mask": [],
+    "periodic_sample_at_departures": [],
+    "precise_discrete_sum": [],
+    "restore_sum_with_local_bounds": [],
+    "richardson_triplet": [],
+    "rk4_periodic_departure_points": [],
+    "rotation_matrix": [],
+    "scalar_gradient_with_boundary": [],
+    "scale_curvature_function": [],
+    "scale_length": [],
+    "scale_spatial_geometry": [],
+    "scale_velocity_function": [],
+    "simulate": [
+      "DEFAULT_STRUCTURAL_WEIGHTS",
+      "STRUCTURAL_COMPONENT_NAMES",
+      "STRUCTURAL_LENGTH"
+    ],
+    "simulate_material_deformation": [
+      "DEFAULT_STRUCTURAL_WEIGHTS",
+      "STRUCTURAL_LENGTH"
+    ],
+    "simulate_multiscale": [
+      "DEFAULT_STRUCTURAL_WEIGHTS"
+    ],
+    "spatial_geometry_metadata": [],
+    "spatial_mean": [],
+    "structural_metrics": [
+      "DEFAULT_STRUCTURAL_WEIGHTS",
+      "STRUCTURAL_LENGTH",
+      "ZERO_THRESHOLD"
+    ],
+    "summarize_convergence_rows": [],
+    "summarize_decoupled_convergence_rows": [],
+    "transform_coordinates": [],
+    "transform_scalar_function": [],
+    "transform_velocity_function": [],
+    "translating_frame_metadata": [],
+    "translating_frame_source_coordinates": [],
+    "translating_frame_transform_scalar_function": [],
+    "translating_frame_transform_velocity_function": [],
+    "transport_previous_vorticity_periodic": [],
+    "validate_axis_spacing": [],
+    "validate_boundary_mode": [
+      "BOUNDARY_MODES"
+    ],
+    "validate_convergence_tolerance": [],
+    "validate_field_shape_for_geometry": [],
+    "validate_galilean_frame_velocity": [],
+    "validate_galilean_reference_time": [],
+    "validate_material_interval_fields": [],
+    "validate_mesh_geometry": [],
+    "validate_nonnegative_length": [],
+    "validate_orthogonal_matrix": [],
+    "validate_periodic_transport_mesh": [],
+    "validate_positive_time_interval": [],
+    "validate_rectilinear_axis_coordinates": [],
+    "validate_refinement_ratio": [],
+    "validate_rotation_angle": [],
+    "validate_spacing": [],
+    "validate_spatial_scale_factor": [],
+    "validate_structural_length_grid": [],
+    "validate_temporal_deformation_mode": [
+      "TEMPORAL_DEFORMATION_MODES"
+    ],
+    "validate_transform_origin": [],
+    "validate_transport_interpolation": [
+      "TRANSPORT_INTERPOLATIONS"
+    ],
+    "validate_transport_trajectory_method": [
+      "TRANSPORT_TRAJECTORY_METHODS"
+    ],
+    "validate_uniform_axis_coordinates": [],
+    "wrap_periodic_points": []
+  },
+  "leaf_functions": [
+    "bounded",
+    "convergence_error_is_estimable",
+    "convergence_row_key",
+    "convex_local_bound_limiter",
+    "cubic_lagrange_weights_at_fraction",
+    "evaluate_translating_frame_vector",
+    "extract_single_scale_diagnostics",
+    "make_sampled_transformed_scalar_function",
+    "make_sampled_transformed_velocity_function",
+    "normalize_structural_weights",
+    "normalize_time_grid",
+    "periodic_coordinate_geometry",
+    "periodic_cubic_lagrange_weights",
+    "periodic_expand_mask",
+    "precise_discrete_sum",
+    "spatial_geometry_metadata",
+    "summarize_convergence_rows",
+    "summarize_decoupled_convergence_rows",
+    "validate_axis_spacing",
+    "validate_boundary_mode",
+    "validate_convergence_tolerance",
+    "validate_field_shape_for_geometry",
+    "validate_galilean_frame_velocity",
+    "validate_galilean_reference_time",
+    "validate_material_interval_fields",
+    "validate_mesh_geometry",
+    "validate_nonnegative_length",
+    "validate_orthogonal_matrix",
+    "validate_positive_time_interval",
+    "validate_rectilinear_axis_coordinates",
+    "validate_refinement_ratio",
+    "validate_rotation_angle",
+    "validate_spatial_scale_factor",
+    "validate_structural_length_grid",
+    "validate_temporal_deformation_mode",
+    "validate_transform_origin",
+    "validate_transport_interpolation",
+    "validate_transport_trajectory_method",
+    "validate_uniform_axis_coordinates",
+    "wrap_periodic_points"
+  ],
+  "module_edges": {
+    "constants": [],
+    "departure_geometry": [
+      "geometry"
+    ],
+    "differential_operators": [
+      "geometry",
+      "limiting_conservation",
+      "quadrature",
+      "simulation",
+      "time_geometry",
+      "unclassified"
+    ],
+    "geometry": [
+      "unclassified"
+    ],
+    "interpolation": [
+      "departure_geometry",
+      "geometry",
+      "limiting_conservation",
+      "unclassified"
+    ],
+    "limiting_conservation": [],
+    "multiscale": [
+      "simulation",
+      "unclassified"
+    ],
+    "quadrature": [
+      "geometry",
+      "limiting_conservation",
+      "unclassified"
+    ],
+    "scenarios_io": [
+      "simulation"
+    ],
+    "simulation": [
+      "differential_operators",
+      "geometry",
+      "interpolation",
+      "limiting_conservation",
+      "quadrature",
+      "structural_metrics",
+      "time_geometry",
+      "trajectory",
+      "unclassified"
+    ],
+    "structural_metrics": [
+      "differential_operators",
+      "geometry",
+      "limiting_conservation",
+      "quadrature"
+    ],
+    "time_geometry": [],
+    "trajectory": [
+      "geometry",
+      "interpolation"
+    ],
+    "unclassified": [
+      "geometry",
+      "quadrature",
+      "time_geometry"
+    ]
+  },
+  "proposed_module_order": [
+    "constants",
+    "geometry",
+    "time_geometry",
+    "differential_operators",
+    "quadrature",
+    "departure_geometry",
+    "interpolation",
+    "limiting_conservation",
+    "trajectory",
+    "structural_metrics",
+    "multiscale",
+    "simulation",
+    "scenarios_io",
+    "unclassified"
+  ],
+  "root_functions": [
+    "analyze_multiscale_profile_triplet",
+    "analyze_result_triplet",
+    "combine_decoupled_convergence_rows",
+    "galilean_metadata",
+    "galilean_transform_scalar_function",
+    "galilean_transform_velocity_function",
+    "main",
+    "make_sampled_transformed_scalar_function",
+    "make_sampled_transformed_velocity_function",
+    "rotation_matrix",
+    "scale_curvature_function",
+    "scale_length",
+    "scale_spatial_geometry",
+    "scale_velocity_function",
+    "simulate_material_deformation",
+    "simulate_multiscale",
+    "summarize_convergence_rows",
+    "summarize_decoupled_convergence_rows",
+    "transform_scalar_function",
+    "transform_velocity_function",
+    "translating_frame_metadata",
+    "translating_frame_transform_scalar_function",
+    "translating_frame_transform_velocity_function",
+    "validate_rectilinear_axis_coordinates",
+    "validate_spacing"
+  ],
+  "source": "itd_v29.py",
+  "status": "pre_modularization_inventory",
+  "symbol_module": {
+    "BOUNDARY_MODES": "constants",
+    "BilinearTransformPlan": "interpolation",
+    "DEFAULT_STRUCTURAL_WEIGHTS": "constants",
+    "RectilinearGeometry": "geometry",
+    "STRUCTURAL_COMPONENT_NAMES": "constants",
+    "STRUCTURAL_LENGTH": "constants",
+    "SpatialGeometry": "geometry",
+    "TEMPORAL_DEFORMATION_MODES": "constants",
+    "TRANSPORT_INTERPOLATIONS": "constants",
+    "TRANSPORT_TRAJECTORY_METHODS": "constants",
+    "TemporalGeometry": "geometry",
+    "ZERO_THRESHOLD": "constants",
+    "analyze_multiscale_profile_triplet": "multiscale",
+    "analyze_result_triplet": "unclassified",
+    "bounded": "limiting_conservation",
+    "combine_decoupled_convergence_rows": "unclassified",
+    "convergence_error_is_estimable": "unclassified",
+    "convergence_row_key": "unclassified",
+    "convex_local_bound_limiter": "limiting_conservation",
+    "cubic_lagrange_weights_at_fraction": "interpolation",
+    "derive_multiscale_profile": "multiscale",
+    "evaluate_periodic_transport_velocity": "trajectory",
+    "evaluate_translating_frame_vector": "unclassified",
+    "extract_single_scale_diagnostics": "unclassified",
+    "galilean_metadata": "unclassified",
+    "galilean_source_coordinates": "unclassified",
+    "galilean_transform_scalar_function": "unclassified",
+    "galilean_transform_velocity_function": "unclassified",
+    "interpolate_interval_series_to_nodes": "unclassified",
+    "inverse_scale_coordinates": "unclassified",
+    "main": "scenarios_io",
+    "make_sampled_transformed_scalar_function": "unclassified",
+    "make_sampled_transformed_velocity_function": "unclassified",
+    "material_vorticity_interval": "differential_operators",
+    "normalize_periodic_departure_geometry": "departure_geometry",
+    "normalize_spatial_geometry": "geometry",
+    "normalize_structural_weights": "structural_metrics",
+    "normalize_time_grid": "time_geometry",
+    "normalized_field_rate": "unclassified",
+    "numerical_vorticity_with_boundary": "differential_operators",
+    "periodic_backtrace": "interpolation",
+    "periodic_bilinear_backtrace": "interpolation",
+    "periodic_bilinear_departure_bounds": "interpolation",
+    "periodic_bilinear_sample_at_departures": "interpolation",
+    "periodic_coordinate_geometry": "geometry",
+    "periodic_cubic_backtrace": "interpolation",
+    "periodic_cubic_lagrange_weights": "interpolation",
+    "periodic_cubic_local_bounded_backtrace": "interpolation",
+    "periodic_cubic_local_bounded_sample_at_departures": "interpolation",
+    "periodic_cubic_local_sum_preserving_backtrace": "interpolation",
+    "periodic_cubic_local_sum_preserving_sample_at_departures": "interpolation",
+    "periodic_cubic_sample_at_departures": "interpolation",
+    "periodic_departure_bounds": "departure_geometry",
+    "periodic_expand_mask": "limiting_conservation",
+    "periodic_sample_at_departures": "interpolation",
+    "precise_discrete_sum": "limiting_conservation",
+    "restore_sum_with_local_bounds": "limiting_conservation",
+    "richardson_triplet": "unclassified",
+    "rk4_periodic_departure_points": "trajectory",
+    "rotation_matrix": "unclassified",
+    "scalar_gradient_with_boundary": "differential_operators",
+    "scale_curvature_function": "unclassified",
+    "scale_length": "unclassified",
+    "scale_spatial_geometry": "geometry",
+    "scale_velocity_function": "unclassified",
+    "simulate": "simulation",
+    "simulate_material_deformation": "differential_operators",
+    "simulate_multiscale": "multiscale",
+    "spatial_geometry_metadata": "geometry",
+    "spatial_mean": "quadrature",
+    "structural_metrics": "structural_metrics",
+    "summarize_convergence_rows": "unclassified",
+    "summarize_decoupled_convergence_rows": "unclassified",
+    "transform_coordinates": "unclassified",
+    "transform_scalar_function": "unclassified",
+    "transform_velocity_function": "unclassified",
+    "translating_frame_metadata": "unclassified",
+    "translating_frame_source_coordinates": "unclassified",
+    "translating_frame_transform_scalar_function": "unclassified",
+    "translating_frame_transform_velocity_function": "unclassified",
+    "transport_previous_vorticity_periodic": "trajectory",
+    "validate_axis_spacing": "unclassified",
+    "validate_boundary_mode": "limiting_conservation",
+    "validate_convergence_tolerance": "unclassified",
+    "validate_field_shape_for_geometry": "unclassified",
+    "validate_galilean_frame_velocity": "unclassified",
+    "validate_galilean_reference_time": "unclassified",
+    "validate_material_interval_fields": "differential_operators",
+    "validate_mesh_geometry": "geometry",
+    "validate_nonnegative_length": "unclassified",
+    "validate_orthogonal_matrix": "unclassified",
+    "validate_periodic_transport_mesh": "unclassified",
+    "validate_positive_time_interval": "unclassified",
+    "validate_rectilinear_axis_coordinates": "unclassified",
+    "validate_refinement_ratio": "unclassified",
+    "validate_rotation_angle": "unclassified",
+    "validate_spacing": "unclassified",
+    "validate_spatial_scale_factor": "unclassified",
+    "validate_structural_length_grid": "multiscale",
+    "validate_temporal_deformation_mode": "time_geometry",
+    "validate_transform_origin": "unclassified",
+    "validate_transport_interpolation": "interpolation",
+    "validate_transport_trajectory_method": "trajectory",
+    "validate_uniform_axis_coordinates": "unclassified",
+    "wrap_periodic_points": "geometry"
+  },
+  "version": "ITD V29.1"
+}
