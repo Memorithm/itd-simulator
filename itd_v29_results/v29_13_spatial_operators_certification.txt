@@ -1,0 +1,52 @@
+ITD V29.13 — SPATIAL OPERATORS CERTIFICATION
+================================================
+
+Date UTC: 2026-07-15T18:28:42Z
+
+Scope:
+- Extraction of five spatial and boundary operators
+- Module: itd_v29_core/spatial_operators.py
+- Historical public API preserved through direct re-export
+
+Extracted functions:
+- validate_boundary_mode
+- numerical_vorticity_with_boundary
+- scalar_gradient_with_boundary
+- bounded
+- spatial_mean
+
+Applicable validation suite:
+- BOUNDARY_V12: PASSED
+- RECTANGULAR_V13: PASSED
+- EXACT_INTERPOLATION_V14_1: PASSED
+- NONUNIFORM_GEOMETRY_V16: PASSED
+- SPATIAL_SCALING_V17: PASSED
+- MULTISCALE_STRUCTURE_V18: PASSED
+- MATERIAL_DERIVATIVE_V22: PASSED
+- GALILEAN_V23: PASSED
+- ACCELERATING_FRAMES_V24: PASSED
+- CONSERVATION_V27: PASSED
+- LOCAL_BOUNDED_V27: PASSED
+- SUM_PRESERVING_V28: PASSED
+- DIRECT_DEPARTURES_V29: PASSED
+- LOCALITY_REGRESSION_V29: PASSED
+- MAIN: PASSED
+
+Regression:
+- Main summary bitwise identical to V29.12
+
+Architecture:
+- Original extracted definitions remaining in itd_v29.py: 0
+- Grouped spatial_operators import count: 1
+- Modular public re-exports: 5/5
+- itd_v29.py line count: 2066
+
+SHA-256:
+5fe9ed72edb4124bfefb408c15e3ad9fe5a8652dd1eb2b142019351be4bb115c  itd_v29.py
+80f74cbde9c1855180774f906a5eeebb9c16745636efd3fd469b177d667c7aca  itd_v29_core/spatial_operators.py
+119b4db845a504facc6f024dc37efe5e5544197802fd219227d32bb38246254b  itd_v29_results/summary.csv
+
+Validation logs:
+- /tmp/itd_v29_13_certification_20260715T181420Z
+
+FINAL STATUS: PASSED
