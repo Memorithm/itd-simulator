@@ -1,14 +1,14 @@
 # ITD Simulator — Model Status
 
-Current published snapshot: ITD V29.11.
+Current published snapshot: ITD V29.12.
 
 - Previous modular components remain unchanged.
-- Galilean and time-dependent translating-frame transformations moved to `itd_v29_core/reference_frames.py`.
-- Eleven historical public functions remain available from `itd_v29` through direct re-export.
-- The main numerical summary remains bit-for-bit identical to V29.10.
-- Galilean objectivity validation V23 passed.
-- Accelerating translating-frame validation V24 passed.
-- Local transformation laws and frame-composition laws passed their declared numerical oracles.
-- Material and semi-Lagrangian objectivity checks passed their declared convergence studies.
-- The published snapshot is source-clean and contains no Python bytecode cache.
-- Validation is relative to the declared suites, numerical oracles and resolution studies.
+- The periodic transport subsystem moved to `itd_v29_core/periodic_transport.py`.
+- Twenty-seven periodic transport functions remain available through direct public re-export from `itd_v29.py`.
+- The main numerical summary is bitwise identical to ITD V29.11.
+- Thirteen applicable validation suites passed.
+- `validate_bounded_cubic_v27.py` is retained as a historical validator for the deprecated `cubic_bounded_periodic` mode and is not applicable to the current local bounded API.
+- Exact cubic-sum preservation is validated by `cubic_local_sum_preserving_periodic`.
+- The detailed certification report is available in `itd_v29_results/v29_12_periodic_transport_certification.txt`.
+
+These results are relative to the declared test suites, numerical oracles, and experimental configurations. They do not constitute a universal proof of correctness.

@@ -1,0 +1,47 @@
+ITD V29.12 — PERIODIC TRANSPORT CERTIFICATION
+================================================
+
+Date UTC: 2026-07-15T09:41:18Z
+
+Scope:
+- Extraction of 27 periodic transport functions
+- Module: itd_v29_core/periodic_transport.py
+- Public compatibility maintained through itd_v29.py
+
+Applicable validation suite:
+- MAIN: PASSED
+- CUBIC_V25: PASSED
+- RK4_V26: PASSED
+- LOCAL_BOUNDED_V27: PASSED
+- PHASE_ROBUST_V27: PASSED
+- ASYMPTOTIC_LIMITER_V27: PASSED
+- CONSERVATION_V27: PASSED
+- SUM_PRESERVING_V28: PASSED
+- RK4_CONSISTENCY_V28: PASSED
+- DIRECT_DEPARTURES_V29: PASSED
+- SUM_REGRESSION_V29: PASSED
+- RK4_REGRESSION_V29: PASSED
+- LOCALITY_REGRESSION_V29: PASSED
+
+Historical validator classification:
+- BOUNDED_V27: NOT APPLICABLE
+- Targets deprecated mode: cubic_bounded_periodic
+- Current local bounded mode: cubic_local_bounded_periodic
+- Exact sum preservation is not claimed by the local bounded mode
+- Sum-preserving guarantee is validated by the V28 mode
+
+Regression:
+- Main summary bitwise identical to V29.11
+
+Architecture:
+- Original periodic transport definitions remaining in itd_v29.py: 0
+- Grouped periodic_transport import count: 1
+- Modular public re-exports: 27/27
+
+SHA-256:
+5e7b34cf9afefa29183ea4d6f8e0e0c1f5d5a423a9dd15b71e01e5ccb5383860  itd_v29.py
+a3851e70b3e69cecc380c2c978d8365b116fe3cb3931bc58abe80b261f2a497e  itd_v29_core/periodic_transport.py
+c77b3c0bf84f88ff0501dc356e5178f42693989112c395f32193a826bffa0c18  validate_bounded_cubic_v27.py
+119b4db845a504facc6f024dc37efe5e5544197802fd219227d32bb38246254b  /root/itd-simulator/itd_v29_results/summary.csv
+
+FINAL STATUS: PASSED
