@@ -11,6 +11,7 @@ import os
 import shutil
 import stat
 import subprocess
+import symtable
 import sys
 import textwrap
 from pathlib import Path
@@ -213,179 +214,185 @@ def import_map(tree: ast.Module) -> dict[str, ImportSpec]:
     return result
 
 
+FunctionLike = (ast.FunctionDef, ast.AsyncFunctionDef)
+
+
+def _collect_global_symbol_names(
+    table: symtable.SymbolTable,
+    into: set[str],
+) -> None:
+    """
+    Parcourt récursivement une table de symboles et toutes ses
+    tables filles (fonctions, classes, lambdas, comprehensions,
+    générateurs, à toute profondeur) et collecte les noms qui,
+    à ce niveau précis, se résolvent vers la portée globale du
+    module.
+
+    C'est exactement la distinction que fait le compilateur CPython
+    lui-même entre :
+
+    - une variable liée localement à une portée (paramètre,
+      cible d'affectation, cible de destructuration, cible de
+      compréhension, cible ``for``/``with``/``except``, nom de
+      fonction ou de classe imbriquée, import local) ;
+    - une variable libre capturée par fermeture depuis une portée
+      de fonction englobante (``is_free``), qui ne doit jamais
+      être promue en dépendance de module puisqu'elle est déjà
+      fournie par la portée englobante extraite avec elle ;
+    - une variable qui ne se résout dans aucune portée de fonction
+      englobante et qui référence donc réellement la portée
+      globale du module (``is_global``), qu'elle soit lue,
+      assignée, ou déclarée ``global`` explicitement.
+
+    Utiliser ``symtable`` évite de ré-implémenter cette analyse
+    lexicale à la main : la portée de chaque nom (y compris à
+    travers une imbrication arbitraire de fonctions, classes,
+    lambdas et compréhensions) est déterminée par le compilateur
+    CPython lui-même, pas par une heuristique locale.
+    """
+    for symbol in table.get_symbols():
+        if symbol.is_global():
+            into.add(symbol.get_name())
+
+    for child in table.get_children():
+        _collect_global_symbol_names(child, into)
+
+
+def _free_names_in_fragment_source(source: str) -> set[str]:
+    """
+    Analyse un fragment de code source autonome (une expression
+    isolée, réinjectée dans une affectation synthétique) et
+    retourne les noms qui s'y résolvent vers la portée globale.
+
+    Ceci est utilisé pour les éléments de signature (décorateurs,
+    annotations, valeurs par défaut, annotation de retour), qui
+    sont évalués dans la portée englobante au moment de l'exécution
+    de l'instruction ``def``, et non dans la portée propre de la
+    fonction. Réinjecter le fragment dans un mini-module synthétique
+    permet de réutiliser exactement la même analyse récursive,
+    y compris lorsque le fragment contient lui-même un ``lambda``
+    ou une compréhension imbriquée.
+    """
+    table = symtable.symtable(
+        source,
+        "<signature-fragment>",
+        "exec",
+    )
+
+    names: set[str] = set()
+    _collect_global_symbol_names(table, names)
+
+    names.discard("__signature_fragment__")
+
+    return names
+
+
+def _signature_fragments(
+    node: ast.FunctionDef | ast.AsyncFunctionDef,
+) -> list[ast.expr]:
+    fragments: list[ast.expr] = list(node.decorator_list)
+
+    arguments = node.args
+
+    all_arguments = (
+        list(arguments.posonlyargs)
+        + list(arguments.args)
+        + list(arguments.kwonlyargs)
+    )
+
+    if arguments.vararg is not None:
+        all_arguments.append(arguments.vararg)
+
+    if arguments.kwarg is not None:
+        all_arguments.append(arguments.kwarg)
+
+    for argument in all_arguments:
+        if argument.annotation is not None:
+            fragments.append(argument.annotation)
+
+    fragments.extend(arguments.defaults)
+
+    fragments.extend(
+        default
+        for default in arguments.kw_defaults
+        if default is not None
+    )
+
+    if node.returns is not None:
+        fragments.append(node.returns)
+
+    return fragments
+
+
+def _find_function_symbol_table(
+    module_table: symtable.SymbolTable,
+    node: ast.FunctionDef | ast.AsyncFunctionDef,
+) -> symtable.SymbolTable:
+    for child in module_table.get_children():
+        if (
+            child.get_type() == "function"
+            and child.get_name() == node.name
+            and child.get_lineno() == node.lineno
+        ):
+            return child
+
+    raise PipelineError(
+        "Table des symboles introuvable pour la fonction "
+        f"de premier niveau : {node.name}"
+    )
+
+
 def unresolved_names(
-    node: ast.FunctionDef,
+    module_table: symtable.SymbolTable,
+    node: ast.FunctionDef | ast.AsyncFunctionDef,
     target_names: set[str],
 ) -> set[str]:
-    local = {
-        argument.arg
-        for argument in (
-            list(node.args.posonlyargs)
-            + list(node.args.args)
-            + list(node.args.kwonlyargs)
+    """
+    Calcule l'ensemble des noms dont dépend réellement une
+    fonction de premier niveau, en distinguant correctement :
+
+    1. les noms liés localement à une portée (y compris dans
+       les portées imbriquées) ;
+    2. les noms référencés par une portée ;
+    3. les variables libres capturées par fermeture depuis une
+       portée englobante (jamais promues en dépendance) ;
+    4. les dépendances réelles de module (``is_global`` à
+       n'importe quelle profondeur d'imbrication) ;
+    5. les fonctions natives (retirées via ``builtins``) ;
+    6. les fonctions extraites dans le même module généré
+       (retirées via ``target_names``).
+
+    Le corps de la fonction (et de toute portée imbriquée :
+    fonctions, fonctions asynchrones, lambdas, classes,
+    compréhensions, générateurs) est analysé via la table de
+    symboles construite par ``symtable`` pour le module entier.
+    Les éléments de signature (décorateurs, annotations de
+    paramètres, valeurs par défaut, valeurs par défaut
+    nommées, annotation de retour) sont évalués dans la portée
+    englobante au moment du ``def`` et sont donc analysés
+    séparément à partir des fragments de source correspondants.
+    """
+    function_table = _find_function_symbol_table(
+        module_table,
+        node,
+    )
+
+    names: set[str] = set()
+    _collect_global_symbol_names(function_table, names)
+
+    for fragment in _signature_fragments(node):
+        fragment_source = (
+            "__signature_fragment__ = (\n"
+            + ast.unparse(fragment)
+            + "\n)\n"
         )
-    }
 
-    if node.args.vararg:
-        local.add(node.args.vararg.arg)
-
-    if node.args.kwarg:
-        local.add(node.args.kwarg.arg)
-
-    loaded: set[str] = set()
-
-    class ScopeVisitor(ast.NodeVisitor):
-        def visit_Name(
-            self,
-            child: ast.Name,
-        ) -> None:
-            if isinstance(child.ctx, ast.Load):
-                loaded.add(child.id)
-
-            elif isinstance(
-                child.ctx,
-                (ast.Store, ast.Param),
-            ):
-                local.add(child.id)
-
-        def visit_ExceptHandler(
-            self,
-            child: ast.ExceptHandler,
-        ) -> None:
-            if child.name:
-                local.add(child.name)
-
-            if child.type is not None:
-                self.visit(child.type)
-
-            for statement in child.body:
-                self.visit(statement)
-
-        def visit_arguments(
-            self,
-            arguments: ast.arguments,
-        ) -> None:
-            all_arguments = (
-                list(arguments.posonlyargs)
-                + list(arguments.args)
-                + list(arguments.kwonlyargs)
-            )
-
-            if arguments.vararg is not None:
-                all_arguments.append(
-                    arguments.vararg
-                )
-
-            if arguments.kwarg is not None:
-                all_arguments.append(
-                    arguments.kwarg
-                )
-
-            for argument in all_arguments:
-                if argument.annotation is not None:
-                    self.visit(
-                        argument.annotation
-                    )
-
-            for default in arguments.defaults:
-                self.visit(default)
-
-            for default in arguments.kw_defaults:
-                if default is not None:
-                    self.visit(default)
-
-        def visit_FunctionDef(
-            self,
-            child: ast.FunctionDef,
-        ) -> None:
-            if child is node:
-                for decorator in child.decorator_list:
-                    self.visit(decorator)
-
-                self.visit_arguments(
-                    child.args
-                )
-
-                if child.returns is not None:
-                    self.visit(child.returns)
-
-                for statement in child.body:
-                    self.visit(statement)
-
-                return
-
-            local.add(child.name)
-
-            for decorator in child.decorator_list:
-                self.visit(decorator)
-
-            self.visit_arguments(
-                child.args
-            )
-
-            if child.returns is not None:
-                self.visit(child.returns)
-
-        def visit_AsyncFunctionDef(
-            self,
-            child: ast.AsyncFunctionDef,
-        ) -> None:
-            if child is node:
-                for decorator in child.decorator_list:
-                    self.visit(decorator)
-
-                self.visit_arguments(
-                    child.args
-                )
-
-                if child.returns is not None:
-                    self.visit(child.returns)
-
-                for statement in child.body:
-                    self.visit(statement)
-
-                return
-
-            local.add(child.name)
-
-            for decorator in child.decorator_list:
-                self.visit(decorator)
-
-            self.visit_arguments(
-                child.args
-            )
-
-            if child.returns is not None:
-                self.visit(child.returns)
-
-        def visit_Lambda(
-            self,
-            child: ast.Lambda,
-        ) -> None:
-            self.visit_arguments(
-                child.args
-            )
-
-        def visit_ClassDef(
-            self,
-            child: ast.ClassDef,
-        ) -> None:
-            local.add(child.name)
-
-            for decorator in child.decorator_list:
-                self.visit(decorator)
-
-            for base in child.bases:
-                self.visit(base)
-
-            for keyword in child.keywords:
-                self.visit(keyword.value)
-
-    ScopeVisitor().visit(node)
+        names |= _free_names_in_fragment_source(
+            fragment_source
+        )
 
     return (
-        loaded
-        - local
+        names
         - set(dir(builtins))
         - target_names
     )
@@ -485,6 +492,12 @@ def build_module(
         filename=str(main),
     )
 
+    module_table = symtable.symtable(
+        source,
+        str(main),
+        "exec",
+    )
+
     functions = {
         node.name: node
         for node in tree.body
@@ -509,6 +522,7 @@ def build_module(
     for name in plan.functions:
         unresolved.update(
             unresolved_names(
+                module_table,
                 functions[name],
                 target_names,
             )
