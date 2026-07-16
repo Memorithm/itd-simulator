@@ -376,5 +376,95 @@
       }
     ],
     "version": "29.17"
+  },
+  "29.18": {
+    "archive": {
+      "archive": "/home/user/itd-simulator/archives/v29_18_entrypoint_modularized",
+      "file_count": 147,
+      "manifest_sha256": "eac78dd8958b9a1255014f98a3849965a6421de8042d2ef9871b74bf08dcf0d2"
+    },
+    "backup": "/home/user/itd-simulator/.v29_pipeline_backups/v29.18_20260716T213802",
+    "candidate": {
+      "imports": [
+        [
+          "from",
+          "compare_scenarios",
+          "Config",
+          ""
+        ],
+        [
+          "from",
+          "compare_scenarios",
+          "calm_field",
+          ""
+        ],
+        [
+          "from",
+          "compare_scenarios",
+          "coherent_vortex",
+          ""
+        ],
+        [
+          "from",
+          "compare_scenarios",
+          "multi_vortex_field",
+          ""
+        ],
+        [
+          "from",
+          "itd_v29_core.constants",
+          "STRUCTURAL_LENGTH",
+          ""
+        ],
+        [
+          "from",
+          "itd_v29_core.simulation_engine",
+          "simulate",
+          ""
+        ],
+        [
+          "from",
+          "pathlib",
+          "Path",
+          ""
+        ],
+        [
+          "import",
+          "matplotlib.pyplot",
+          "",
+          "plt"
+        ],
+        [
+          "import",
+          "numpy",
+          "",
+          "np"
+        ]
+      ],
+      "module_sha256": "7e76257f161d1d643e5808f2793db6ecd4a3a3cbd8a9bfd678db0c6f4be5494e"
+    },
+    "finished_utc": "2026-07-16T21:38:10Z",
+    "integrated": {
+      "main_lines": 232,
+      "main_sha256": "624320698c9bc8fa4b65ef160e75bbe6591bf14f43ea2ceca50123361746246f"
+    },
+    "reference_archive": "/home/user/itd-simulator/archives/v29_17_material_deformation_modularized",
+    "report": "/home/user/itd-simulator/itd_v29_results/v29_18_entrypoint_certification.md",
+    "started_utc": "2026-07-16T21:38:02Z",
+    "status": "PASSED",
+    "summary_sha256": "119b4db845a504facc6f024dc37efe5e5544197802fd219227d32bb38246254b",
+    "validations": [
+      {
+        "code": 0,
+        "log": "/tmp/itd_v29_18_certification_20260716T213803Z/VALIDATE_RELEASE_V10.log",
+        "name": "VALIDATE_RELEASE_V10"
+      },
+      {
+        "code": 0,
+        "log": "/tmp/itd_v29_18_certification_20260716T213803Z/MAIN.log",
+        "name": "MAIN"
+      }
+    ],
+    "version": "29.18"
   }
 }
