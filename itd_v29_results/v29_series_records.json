@@ -88,5 +88,179 @@
       }
     ],
     "version": "29.15"
+  },
+  "29.16": {
+    "archive": {
+      "archive": "/home/user/itd-simulator/archives/v29_16_simulation_engine_modularized",
+      "file_count": 141,
+      "manifest_sha256": "fe7fecf8b5509df7e9b638325a93ae80452f4545cf709ed28d6d7600b6c421e7"
+    },
+    "backup": "/home/user/itd-simulator/.v29_pipeline_backups/v29.16_20260716T212946",
+    "candidate": {
+      "imports": [
+        [
+          "from",
+          "compare_scenarios",
+          "Config",
+          ""
+        ],
+        [
+          "from",
+          "compare_scenarios",
+          "curvature_field",
+          ""
+        ],
+        [
+          "from",
+          "itd_v29_core.constants",
+          "DEFAULT_STRUCTURAL_WEIGHTS",
+          ""
+        ],
+        [
+          "from",
+          "itd_v29_core.constants",
+          "STRUCTURAL_COMPONENT_NAMES",
+          ""
+        ],
+        [
+          "from",
+          "itd_v29_core.constants",
+          "STRUCTURAL_LENGTH",
+          ""
+        ],
+        [
+          "from",
+          "itd_v29_core.constants",
+          "TEMPORAL_DEFORMATION_MODES",
+          ""
+        ],
+        [
+          "from",
+          "itd_v29_core.multiscale_structure",
+          "derive_multiscale_profile",
+          ""
+        ],
+        [
+          "from",
+          "itd_v29_core.multiscale_structure",
+          "validate_structural_length_grid",
+          ""
+        ],
+        [
+          "from",
+          "itd_v29_core.periodic_transport",
+          "transport_previous_vorticity_periodic",
+          ""
+        ],
+        [
+          "from",
+          "itd_v29_core.periodic_transport",
+          "validate_periodic_transport_mesh",
+          ""
+        ],
+        [
+          "from",
+          "itd_v29_core.periodic_transport",
+          "validate_transport_interpolation",
+          ""
+        ],
+        [
+          "from",
+          "itd_v29_core.periodic_transport",
+          "validate_transport_trajectory_method",
+          ""
+        ],
+        [
+          "from",
+          "itd_v29_core.spatial_geometry",
+          "normalize_spatial_geometry",
+          ""
+        ],
+        [
+          "from",
+          "itd_v29_core.spatial_geometry",
+          "spatial_geometry_metadata",
+          ""
+        ],
+        [
+          "from",
+          "itd_v29_core.spatial_geometry",
+          "validate_mesh_geometry",
+          ""
+        ],
+        [
+          "from",
+          "itd_v29_core.spatial_operators",
+          "numerical_vorticity_with_boundary",
+          ""
+        ],
+        [
+          "from",
+          "itd_v29_core.spatial_operators",
+          "spatial_mean",
+          ""
+        ],
+        [
+          "from",
+          "itd_v29_core.spatial_operators",
+          "validate_boundary_mode",
+          ""
+        ],
+        [
+          "from",
+          "itd_v29_core.structural_metrics",
+          "normalize_structural_weights",
+          ""
+        ],
+        [
+          "from",
+          "itd_v29_core.structural_metrics",
+          "structural_metrics",
+          ""
+        ],
+        [
+          "from",
+          "itd_v29_core.time_geometry",
+          "normalize_time_grid",
+          ""
+        ],
+        [
+          "from",
+          "typing",
+          "Callable",
+          ""
+        ],
+        [
+          "import",
+          "numpy",
+          "",
+          "np"
+        ]
+      ],
+      "module_sha256": "d611ee0f6ee21d36ce7a551dba7548e1b1f389dc1bfec3756f6d23de44512375"
+    },
+    "finished_utc": "2026-07-16T21:30:03Z",
+    "integrated": {
+      "main_lines": 802,
+      "main_sha256": "579d76c6b1f94cfeca9420d201181b1365fd5ef7d06e576cf3afdb239ac0ee84"
+    },
+    "reference_archive": "/home/user/itd-simulator/archives/v29_15_structural_metrics_modularized",
+    "report": "/home/user/itd-simulator/itd_v29_results/v29_16_simulation_engine_certification.md",
+    "started_utc": "2026-07-16T21:29:46Z",
+    "status": "PASSED",
+    "summary_sha256": "119b4db845a504facc6f024dc37efe5e5544197802fd219227d32bb38246254b",
+    "validations": [
+      {
+        "code": 0,
+        "log": "/tmp/itd_v29_16_certification_20260716T212953Z/VALIDATE_RELEASE_V10.log",
+        "name": "VALIDATE_RELEASE_V10"
+      },
+      {
+        "code": 0,
+        "log": "/tmp/itd_v29_16_certification_20260716T212953Z/MAIN.log",
+        "name": "MAIN"
+      }
+    ],
+    "version": "29.16"
   }
 }
