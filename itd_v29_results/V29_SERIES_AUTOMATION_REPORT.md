@@ -1,6 +1,6 @@
 # ITD V29.xx — Rapport d'automatisation
 
-- Généré le : `2026-07-16T21:23:03Z`
+- Généré le : `2026-07-16T21:30:03Z`
 - Ce rapport cumule l'historique de toutes les versions déjà traitées (voir `v29_series_records.json`) ; une exécution portant sur une seule version ne supprime jamais les sections des versions précédentes.
 
 ## V29.15
@@ -11,3 +11,12 @@
 - Archive : `/home/user/itd-simulator/archives/v29_15_structural_metrics_modularized`
 - Fichiers manifestés : `137`
 - SHA-256 du manifeste : `f6f0ff7e804cfc376bf0a9df82cfb31a5658b7334bffa8d940a58a6ac61e1518`
+
+## V29.16
+
+- Statut : **PASSED**
+- Début : `2026-07-16T21:29:46Z`
+- Fin : `2026-07-16T21:30:03Z`
+- Archive : `/home/user/itd-simulator/archives/v29_16_simulation_engine_modularized`
+- Fichiers manifestés : `141`
+- SHA-256 du manifeste : `fe7fecf8b5509df7e9b638325a93ae80452f4545cf709ed28d6d7600b6c421e7`
