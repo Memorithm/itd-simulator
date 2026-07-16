@@ -1,0 +1,92 @@
+{
+  "29.15": {
+    "archive": {
+      "archive": "/home/user/itd-simulator/archives/v29_15_structural_metrics_modularized",
+      "file_count": 137,
+      "manifest_sha256": "f6f0ff7e804cfc376bf0a9df82cfb31a5658b7334bffa8d940a58a6ac61e1518"
+    },
+    "backup": "/home/user/itd-simulator/.v29_pipeline_backups/v29.15_20260716T212255",
+    "candidate": {
+      "imports": [
+        [
+          "from",
+          "itd_v29_core.constants",
+          "DEFAULT_STRUCTURAL_WEIGHTS",
+          ""
+        ],
+        [
+          "from",
+          "itd_v29_core.constants",
+          "STRUCTURAL_LENGTH",
+          ""
+        ],
+        [
+          "from",
+          "itd_v29_core.constants",
+          "ZERO_THRESHOLD",
+          ""
+        ],
+        [
+          "from",
+          "itd_v29_core.spatial_geometry",
+          "normalize_spatial_geometry",
+          ""
+        ],
+        [
+          "from",
+          "itd_v29_core.spatial_operators",
+          "bounded",
+          ""
+        ],
+        [
+          "from",
+          "itd_v29_core.spatial_operators",
+          "scalar_gradient_with_boundary",
+          ""
+        ],
+        [
+          "from",
+          "itd_v29_core.spatial_operators",
+          "spatial_mean",
+          ""
+        ],
+        [
+          "from",
+          "itd_v29_core.spatial_operators",
+          "validate_boundary_mode",
+          ""
+        ],
+        [
+          "import",
+          "numpy",
+          "",
+          "np"
+        ]
+      ],
+      "module_sha256": "573f52b9aca8a99583cd10f710cb9dd329d3c29950e731c17ddedc8c12f45bf5"
+    },
+    "finished_utc": "2026-07-16T21:23:03Z",
+    "integrated": {
+      "main_lines": 1540,
+      "main_sha256": "be4afb06f2adf0e6405a3b746c6dc715808a3ecb773edf531d846523447c72e0"
+    },
+    "reference_archive": "/home/user/itd-simulator/archives/v29_14_material_interval_modularized",
+    "report": "/home/user/itd-simulator/itd_v29_results/v29_15_structural_metrics_certification.md",
+    "started_utc": "2026-07-16T21:22:55Z",
+    "status": "PASSED",
+    "summary_sha256": "119b4db845a504facc6f024dc37efe5e5544197802fd219227d32bb38246254b",
+    "validations": [
+      {
+        "code": 0,
+        "log": "/tmp/itd_v29_15_certification_20260716T212256Z/VALIDATE_RELEASE_V10.log",
+        "name": "VALIDATE_RELEASE_V10"
+      },
+      {
+        "code": 0,
+        "log": "/tmp/itd_v29_15_certification_20260716T212256Z/MAIN.log",
+        "name": "MAIN"
+      }
+    ],
+    "version": "29.15"
+  }
+}
