@@ -4,3 +4,5 @@ __pycache__/
 itd_v10_results/
 *.log
 .DS_Store
+archives/
+.v29_pipeline_backups/

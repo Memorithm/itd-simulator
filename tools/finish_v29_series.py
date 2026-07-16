@@ -7,6 +7,7 @@ import builtins
 import dataclasses
 import datetime as dt
 import hashlib
+import json
 import os
 import shutil
 import stat
@@ -89,8 +90,342 @@ PLANS = (
 )
 
 EXCLUDED_VALIDATORS = {
+    # Exclusion historique explicite : cible le mode déprécié
+    # cubic_bounded_periodic. Le mode local actuel est
+    # cubic_local_bounded_periodic ; la préservation exacte de
+    # somme est couverte par cubic_local_sum_preserving_periodic.
     "validate_bounded_cubic_v27.py":
         "validateur historique du mode cubic_bounded_periodic",
+    # Exclusions découvertes empiriquement (audit V29.15) : chacun
+    # de ces validateurs importe, directement ou via un autre
+    # validateur réutilisé comme module d'aide, un monolithe
+    # historique itd_vN (N < 29, hors itd_v10) qui n'a jamais été
+    # ajouté à l'historique Git de ce dépôt (vérifié via
+    # `git log --all --diff-filter=A -- 'itd_v*.py'`). Il ne
+    # s'agit donc pas d'une régression locale à un environnement
+    # particulier : aucun clone de ce dépôt public ne peut faire
+    # exécuter ces validateurs de comparaison inter-versions tant
+    # que le monolithe historique qu'ils requièrent n'est pas
+    # restauré. Recréer ce code historique perdu à partir de rien
+    # serait une fabrication scientifiquement inacceptable ; ces
+    # validateurs restent donc non applicables et sont conservés
+    # inchangés pour la traçabilité, exactement comme
+    # validate_bounded_cubic_v27.py ci-dessus.
+    "validate_accelerating_frames_v24.py":
+        (
+            "dépend (directement ou via un autre validateur "
+            "réutilisé comme module d'aide) du monolithe "
+            "historique 'itd_v23', absent de tout "
+            "l'historique Git du dépôt."
+        ),
+    "validate_arbitrary_rotations_v14.py":
+        (
+            "dépend (directement ou via un autre validateur "
+            "réutilisé comme module d'aide) du monolithe "
+            "historique 'itd_v13', absent de tout "
+            "l'historique Git du dépôt."
+        ),
+    "validate_asymptotic_local_limiter_v27.py":
+        (
+            "dépend (directement ou via un autre validateur "
+            "réutilisé comme module d'aide) du monolithe "
+            "historique 'itd_v24', absent de tout "
+            "l'historique Git du dépôt."
+        ),
+    "validate_boundary_conditions_v12.py":
+        (
+            "dépend (directement ou via un autre validateur "
+            "réutilisé comme module d'aide) du monolithe "
+            "historique 'itd_v11', absent de tout "
+            "l'historique Git du dépôt."
+        ),
+    "validate_conservation_v27.py":
+        (
+            "dépend (directement ou via un autre validateur "
+            "réutilisé comme module d'aide) du monolithe "
+            "historique 'itd_v27', absent de tout "
+            "l'historique Git du dépôt."
+        ),
+    "validate_cubic_transport_v25.py":
+        (
+            "dépend (directement ou via un autre validateur "
+            "réutilisé comme module d'aide) du monolithe "
+            "historique 'itd_v24', absent de tout "
+            "l'historique Git du dépôt."
+        ),
+    "validate_curvature_injection_v7.py":
+        (
+            "dépend (directement ou via un autre validateur "
+            "réutilisé comme module d'aide) du monolithe "
+            "historique 'itd_v6', absent de tout "
+            "l'historique Git du dépôt."
+        ),
+    "validate_curvature_weight_v6.py":
+        (
+            "dépend (directement ou via un autre validateur "
+            "réutilisé comme module d'aide) du monolithe "
+            "historique 'itd_v6', absent de tout "
+            "l'historique Git du dépôt."
+        ),
+    "validate_decoupled_error_budget_v20.py":
+        (
+            "dépend (directement ou via un autre validateur "
+            "réutilisé comme module d'aide) du monolithe "
+            "historique 'itd_v19', absent de tout "
+            "l'historique Git du dépôt."
+        ),
+    "validate_decoupled_error_budget_v20_1.py":
+        (
+            "dépend (directement ou via un autre validateur "
+            "réutilisé comme module d'aide) du monolithe "
+            "historique 'itd_v19', absent de tout "
+            "l'historique Git du dépôt."
+        ),
+    "validate_direct_departures_v29.py":
+        (
+            "dépend (directement ou via un autre validateur "
+            "réutilisé comme module d'aide) du monolithe "
+            "historique 'itd_v28', absent de tout "
+            "l'historique Git du dépôt."
+        ),
+    "validate_error_budget_v26.py":
+        (
+            "dépend (directement ou via un autre validateur "
+            "réutilisé comme module d'aide) du monolithe "
+            "historique 'itd_v26', absent de tout "
+            "l'historique Git du dépôt."
+        ),
+    "validate_exact_interpolation_v14_1.py":
+        (
+            "dépend (directement ou via un autre validateur "
+            "réutilisé comme module d'aide) du monolithe "
+            "historique 'itd_v14', absent de tout "
+            "l'historique Git du dépôt."
+        ),
+    "validate_galilean_objectivity_v23.py":
+        (
+            "dépend (directement ou via un autre validateur "
+            "réutilisé comme module d'aide) du monolithe "
+            "historique 'itd_v22', absent de tout "
+            "l'historique Git du dépôt."
+        ),
+    "validate_gamma_parametric_v25.py":
+        (
+            "dépend (directement ou via un autre validateur "
+            "réutilisé comme module d'aide) du monolithe "
+            "historique 'itd_v25', absent de tout "
+            "l'historique Git du dépôt."
+        ),
+    "validate_geometric_invariance_v11.py":
+        (
+            "dépend (directement ou via un autre validateur "
+            "réutilisé comme module d'aide) du monolithe "
+            "historique 'itd_v11', absent de tout "
+            "l'historique Git du dépôt."
+        ),
+    "validate_growth_family_v25.py":
+        (
+            "dépend (directement ou via un autre validateur "
+            "réutilisé comme module d'aide) du monolithe "
+            "historique 'itd_v25', absent de tout "
+            "l'historique Git du dépôt."
+        ),
+    "validate_heterogeneity_v8.py":
+        (
+            "dépend (directement ou via un autre validateur "
+            "réutilisé comme module d'aide) du monolithe "
+            "historique 'itd_v7', absent de tout "
+            "l'historique Git du dépôt."
+        ),
+    "validate_irrotational_invariance_v6.py":
+        (
+            "dépend (directement ou via un autre validateur "
+            "réutilisé comme module d'aide) du monolithe "
+            "historique 'itd_v6', absent de tout "
+            "l'historique Git du dépôt."
+        ),
+    "validate_local_bounded_v27.py":
+        (
+            "dépend (directement ou via un autre validateur "
+            "réutilisé comme module d'aide) du monolithe "
+            "historique 'itd_v26', absent de tout "
+            "l'historique Git du dépôt."
+        ),
+    "validate_locality_v28.py":
+        (
+            "dépend (directement ou via un autre validateur "
+            "réutilisé comme module d'aide) du monolithe "
+            "historique 'itd_v28', absent de tout "
+            "l'historique Git du dépôt."
+        ),
+    "validate_locality_v29_regression.py":
+        (
+            "dépend (directement ou via un autre validateur "
+            "réutilisé comme module d'aide) du monolithe "
+            "historique 'itd_v24', absent de tout "
+            "l'historique Git du dépôt."
+        ),
+    "validate_material_derivative_v22.py":
+        (
+            "dépend (directement ou via un autre validateur "
+            "réutilisé comme module d'aide) du monolithe "
+            "historique 'itd_v21', absent de tout "
+            "l'historique Git du dépôt."
+        ),
+    "validate_multiscale_structure_v18.py":
+        (
+            "dépend (directement ou via un autre validateur "
+            "réutilisé comme module d'aide) du monolithe "
+            "historique 'itd_v17', absent de tout "
+            "l'historique Git du dépôt."
+        ),
+    "validate_nonuniform_geometry_v16.py":
+        (
+            "dépend (directement ou via un autre validateur "
+            "réutilisé comme module d'aide) du monolithe "
+            "historique 'itd_v15', absent de tout "
+            "l'historique Git du dépôt."
+        ),
+    "validate_nonuniform_time_v6.py":
+        (
+            "dépend (directement ou via un autre validateur "
+            "réutilisé comme module d'aide) du monolithe "
+            "historique 'itd_v6', absent de tout "
+            "l'historique Git du dépôt."
+        ),
+    "validate_numerical_certification_v19.py":
+        (
+            "dépend (directement ou via un autre validateur "
+            "réutilisé comme module d'aide) du monolithe "
+            "historique 'itd_v18', absent de tout "
+            "l'historique Git du dépôt."
+        ),
+    "validate_phase_robust_limiter_v27.py":
+        (
+            "dépend (directement ou via un autre validateur "
+            "réutilisé comme module d'aide) du monolithe "
+            "historique 'itd_v27', absent de tout "
+            "l'historique Git du dépôt."
+        ),
+    "validate_rectangular_geometry_v13.py":
+        (
+            "dépend (directement ou via un autre validateur "
+            "réutilisé comme module d'aide) du monolithe "
+            "historique 'itd_v12', absent de tout "
+            "l'historique Git du dépôt."
+        ),
+    "validate_rk4_departure_consistency_v28.py":
+        (
+            "dépend (directement ou via un autre validateur "
+            "réutilisé comme module d'aide) du monolithe "
+            "historique 'itd_v28', absent de tout "
+            "l'historique Git du dépôt."
+        ),
+    "validate_rk4_departure_consistency_v29_regression.py":
+        (
+            "dépend (directement ou via un autre validateur "
+            "réutilisé comme module d'aide) du monolithe "
+            "historique 'itd_v24', absent de tout "
+            "l'historique Git du dépôt."
+        ),
+    "validate_rk4_transport_v26.py":
+        (
+            "dépend (directement ou via un autre validateur "
+            "réutilisé comme module d'aide) du monolithe "
+            "historique 'itd_v25', absent de tout "
+            "l'historique Git du dépôt."
+        ),
+    "validate_scaling_v6.py":
+        (
+            "dépend (directement ou via un autre validateur "
+            "réutilisé comme module d'aide) du monolithe "
+            "historique 'itd_v6', absent de tout "
+            "l'historique Git du dépôt."
+        ),
+    "validate_shape_stability_v26.py":
+        (
+            "dépend (directement ou via un autre validateur "
+            "réutilisé comme module d'aide) du monolithe "
+            "historique 'itd_v26', absent de tout "
+            "l'historique Git du dépôt."
+        ),
+    "validate_spatial_scaling_v17.py":
+        (
+            "dépend (directement ou via un autre validateur "
+            "réutilisé comme module d'aide) du monolithe "
+            "historique 'itd_v16', absent de tout "
+            "l'historique Git du dépôt."
+        ),
+    "validate_structural_length_v9.py":
+        (
+            "dépend (directement ou via un autre validateur "
+            "réutilisé comme module d'aide) du monolithe "
+            "historique 'itd_v8', absent de tout "
+            "l'historique Git du dépôt."
+        ),
+    "validate_structural_weights_v10.py":
+        (
+            "dépend (directement ou via un autre validateur "
+            "réutilisé comme module d'aide) du monolithe "
+            "historique 'itd_v9', absent de tout "
+            "l'historique Git du dépôt."
+        ),
+    "validate_sum_preserving_v28.py":
+        (
+            "dépend (directement ou via un autre validateur "
+            "réutilisé comme module d'aide) du monolithe "
+            "historique 'itd_v27', absent de tout "
+            "l'historique Git du dépôt."
+        ),
+    "validate_sum_preserving_v29_regression.py":
+        (
+            "dépend (directement ou via un autre validateur "
+            "réutilisé comme module d'aide) du monolithe "
+            "historique 'itd_v27', absent de tout "
+            "l'historique Git du dépôt."
+        ),
+    "validate_summary_semantics_v20_1.py":
+        (
+            "dépend (directement ou via un autre validateur "
+            "réutilisé comme module d'aide) du monolithe "
+            "historique 'itd_v20_1', absent de tout "
+            "l'historique Git du dépôt."
+        ),
+    "validate_temporal_geometry_v15.py":
+        (
+            "dépend (directement ou via un autre validateur "
+            "réutilisé comme module d'aide) du monolithe "
+            "historique 'itd_v14_1', absent de tout "
+            "l'historique Git du dépôt."
+        ),
+    "validate_temporal_interval_v6.py":
+        (
+            "dépend (directement ou via un autre validateur "
+            "réutilisé comme module d'aide) du monolithe "
+            "historique 'itd_v6', absent de tout "
+            "l'historique Git du dépôt."
+        ),
+    "validate_temporal_oracle.py":
+        (
+            "dépend (directement ou via un autre validateur "
+            "réutilisé comme module d'aide) du monolithe "
+            "historique 'itd_v4', absent de tout "
+            "l'historique Git du dépôt."
+        ),
+    "validate_temporal_oracle_v5.py":
+        (
+            "dépend (directement ou via un autre validateur "
+            "réutilisé comme module d'aide) du monolithe "
+            "historique 'itd_v5', absent de tout "
+            "l'historique Git du dépôt."
+        ),
+    "validate_transport_deformation_v21.py":
+        (
+            "dépend (directement ou via un autre validateur "
+            "réutilisé comme module d'aide) du monolithe "
+            "historique 'itd_v20_1', absent de tout "
+            "l'historique Git du dépôt."
+        ),
 }
 
 
@@ -1574,10 +1909,87 @@ def execute_release(
         raise
 
 
+def _series_ledger_path(project: Path) -> Path:
+    return (
+        project
+        / "itd_v29_results"
+        / "v29_series_records.json"
+    )
+
+
+def _load_series_ledger(
+    project: Path,
+) -> dict[str, dict[str, object]]:
+    """
+    Charge l'historique cumulatif persistant des versions déjà
+    traitées par l'automatisation. Ce fichier permet à chaque
+    exécution (`--version X.Y`) de fusionner son propre résultat
+    avec l'historique existant, au lieu d'écraser silencieusement
+    les versions précédemment réussies.
+    """
+    path = _series_ledger_path(project)
+
+    if not path.is_file():
+        return {}
+
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+
+    except (
+        json.JSONDecodeError,
+        OSError,
+    ):
+        return {}
+
+    if not isinstance(data, dict):
+        return {}
+
+    return data
+
+
+def _save_series_ledger(
+    project: Path,
+    ledger: dict[str, dict[str, object]],
+) -> None:
+    path = _series_ledger_path(project)
+
+    path.parent.mkdir(
+        parents=True,
+        exist_ok=True,
+    )
+
+    path.write_text(
+        json.dumps(
+            ledger,
+            indent=2,
+            sort_keys=True,
+            ensure_ascii=False,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+
+
+def _version_sort_key(version: str) -> tuple[int, int]:
+    major, minor = version.split(".", 1)
+
+    return (
+        int(major),
+        int(minor),
+    )
+
+
 def write_series_report(
     project: Path,
     records: list[dict[str, object]],
 ) -> Path:
+    ledger = _load_series_ledger(project)
+
+    for record in records:
+        ledger[str(record["version"])] = record
+
+    _save_series_ledger(project, ledger)
+
     report = (
         project
         / "itd_v29_results"
@@ -1593,10 +2005,24 @@ def write_series_report(
         "# ITD V29.xx — Rapport d'automatisation",
         "",
         f"- Généré le : `{now_utc()}`",
+        (
+            "- Ce rapport cumule l'historique de toutes les "
+            "versions déjà traitées (voir "
+            "`v29_series_records.json`) ; une exécution portant "
+            "sur une seule version ne supprime jamais les "
+            "sections des versions précédentes."
+        ),
         "",
     ]
 
-    for record in records:
+    ordered_versions = sorted(
+        ledger,
+        key=_version_sort_key,
+    )
+
+    for version in ordered_versions:
+        record = ledger[version]
+
         lines.extend(
             [
                 f"## V{record['version']}",
