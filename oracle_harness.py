@@ -46,6 +46,7 @@ from itd_v29_core.reference_frames import (
 )
 from itd_v29_core.multiscale_structure import derive_multiscale_profile
 from itd_v29_core.material_interval import material_vorticity_interval
+from itd_v29_core.material_deformation import simulate_material_deformation
 
 from compare_scenarios import (
     Config,
@@ -642,6 +643,53 @@ def emit_material() -> None:
     emit()
 
 
+# ---------------------------------------------------------------------------
+# Material-deformation orchestration fixtures.
+# ---------------------------------------------------------------------------
+def emit_material_deformation() -> None:
+    cfg = Config(grid_size=21, time_steps=9)
+    coords = np.linspace(cfg.domain_min, cfg.domain_max, cfg.grid_size, dtype=np.float64)
+    x, y = np.meshgrid(coords, coords, indexing="xy")
+    spacing = float(coords[1] - coords[0])
+    times = np.linspace(0.0, cfg.duration, cfg.time_steps, dtype=np.float64)
+
+    cases = (
+        ("DEFAULT", multi_vortex_field, None),
+        ("SEP", multi_vortex_field, coherent_vortex),
+    )
+    emit("// ---- material-deformation orchestration fixtures (grid=21, steps=9) ----")
+    for tag, velocity, advection in cases:
+        r = simulate_material_deformation(
+            "multi",
+            velocity,
+            x,
+            y,
+            times,
+            spacing,
+            cfg,
+            advection_velocity_function=advection,
+        )
+        assert r["material_eulerian_consistency_error"] < 1.0e-12
+        flat(f"MD_{tag}_EUL_IV", np.asarray(r["material_eulerian_rate_interval"]))
+        flat(f"MD_{tag}_ADV_IV", np.asarray(r["material_advective_rate_interval"]))
+        flat(f"MD_{tag}_MAT_IV", np.asarray(r["material_deformation_interval"]))
+        flat(f"MD_{tag}_EUL_NODAL", np.asarray(r["material_eulerian_rate"]))
+        flat(f"MD_{tag}_ADV_NODAL", np.asarray(r["material_advective_rate"]))
+        flat(f"MD_{tag}_MAT_NODAL", np.asarray(r["material_deformation"]))
+        scalar(f"MD_{tag}_EUL_IDX", r["material_eulerian_rate_index"])
+        scalar(f"MD_{tag}_ADV_IDX", r["material_advective_rate_index"])
+        scalar(f"MD_{tag}_MAT_IDX", r["material_deformation_index"])
+        scalar(f"MD_{tag}_CONSISTENCY", r["material_eulerian_consistency_error"])
+        scalar(f"MD_{tag}_BASE_INTENSITY", r["intensity_index"])
+        scalar(f"MD_{tag}_BASE_STRUCTURE", r["structure_index"])
+        print(
+            f"[MD] {tag:7s} eul={r['material_eulerian_rate_index']:.10f} "
+            f"adv={r['material_advective_rate_index']:.10f} "
+            f"mat={r['material_deformation_index']:.10f}"
+        )
+    emit()
+
+
 def main() -> None:
     out_path = sys.argv[1] if len(sys.argv) > 1 else "oracle_data.rs"
     emit("// AUTO-GENERATED from ITD V29 via numpy. Do not edit by hand.")
@@ -657,6 +705,7 @@ def main() -> None:
     emit_covariance()
     emit_multiscale()
     emit_material()
+    emit_material_deformation()
     with open(out_path, "w", encoding="utf-8") as fh:
         fh.write("\n".join(_LINES) + "\n")
     print(f"wrote {out_path} ({len(_LINES)} lines)")
