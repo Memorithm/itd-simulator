@@ -18,7 +18,7 @@ import sys
 
 import numpy as np
 
-from itd_v29_core.spatial_geometry import RectilinearGeometry
+from itd_v29_core.spatial_geometry import RectilinearGeometry, SpatialGeometry
 from itd_v29_core.spatial_operators import (
     bounded,
     numerical_vorticity_with_boundary,
@@ -30,6 +30,22 @@ from itd_v29_core.simulation_engine import simulate
 from itd_v29_core.periodic_transport import (
     transport_previous_vorticity_periodic,
 )
+from itd_v29_core.geometric_transforms import (
+    BilinearTransformPlan,
+    rotation_matrix,
+    transform_coordinates,
+)
+from itd_v29_core.spatial_scaling import (
+    inverse_scale_coordinates,
+    scale_length,
+    scale_spatial_geometry,
+)
+from itd_v29_core.reference_frames import (
+    galilean_source_coordinates,
+    translating_frame_source_coordinates,
+)
+from itd_v29_core.multiscale_structure import derive_multiscale_profile
+from itd_v29_core.material_interval import material_vorticity_interval
 
 from compare_scenarios import (
     Config,
@@ -412,6 +428,220 @@ def run_transport_scenarios(grid_size: int, time_steps: int) -> None:
     emit()
 
 
+# ---------------------------------------------------------------------------
+# Geometric-transform fixtures (rotation / reflection covariance of a field).
+# ---------------------------------------------------------------------------
+GTX = np.array([0.0, 0.5, 1.0, 1.5, 2.0], dtype=np.float64)  # nx=5, dx=0.5
+GTY = np.array([0.0, 0.4, 0.8, 1.2], dtype=np.float64)  # ny=4, dy=0.4
+GT_ANGLE = 0.37
+GT_ORIGIN = (1.0, 0.6)
+
+
+def _gfield(fn) -> np.ndarray:
+    out = np.empty((GTY.size, GTX.size), dtype=np.float64)
+    for i in range(GTY.size):
+        for j in range(GTX.size):
+            out[i, j] = fn(float(GTX[j]), float(GTY[i]))
+    return out
+
+
+def emit_transforms() -> None:
+    scalar_field = _gfield(
+        lambda x, y: math.sin(1.3 * x) * math.cos(0.9 * y) + 0.2 * x - 0.1 * y
+    )
+    vx = _gfield(lambda x, y: math.cos(0.8 * x) + 0.3 * y)
+    vy = _gfield(lambda x, y: math.sin(0.6 * y) - 0.2 * x)
+
+    emit("// ---- geometric-transform fixtures ----")
+    emit(f"pub const GT_NY: usize = {GTY.size};")
+    emit(f"pub const GT_NX: usize = {GTX.size};")
+    flat("GTX", GTX)
+    flat("GTY", GTY)
+    flat("GT_SCALAR", scalar_field)
+    flat("GT_VX", vx)
+    flat("GT_VY", vy)
+    scalar("GT_ANGLE", GT_ANGLE)
+    flat("GT_ORIGIN", np.array(GT_ORIGIN, dtype=np.float64))
+
+    # A handful of rotation matrices (row-major 2x2 -> 4 values).
+    rot_angles = (0.0, math.pi / 6.0, -1.2, GT_ANGLE)
+    flat("GT_ROT_ANGLES", np.array(rot_angles, dtype=np.float64))
+    for k, ang in enumerate(rot_angles):
+        flat(f"GT_ROT_{k}", rotation_matrix(ang))
+
+    q = rotation_matrix(GT_ANGLE)
+
+    # transform_coordinates over the (flattened, row-major) target grid.
+    tx_mesh, ty_mesh = np.meshgrid(GTX, GTY, indexing="xy")
+    scx, scy = transform_coordinates(tx_mesh, ty_mesh, q)
+    flat("GT_COORD_SX", scx)
+    flat("GT_COORD_SY", scy)
+
+    plan = BilinearTransformPlan(GTX, GTY, q, origin=GT_ORIGIN, fill_value=0.0)
+    assert not plan.uses_exact_node_map, "generic rotation must not be node-aligned"
+    flat("GT_T_SCALAR", plan.transform_scalar(scalar_field))
+    tvx, tvy = plan.transform_vector(vx, vy)
+    flat("GT_T_VX", tvx)
+    flat("GT_T_VY", tvy)
+
+    # Exact node map: square grid, 90-degree rotation about the centre.
+    sq = np.array([0.0, 1.0, 2.0, 3.0, 4.0], dtype=np.float64)  # 5x5, d=1
+    sqf = np.empty((sq.size, sq.size), dtype=np.float64)
+    for i in range(sq.size):
+        for j in range(sq.size):
+            sqf[i, j] = (
+                math.sin(0.7 * sq[j])
+                + math.cos(0.5 * sq[i])
+                + 0.1 * sq[j] * sq[i]
+            )
+    q90 = rotation_matrix(math.pi / 2.0)
+    plan90 = BilinearTransformPlan(sq, sq, q90, origin=(2.0, 2.0), fill_value=0.0)
+    assert plan90.uses_exact_node_map, "90-deg rotation about centre is node-aligned"
+    emit(f"pub const GT_SQ_N: usize = {sq.size};")
+    flat("GT_SQ", sq)
+    flat("GT_SQF", sqf)
+    flat("GT_SQ_ROT90", plan90.transform_scalar(sqf))
+    emit()
+
+
+# ---------------------------------------------------------------------------
+# Covariance fixtures (spatial scaling + reference frames).
+# ---------------------------------------------------------------------------
+COV_X = np.array([0.0, 0.5, 1.0, 1.5, 2.0], dtype=np.float64)
+COV_Y = np.array([0.2, 0.7, 1.1, 1.6, 2.3], dtype=np.float64)
+
+
+def emit_covariance() -> None:
+    a = 1.75
+    origin = (0.3, -0.4)
+
+    emit("// ---- covariance (spatial scaling + reference frames) fixtures ----")
+    flat("COV_X", COV_X)
+    flat("COV_Y", COV_Y)
+    scalar("COV_A", a)
+    flat("COV_ORIGIN", np.array(origin, dtype=np.float64))
+
+    sx, sy = inverse_scale_coordinates(COV_X, COV_Y, a, origin)
+    flat("COV_INV_SX", sx)
+    flat("COV_INV_SY", sy)
+
+    scalar("COV_LEN_IN", 0.8)
+    scalar("COV_LEN_OUT", scale_length(0.8, a))
+
+    uniform = scale_spatial_geometry(SpatialGeometry(0.5, 0.3), a, origin)
+    scalar("COV_SCALED_DX", uniform.dx)
+    scalar("COV_SCALED_DY", uniform.dy)
+
+    rect = scale_spatial_geometry(RectilinearGeometry(COV_X, COV_Y), a, origin)
+    flat("COV_SCALED_RX", rect.x_coordinates)
+    flat("COV_SCALED_RY", rect.y_coordinates)
+
+    frame_velocity = (0.4, -0.25)
+    time, reference_time = 1.3, 0.5
+    flat("COV_C", np.array(frame_velocity, dtype=np.float64))
+    scalar("COV_T", time)
+    scalar("COV_T0", reference_time)
+    gsx, gsy = galilean_source_coordinates(
+        COV_X, COV_Y, time, frame_velocity, reference_time
+    )
+    flat("COV_GAL_SX", gsx)
+    flat("COV_GAL_SY", gsy)
+
+    displacement = (0.15, 0.6)
+    flat("COV_B", np.array(displacement, dtype=np.float64))
+    tsx, tsy = translating_frame_source_coordinates(
+        COV_X, COV_Y, 0.0, lambda _t: np.array(displacement, dtype=np.float64)
+    )
+    flat("COV_TRANS_SX", tsx)
+    flat("COV_TRANS_SY", tsy)
+    emit()
+
+
+# ---------------------------------------------------------------------------
+# Multiscale-profile fixtures (derived from one structural_length = 1 run).
+# ---------------------------------------------------------------------------
+def emit_multiscale() -> None:
+    cfg = Config(grid_size=21, time_steps=9)
+    coords = np.linspace(cfg.domain_min, cfg.domain_max, cfg.grid_size, dtype=np.float64)
+    x, y = np.meshgrid(coords, coords, indexing="xy")
+    spacing = float(coords[1] - coords[0])
+    times = np.linspace(0.0, cfg.duration, cfg.time_steps, dtype=np.float64)
+    r = simulate(
+        "coherent", coherent_vortex, x, y, times, spacing, cfg, structural_length=1.0
+    )
+    lengths = np.array([0.25, 0.5, 1.0, 2.0], dtype=np.float64)
+    profile = derive_multiscale_profile(r, lengths)
+
+    emit("// ---- multiscale profile fixtures (reference run at ell = 1) ----")
+    emit(f"pub const MS_NODES: usize = {np.asarray(r['intensity_rate']).size};")
+    flat("MS_INTENSITY_RATE", np.asarray(r["intensity_rate"]))
+    flat("MS_HETEROGENEITY", np.asarray(r["heterogeneity"]))
+    flat("MS_LOCALIZATION", np.asarray(r["localization"]))
+    flat("MS_UNIT_ROUGHNESS", np.asarray(r["roughness"]))
+    flat("MS_SIGN_MIXING", np.asarray(r["sign_mixing"]))
+    flat("MS_TDEF_INTERVAL", np.asarray(r["temporal_deformation_interval"]))
+    flat("MS_INTERVAL_DT", np.asarray(r["temporal_interval_dt"]))
+    flat("MS_WEIGHTS", np.asarray(r["structural_weights"], dtype=np.float64))
+    scalar("MS_INTENSITY_INDEX", r["intensity_index"])
+    scalar("MS_TDEF_INDEX", r["temporal_deformation_index"])
+    emit(f"pub const MS_LENGTH_COUNT: usize = {lengths.size};")
+    flat("MS_LENGTHS", lengths)
+    flat("MS_SIGNATURES", np.asarray(profile["structural_signatures"]))
+    flat("MS_STRUCTURE_IDX", np.asarray(profile["structure_indices"]))
+    flat("MS_COUPLED_IDX", np.asarray(profile["coupled_indices"]))
+    flat("MS_RAW_ROUGH_IDX", np.asarray(profile["raw_roughness_indices"]))
+    emit()
+
+
+# ---------------------------------------------------------------------------
+# Material-derivative interval fixtures.
+# ---------------------------------------------------------------------------
+def emit_material() -> None:
+    mny, mnx = 5, 6
+    mdx, mdy = 0.5, 0.3
+
+    def mbuild(fn) -> np.ndarray:
+        out = np.empty((mny, mnx), dtype=np.float64)
+        for i in range(mny):
+            for j in range(mnx):
+                out[i, j] = fn(i, j)
+        return out
+
+    prev = mbuild(lambda i, j: math.sin(0.6 * i) * math.cos(0.4 * j) + 0.1 * i)
+    cur = mbuild(
+        lambda i, j: math.sin(0.6 * i + 0.2) * math.cos(0.4 * j - 0.1)
+        + 0.1 * i
+        + 0.05 * j
+    )
+    mvx = mbuild(lambda i, j: 0.3 * math.cos(0.5 * j) + 0.1 * i)
+    mvy = mbuild(lambda i, j: -0.2 * math.sin(0.4 * i) + 0.05 * j)
+    dt = 0.25
+    res = material_vorticity_interval(
+        prev, cur, mvx, mvy, (mdx, mdy), dt, boundary_mode="finite"
+    )
+
+    emit("// ---- material-derivative interval fixtures ----")
+    emit(f"pub const MAT_NY: usize = {mny};")
+    emit(f"pub const MAT_NX: usize = {mnx};")
+    scalar("MAT_DX", mdx)
+    scalar("MAT_DY", mdy)
+    scalar("MAT_DT", dt)
+    flat("MAT_PREV", prev)
+    flat("MAT_CUR", cur)
+    flat("MAT_VX", mvx)
+    flat("MAT_VY", mvy)
+    flat("MAT_TEMPORAL", res["temporal_tendency"])
+    flat("MAT_ADVECTIVE", res["advective_tendency"])
+    flat("MAT_MATERIAL", res["material_tendency"])
+    scalar("MAT_REF_RMS", res["reference_rms"])
+    scalar("MAT_PREV_RMS", res["previous_rms"])
+    scalar("MAT_CUR_RMS", res["current_rms"])
+    scalar("MAT_EUL_RATE", res["eulerian_rate"])
+    scalar("MAT_ADV_RATE", res["advective_rate"])
+    scalar("MAT_MAT_RATE", res["material_rate"])
+    emit()
+
+
 def main() -> None:
     out_path = sys.argv[1] if len(sys.argv) > 1 else "oracle_data.rs"
     emit("// AUTO-GENERATED from ITD V29 via numpy. Do not edit by hand.")
@@ -423,6 +653,10 @@ def main() -> None:
     run_scenarios(161, 401, "FULL")
     emit_transport()
     run_transport_scenarios(41, 41)
+    emit_transforms()
+    emit_covariance()
+    emit_multiscale()
+    emit_material()
     with open(out_path, "w", encoding="utf-8") as fh:
         fh.write("\n".join(_LINES) + "\n")
     print(f"wrote {out_path} ({len(_LINES)} lines)")
