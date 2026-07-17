@@ -27,6 +27,9 @@ from itd_v29_core.spatial_operators import (
 )
 from itd_v29_core.structural_metrics import structural_metrics
 from itd_v29_core.simulation_engine import simulate
+from itd_v29_core.periodic_transport import (
+    transport_previous_vorticity_periodic,
+)
 
 from compare_scenarios import (
     Config,
@@ -247,6 +250,125 @@ def run_scenarios(grid_size: int, time_steps: int, tag: str) -> None:
     emit()
 
 
+# ---------------------------------------------------------------------------
+# Transport (semi-Lagrangian) fixtures.
+# ---------------------------------------------------------------------------
+TNX, TNY = 8, 6
+TX_COORDS = np.array(
+    [k * (2.0 * math.pi / TNX) for k in range(TNX)], dtype=np.float64
+)
+TY_COORDS = np.array(
+    [k * (2.0 * math.pi / TNY) for k in range(TNY)], dtype=np.float64
+)
+
+
+def _tprev(i: int, j: int) -> float:
+    x = TX_COORDS[j]
+    y = TY_COORDS[i]
+    return (
+        math.sin(x) * math.cos(y)
+        + 0.3 * math.cos(2.0 * x - y)
+    )
+
+
+def transport_velocity(x, y, t):
+    """A smooth 2*pi-periodic transport velocity (wrapping is a no-op)."""
+    return (
+        0.4 * np.cos(x + 0.2 * t) * np.sin(y),
+        -0.4 * np.sin(x) * np.cos(y - 0.1 * t),
+    )
+
+
+TRANSPORT_COMBOS = (
+    ("BILINEAR", "MIDPOINT", "bilinear_periodic", "midpoint_time_velocity"),
+    ("BILINEAR", "RK4", "bilinear_periodic", "rk4_backtrace"),
+    ("CUBIC", "MIDPOINT", "cubic_periodic", "midpoint_time_velocity"),
+    ("CUBIC", "RK4", "cubic_periodic", "rk4_backtrace"),
+)
+
+
+def emit_transport() -> None:
+    prev = np.empty((TNY, TNX), dtype=np.float64)
+    for i in range(TNY):
+        for j in range(TNX):
+            prev[i, j] = _tprev(i, j)
+
+    x_mesh, y_mesh = np.meshgrid(TX_COORDS, TY_COORDS, indexing="xy")
+    prev_time, cur_time = 0.5, 0.9
+
+    emit("// ---- transport fixtures (periodic grid TNY x TNX) ----")
+    emit(f"pub const TNY: usize = {TNY};")
+    emit(f"pub const TNX: usize = {TNX};")
+    flat("TX_COORDS", TX_COORDS)
+    flat("TY_COORDS", TY_COORDS)
+    flat("TPREV", prev)
+    scalar("T_PREV_TIME", prev_time)
+    scalar("T_CUR_TIME", cur_time)
+
+    for interp_tag, traj_tag, interp, traj in TRANSPORT_COMBOS:
+        result = transport_previous_vorticity_periodic(
+            prev,
+            x_mesh,
+            y_mesh,
+            TX_COORDS,
+            TY_COORDS,
+            prev_time,
+            cur_time,
+            transport_velocity,
+            transport_interpolation=interp,
+            transport_trajectory_method=traj,
+        )
+        flat(f"T_{interp_tag}_{traj_tag}", result)
+    emit()
+
+
+def run_transport_scenarios(grid_size: int, time_steps: int) -> None:
+    cfg = Config(grid_size=grid_size, time_steps=time_steps)
+    coords = np.linspace(cfg.domain_min, cfg.domain_max, cfg.grid_size, dtype=np.float64)
+    x, y = np.meshgrid(coords, coords, indexing="xy")
+    spacing = float(coords[1] - coords[0])
+    times = np.linspace(0.0, cfg.duration, cfg.time_steps, dtype=np.float64)
+
+    cases = (
+        ("COHERENT", coherent_vortex, "bilinear_periodic", "midpoint_time_velocity"),
+        ("MULTI", multi_vortex_field, "cubic_periodic", "rk4_backtrace"),
+    )
+    emit(f"// ---- transport-compensated engine indices (grid={grid_size}) ----")
+    for up, vf, interp, traj in cases:
+        r = simulate(
+            up.lower(),
+            vf,
+            x,
+            y,
+            times,
+            spacing,
+            cfg,
+            boundary_mode="periodic",
+            temporal_deformation_mode="transport_compensated",
+            transport_velocity_function=vf,
+            transport_interpolation=interp,
+            transport_trajectory_method=traj,
+        )
+        scalar(f"TC_{up}_INTENSITY", r["intensity_index"])
+        scalar(f"TC_{up}_STRUCTURE", r["structure_index"])
+        scalar(f"TC_{up}_COUPLED", r["coupled_index"])
+        ci = r["component_indices"]
+        scalar(f"TC_{up}_TMP", ci["temporal_deformation"])
+        scalar(
+            f"TC_{up}_EUL_IDX", r["temporal_deformation_eulerian_index"]
+        )
+        scalar(
+            f"TC_{up}_COMP_IDX",
+            r["temporal_deformation_compensated_index"],
+        )
+        print(
+            f"[TC] {up.lower():9s} I={r['intensity_index']:.10f} "
+            f"S={r['structure_index']:.10f} "
+            f"comp={r['temporal_deformation_compensated_index']:.10f}"
+        )
+    emit()
+
+
 def main() -> None:
     out_path = sys.argv[1] if len(sys.argv) > 1 else "oracle_data.rs"
     emit("// AUTO-GENERATED from ITD V29 via numpy. Do not edit by hand.")
@@ -256,6 +378,8 @@ def main() -> None:
     emit_operators()
     run_scenarios(41, 41, "SMALL")
     run_scenarios(161, 401, "FULL")
+    emit_transport()
+    run_transport_scenarios(41, 41)
     with open(out_path, "w", encoding="utf-8") as fh:
         fh.write("\n".join(_LINES) + "\n")
     print(f"wrote {out_path} ({len(_LINES)} lines)")
