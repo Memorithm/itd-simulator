@@ -279,11 +279,29 @@ def transport_velocity(x, y, t):
     )
 
 
+def _tprev_sharp(i: int, j: int) -> float:
+    """Smooth base plus a localized spike so the cubic overshoots and the
+    local limiters genuinely activate."""
+    x = TX_COORDS[j]
+    y = TY_COORDS[i]
+    spike = 2.5 if (i == 2 and j == 3) else 0.0
+    return math.sin(x) * math.cos(y) + spike
+
+
 TRANSPORT_COMBOS = (
     ("BILINEAR", "MIDPOINT", "bilinear_periodic", "midpoint_time_velocity"),
     ("BILINEAR", "RK4", "bilinear_periodic", "rk4_backtrace"),
     ("CUBIC", "MIDPOINT", "cubic_periodic", "midpoint_time_velocity"),
     ("CUBIC", "RK4", "cubic_periodic", "rk4_backtrace"),
+)
+
+LIMITER_COMBOS = (
+    ("CUBIC", "MIDPOINT", "cubic_periodic", "midpoint_time_velocity"),
+    ("CUBIC", "RK4", "cubic_periodic", "rk4_backtrace"),
+    ("BOUNDED", "MIDPOINT", "cubic_local_bounded_periodic", "midpoint_time_velocity"),
+    ("BOUNDED", "RK4", "cubic_local_bounded_periodic", "rk4_backtrace"),
+    ("SUMPRES", "MIDPOINT", "cubic_local_sum_preserving_periodic", "midpoint_time_velocity"),
+    ("SUMPRES", "RK4", "cubic_local_sum_preserving_periodic", "rk4_backtrace"),
 )
 
 
@@ -319,6 +337,31 @@ def emit_transport() -> None:
             transport_trajectory_method=traj,
         )
         flat(f"T_{interp_tag}_{traj_tag}", result)
+
+    # Limiter fixtures on a sharp field (spike) so the cubic overshoots and the
+    # convex / sum-preserving limiters do real work. Emitted for both the sharp
+    # and the smooth field.
+    sharp = np.empty((TNY, TNX), dtype=np.float64)
+    for i in range(TNY):
+        for j in range(TNX):
+            sharp[i, j] = _tprev_sharp(i, j)
+    flat("TPREV_SHARP", sharp)
+
+    for field_tag, field in (("SHARP", sharp), ("SMOOTH", prev)):
+        for interp_tag, traj_tag, interp, traj in LIMITER_COMBOS:
+            result = transport_previous_vorticity_periodic(
+                field,
+                x_mesh,
+                y_mesh,
+                TX_COORDS,
+                TY_COORDS,
+                prev_time,
+                cur_time,
+                transport_velocity,
+                transport_interpolation=interp,
+                transport_trajectory_method=traj,
+            )
+            flat(f"TL_{field_tag}_{interp_tag}_{traj_tag}", result)
     emit()
 
 
