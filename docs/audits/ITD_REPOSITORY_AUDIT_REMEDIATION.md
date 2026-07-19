@@ -198,13 +198,38 @@ automated-authorship trailer.
 | `810938c6c9daf2bbbb6c992c8f0607481551a282` | `test: add V29 validation and oracle contracts` |
 | `699108ebed34b0ad06912f374180d1c009f326c4` | `build: add packaging reproducibility and CI` |
 | `1032cb97dad238de8afaeee7e49e8fcf486760a5` | `docs: define scientific and project governance contracts` |
-| pending | final manifest and this remediation report |
+| `81e278b2d7145b600e4c060ae0c0a5dc7e189c04` | `docs: record audit remediation and manifest` |
+| `a86fcebd1ee28689b8bb386cb3f5faf5088429a0` | `ci: scope provenance and numerical checks` |
+| `0278f7e92caa89180d7260660dcc9319e1af387c` | `ci: inspect pull request head commits only` |
+
+The final publication-evidence update is necessarily this document's
+containing commit, so its SHA cannot be embedded in its own content without
+changing that SHA. The pull request head records it unambiguously.
 
 ## Pull request and publication status
 
-Draft pull request: **pending branch publication**. This section will be
-updated with the URL/number and CI conclusion after the branch is pushed and
-the remote workflow completes.
+Draft pull request: **[#9](https://github.com/Memorithm/itd-simulator/pull/9)**.
+
+The first CI observation exposed two legitimate workflow-contract issues: an
+all-zero `before` SHA on a new-branch push caused old public history to enter
+the commit-policy range, and NumPy version alone was insufficient to infer
+cross-architecture bitwise equality. A second PR-only observation showed that
+GitHub checks out a synthetic merge commit. Commits `a86fceb` and `0278f7e`
+scope first pushes to the default-branch merge base, inspect the actual PR head,
+and make exact numerical comparison an explicit reference-environment opt-in.
+
+Replacement GitHub Actions runs completed successfully:
+
+- push run
+  [`29695503764`](https://github.com/Memorithm/itd-simulator/actions/runs/29695503764):
+  Python 3.11, 3.12, 3.13, dependency audit, cleanliness, and commit policy all
+  passed;
+- pull-request run
+  [`29695505177`](https://github.com/Memorithm/itd-simulator/actions/runs/29695505177):
+  the same complete matrix and policy passed.
+
+The superseded failed runs remain visible as audit evidence; they were not
+rerun or ignored without correction.
 
 No tag or GitHub Release is created by this remediation. The 0.2.0 release
 metadata, immutable asset hashes, and legal licence status are not yet all
@@ -241,7 +266,8 @@ owner-approved.
 
 ## Final repository status
 
-At this pre-publication report revision, all local technical checks pass and
-the branch contains only intentional changes. The canonical manifest is updated
-after this report enters the Git index, followed by the mandatory clean-tree
-validation, branch push, draft pull request creation, and remote CI inspection.
+All local technical checks pass, the canonical manifest covers 185 tracked
+files, and the branch contains only intentional changes. The branch is pushed,
+draft pull request #9 is open, and both replacement push and pull-request CI
+runs are green. No tag, release asset, licence, or repository setting was
+silently created or changed.
