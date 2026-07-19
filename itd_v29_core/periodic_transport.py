@@ -606,16 +606,31 @@ def wrap_periodic_points(
     origin: float,
     period: float,
 ) -> np.ndarray:
-    array = np.asarray(
-        values,
-        dtype=np.float64,
-    )
+    try:
+        array = np.asarray(values, dtype=np.float64)
+        origin_value = float(origin)
+        period_value = float(period)
+    except (TypeError, ValueError, OverflowError) as error:
+        raise ValueError(
+            "Les coordonnées périodiques doivent être réelles."
+        ) from error
+
+    if (
+        not np.all(np.isfinite(array))
+        or not np.isfinite(origin_value)
+        or not np.isfinite(period_value)
+        or period_value <= 0.0
+    ):
+        raise ValueError(
+            "Les coordonnées et l'origine doivent être finies, "
+            "et la période strictement positive."
+        )
 
     return (
-        origin
+        origin_value
         + np.mod(
-            array - origin,
-            period,
+            array - origin_value,
+            period_value,
         )
     )
 

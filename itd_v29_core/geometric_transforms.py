@@ -2,9 +2,10 @@
 
 from __future__ import annotations
 
-from typing import Callable
+from collections.abc import Callable
 
 import numpy as np
+
 
 def validate_orthogonal_matrix(
     matrix: object,
@@ -72,18 +73,32 @@ def transform_coordinates(
     """
     Calcule les coordonnées sources Qᵀx.
     """
-    orthogonal = validate_orthogonal_matrix(
-        matrix
-    )
+    orthogonal = validate_orthogonal_matrix(matrix)
+
+    x_array = np.asarray(x, dtype=np.float64)
+    y_array = np.asarray(y, dtype=np.float64)
+
+    if x_array.shape != y_array.shape:
+        raise ValueError(
+            "Les coordonnées x et y doivent avoir la même forme."
+        )
+
+    if not (
+        np.all(np.isfinite(x_array))
+        and np.all(np.isfinite(y_array))
+    ):
+        raise ValueError(
+            "Les coordonnées transformées doivent être finies."
+        )
 
     source_x = (
-        orthogonal[0, 0] * x
-        + orthogonal[1, 0] * y
+        orthogonal[0, 0] * x_array
+        + orthogonal[1, 0] * y_array
     )
 
     source_y = (
-        orthogonal[0, 1] * x
-        + orthogonal[1, 1] * y
+        orthogonal[0, 1] * x_array
+        + orthogonal[1, 1] * y_array
     )
 
     return source_x, source_y
@@ -820,5 +835,4 @@ def make_sampled_transformed_scalar_function(
         )
 
     return transformed
-
 

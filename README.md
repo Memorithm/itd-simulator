@@ -1,65 +1,109 @@
 # ITD Simulator
 
-Deterministic research simulator for curvature-weighted rotational
-intensity and structural dynamics.
+Deterministic research simulator for curvature-weighted rotational intensity
+and a five-component structural signature.
 
-## Version
+| Version dimension | Value |
+|---|---|
+| Software version in this source tree | `0.2.0` |
+| Scientific model revision | `ITD V29.18` |
+| Latest published GitHub software release | `0.1.1` (legacy V10) |
 
-Current release: 0.1.1
+Software versions describe packaging and repository releases. Scientific model
+revisions describe the numerical model. They are intentionally independent:
+software `0.2.0` packages the unchanged scientific model `ITD V29.18`.
 
-## Main outputs
+## Install
 
-The simulator computes:
+Python 3.11, 3.12, and 3.13 are tested. The exact resolved validation
+environment is recorded in `requirements-dev.lock`.
 
-1. curvature-weighted rotational intensity;
-2. a five-component structural signature;
-3. an optional scalar score using explicit normalized weights.
-
-The structural components are:
-
-- heterogeneity;
-- localization;
-- roughness;
-- sign mixing;
-- temporal deformation.
-
-## Installation
-
-Create a Python virtual environment, activate it, then install the
-dependencies listed in requirements.txt.
-
-Commands:
-
-    python3 -m venv .venv
-    source .venv/bin/activate
-    python -m pip install --upgrade pip
-    python -m pip install -r requirements.txt
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install --upgrade pip
+python -m pip install -r requirements.lock
+python -m pip install --no-deps -e .
+```
 
 ## Run
 
-    python itd_v10.py
+Either current entry point runs V29.18:
+
+```bash
+python itd_v29.py
+python -m itd_simulator
+```
+
+The command writes CSV summaries and plots beneath `itd_v29_results/` in the
+current directory. Importing `itd_v29` alone does not initialize Matplotlib or
+select a plotting backend.
+
+`itd_v10.py` and `validate_release_v10.py` remain historical V10 material. They
+do not certify V29.18.
 
 ## Validate
 
-    ./run_validation.sh
+```bash
+python -m pip install -r requirements-dev.lock
+python -m pip install --no-deps -e .
+ruff check .
+pytest -q
+./run_validation.sh
+```
+
+The default validation compiles the current facade, package, core, tools, and
+tests; runs the V29.18 pytest suite and dependency analyser; checks independent
+process determinism; executes the full V29 simulator; verifies the public
+manifest; generates the Rust oracle in a temporary file; compares it with the
+reviewed fixture; and proves tracked files were not changed. The optional
+`./run_validation.sh --legacy-v10` adds the separately labelled V10 validator.
+
+## Model outputs
+
+The two primary outputs are:
+
+1. time-averaged curvature-weighted rotational intensity;
+2. a five-component structural signature comprising heterogeneity,
+   localization, roughness, sign mixing, and temporal deformation.
+
+An explicitly weighted scalar structural score and an intensity/structure
+coupling are experimental aggregations. They are not universal quantities.
+Definitions and numerical conventions are in
+[`docs/scientific_definition.md`](docs/scientific_definition.md) and
+[`docs/numerical_methods.md`](docs/numerical_methods.md).
+
+## Public API
+
+`itd_v29.py` is a compatibility facade containing direct re-exports and no
+scientific function definitions. Its explicit `__all__` separates stable,
+advanced, and legacy compatibility names. The implementation is in
+`itd_v29_core/`; `import itd_v29` remains supported. The packaged namespace
+`itd_simulator` re-exports the same objects.
 
 ## Release integrity
 
-Official archive SHA-256:
+The previously unexplained SHA-256 belongs specifically to the public V10
+software `0.1.1` archive:
 
-    af323367f804853ebf980e0805d2127714b7f5971abb3d0848d375b4931ba00e
+| Scientific revision | Software | Tag | Artifact | SHA-256 |
+|---|---:|---|---|---|
+| V10 | 0.1.1 | `v0.1.1` | `itd-simulator-0.1.1.tar.gz` | `af323367f804853ebf980e0805d2127714b7f5971abb3d0848d375b4931ba00e` |
+| ITD V29.18 | 0.2.0 source | pending review | no public artifact | not applicable |
 
-## Scientific status
+The full commit, manifest, and publication status are recorded in
+[`docs/release_integrity.md`](docs/release_integrity.md). No V29.18 software
+archive is claimed to exist.
 
-This project is a mathematical and numerical research prototype.
+## Scientific and legal status
 
-Its tests establish internal numerical and software consistency. They
-do not establish the ITD as a validated physical observable, a universal
-measure of complexity, an entropy, or a replacement for Shannon
-information theory.
+This repository is an experimental mathematical and numerical research
+prototype. Its results are relative to the declared algorithms, validators,
+fixtures, tolerances, inputs, and execution environments. They do not establish
+ITD as a validated physical observable, a universal complexity measure, an
+entropy, or a replacement for Shannon information or established measures.
 
-## Licence
-
-No software licence has yet been selected. Public visibility alone does
-not grant permission to copy, modify, redistribute, or commercially
-reuse the source.
+No software licence has been selected. Public visibility does not itself grant
+permission to copy, modify, redistribute, or commercially reuse the source.
+The owner decision and consequences are summarized in
+[`docs/license_decision.md`](docs/license_decision.md).

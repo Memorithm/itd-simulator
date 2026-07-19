@@ -7,35 +7,30 @@ L'API historique reste réexportée par itd_v29.py.
 
 from __future__ import annotations
 
+from collections.abc import Callable
+
 import numpy as np
 
 from compare_scenarios import (
     Config,
     curvature_field,
 )
-
 from itd_v29_core.constants import (
     DEFAULT_STRUCTURAL_WEIGHTS,
     STRUCTURAL_LENGTH,
 )
-
 from itd_v29_core.material_interval import material_vorticity_interval
-
 from itd_v29_core.simulation_engine import simulate
-
 from itd_v29_core.spatial_geometry import (
     normalize_spatial_geometry,
     validate_mesh_geometry,
 )
-
 from itd_v29_core.spatial_operators import (
     numerical_vorticity_with_boundary,
     validate_boundary_mode,
 )
-
 from itd_v29_core.time_geometry import normalize_time_grid
 
-from typing import Callable
 
 def interpolate_interval_series_to_nodes(
     times: object,
@@ -148,6 +143,9 @@ def simulate_material_deformation(
         y,
         geometry,
     )
+
+    x = np.asarray(x, dtype=np.float64)
+    y = np.asarray(y, dtype=np.float64)
 
     baseline = simulate(
         name,

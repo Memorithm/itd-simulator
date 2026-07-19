@@ -8,6 +8,7 @@ from itd_v29_core.constants import (
     STRUCTURAL_COMPONENT_NAMES,
 )
 
+
 def validate_structural_length_grid(
     structural_lengths: object,
 ) -> np.ndarray:

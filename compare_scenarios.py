@@ -2,17 +2,12 @@
 
 from __future__ import annotations
 
+from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Callable
 
-import matplotlib
-matplotlib.use("Agg")
-
-import matplotlib.pyplot as plt
 import numpy as np
 from numpy.typing import NDArray
-
 
 FloatArray = NDArray[np.float64]
 VelocityFunction = Callable[
@@ -286,6 +281,12 @@ def simulate_scenario(
 
 
 def main() -> None:
+    import matplotlib
+
+    matplotlib.use("Agg")
+
+    import matplotlib.pyplot as plt
+
     cfg = Config()
 
     output_dir = Path(cfg.output_dir)
