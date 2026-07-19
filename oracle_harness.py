@@ -3,21 +3,49 @@
 
 Runs the ITD V29 numerical core (operators + engine) and emits a
 self-contained Rust fixture file (`oracle_data.rs`) with inputs and
-expected outputs, so the Rust port can be validated against the
-reference implementation to a tight numerical tolerance.
+expected outputs, so the Rust port can be validated against this
+implementation-generated reference to a declared numerical tolerance.
+
+These fixtures are regression snapshots, not independent mathematical proofs.
 
 Run from the itd-simulator repository root:
 
     python3 oracle_harness.py /path/to/oracle_data.rs
+    python3 oracle_harness.py --check /path/to/reference.rs
 """
 
 from __future__ import annotations
 
+import argparse
 import math
-import sys
+import os
+import re
+import tempfile
+from collections.abc import Callable
+from pathlib import Path
 
 import numpy as np
 
+from compare_scenarios import (
+    Config,
+    calm_field,
+    coherent_vortex,
+    multi_vortex_field,
+)
+from itd_v29_core.geometric_transforms import (
+    BilinearTransformPlan,
+    rotation_matrix,
+    transform_coordinates,
+)
+from itd_v29_core.material_deformation import simulate_material_deformation
+from itd_v29_core.material_interval import material_vorticity_interval
+from itd_v29_core.multiscale_structure import derive_multiscale_profile
+from itd_v29_core.periodic_transport import transport_previous_vorticity_periodic
+from itd_v29_core.reference_frames import (
+    galilean_source_coordinates,
+    translating_frame_source_coordinates,
+)
+from itd_v29_core.simulation_engine import simulate
 from itd_v29_core.spatial_geometry import RectilinearGeometry, SpatialGeometry
 from itd_v29_core.spatial_operators import (
     bounded,
@@ -25,37 +53,12 @@ from itd_v29_core.spatial_operators import (
     scalar_gradient_with_boundary,
     spatial_mean,
 )
-from itd_v29_core.structural_metrics import structural_metrics
-from itd_v29_core.simulation_engine import simulate
-from itd_v29_core.periodic_transport import (
-    transport_previous_vorticity_periodic,
-)
-from itd_v29_core.geometric_transforms import (
-    BilinearTransformPlan,
-    rotation_matrix,
-    transform_coordinates,
-)
 from itd_v29_core.spatial_scaling import (
     inverse_scale_coordinates,
     scale_length,
     scale_spatial_geometry,
 )
-from itd_v29_core.reference_frames import (
-    galilean_source_coordinates,
-    translating_frame_source_coordinates,
-)
-from itd_v29_core.multiscale_structure import derive_multiscale_profile
-from itd_v29_core.material_interval import material_vorticity_interval
-from itd_v29_core.material_deformation import simulate_material_deformation
-
-from compare_scenarios import (
-    Config,
-    calm_field,
-    coherent_vortex,
-    curvature_field,
-    multi_vortex_field,
-)
-
+from itd_v29_core.structural_metrics import structural_metrics
 
 # ---------------------------------------------------------------------------
 # Reproducible input fields (identical formulas will be rebuilt in Rust).
@@ -64,7 +67,7 @@ NY, NX = 5, 6
 DX, DY = 0.5, 0.3
 
 
-def build_field(fn) -> np.ndarray:
+def build_field(fn: Callable[[int, int], float]) -> np.ndarray:
     out = np.empty((NY, NX), dtype=np.float64)
     for i in range(NY):
         for j in range(NX):
@@ -690,10 +693,19 @@ def emit_material_deformation() -> None:
     emit()
 
 
-def main() -> None:
-    out_path = sys.argv[1] if len(sys.argv) > 1 else "oracle_data.rs"
-    emit("// AUTO-GENERATED from ITD V29 via numpy. Do not edit by hand.")
-    emit("// Regenerate with: python3 oracle_harness.py <out>")
+_NUMBER = re.compile(
+    r"(?<![A-Za-z0-9_])[-+]?(?:\d+\.\d*|\.\d+|\d+)(?:[eE][-+]?\d+)?"
+    r"(?![A-Za-z0-9_])"
+)
+
+
+def render_oracle_fixture() -> str:
+    """Return the complete deterministic Rust reference fixture."""
+    _LINES.clear()
+    emit("// AUTO-GENERATED from ITD V29.18 using NumPy float64.")
+    emit("// Regression reference only; this is not an analytical proof.")
+    emit("// Arrays are row-major with axis order [y, x].")
+    emit("// Regenerate explicitly: python oracle_harness.py --force <out>")
     emit("// Included via `mod oracle_data { include!(...) }` in tests/oracle.rs.")
     emit()
     emit_operators()
@@ -706,9 +718,121 @@ def main() -> None:
     emit_multiscale()
     emit_material()
     emit_material_deformation()
-    with open(out_path, "w", encoding="utf-8") as fh:
-        fh.write("\n".join(_LINES) + "\n")
-    print(f"wrote {out_path} ({len(_LINES)} lines)")
+    return "\n".join(_LINES).rstrip("\n") + "\n"
+
+
+def fixtures_equivalent(
+    expected: str,
+    actual: str,
+    *,
+    relative_tolerance: float = 1.0e-12,
+    absolute_tolerance: float = 1.0e-12,
+) -> tuple[bool, str]:
+    """Compare fixture structure exactly and float literals to tolerance."""
+    expected_lines = expected.splitlines()
+    actual_lines = actual.splitlines()
+    if len(expected_lines) != len(actual_lines):
+        return False, (
+            f"line count differs: reference={len(expected_lines)}, "
+            f"generated={len(actual_lines)}"
+        )
+
+    for line_number, (reference_line, generated_line) in enumerate(
+        zip(expected_lines, actual_lines, strict=True), start=1
+    ):
+        if reference_line == generated_line:
+            continue
+        reference_numbers = _NUMBER.findall(reference_line)
+        generated_numbers = _NUMBER.findall(generated_line)
+        reference_shape = _NUMBER.sub("<number>", reference_line)
+        generated_shape = _NUMBER.sub("<number>", generated_line)
+        if reference_shape != generated_shape or len(reference_numbers) != len(
+            generated_numbers
+        ):
+            return False, f"structural mismatch at line {line_number}"
+        for reference_number, generated_number in zip(
+            reference_numbers, generated_numbers, strict=True
+        ):
+            if reference_number == generated_number:
+                continue
+            if not any(character in reference_number.lower() for character in ".e"):
+                return False, f"integer mismatch at line {line_number}"
+            if not math.isclose(
+                float(reference_number),
+                float(generated_number),
+                rel_tol=relative_tolerance,
+                abs_tol=absolute_tolerance,
+            ):
+                return False, f"floating-point mismatch at line {line_number}"
+    return True, "fixture matches the declared numerical contract"
+
+
+def write_fixture(path: Path, content: str, *, force: bool) -> None:
+    """Write a fixture without silently replacing an existing reference."""
+    if path.is_symlink():
+        raise ValueError(f"refusing to write through symbolic link: {path}")
+    if not path.parent.is_dir():
+        raise ValueError(f"output directory does not exist: {path.parent}")
+
+    if not force:
+        with path.open("x", encoding="utf-8", newline="\n") as fixture_file:
+            fixture_file.write(content)
+        return
+
+    descriptor, temporary_name = tempfile.mkstemp(
+        dir=path.parent,
+        prefix=f".{path.name}.",
+        suffix=".tmp",
+        text=True,
+    )
+    try:
+        with os.fdopen(descriptor, "w", encoding="utf-8", newline="\n") as fixture_file:
+            fixture_file.write(content)
+            fixture_file.flush()
+            os.fsync(fixture_file.fileno())
+        os.replace(temporary_name, path)
+    except BaseException:
+        try:
+            os.unlink(temporary_name)
+        except FileNotFoundError:
+            pass
+        raise
+
+
+def parse_arguments() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description=__doc__)
+    destination = parser.add_mutually_exclusive_group(required=True)
+    destination.add_argument("output", nargs="?", type=Path)
+    destination.add_argument(
+        "--check",
+        metavar="REFERENCE",
+        type=Path,
+        help="compare generated data to an existing fixture without writing",
+    )
+    parser.add_argument(
+        "--force",
+        action="store_true",
+        help="explicitly replace OUTPUT using an atomic write",
+    )
+    arguments = parser.parse_args()
+    if arguments.check is not None and arguments.force:
+        parser.error("--force cannot be combined with --check")
+    return arguments
+
+
+def main() -> None:
+    arguments = parse_arguments()
+    generated = render_oracle_fixture()
+    if arguments.check is not None:
+        reference = arguments.check.read_text(encoding="utf-8")
+        matches, detail = fixtures_equivalent(reference, generated)
+        if not matches:
+            raise SystemExit(f"oracle check failed: {detail}")
+        print(f"oracle check passed: {arguments.check} ({detail})")
+        return
+
+    write_fixture(arguments.output, generated, force=arguments.force)
+    print(f"wrote {arguments.output} ({generated.count(chr(10))} lines)")
 
 
 if __name__ == "__main__":
