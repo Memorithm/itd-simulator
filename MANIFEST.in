@@ -1,0 +1,19 @@
+include CHANGELOG.md
+include CITATION.cff
+include CONTRIBUTING.md
+include MANIFEST.sha256
+include MODEL_REVISION
+include MODEL_STATUS.md
+include README.md
+include SECURITY.md
+include VERSION
+include oracle_harness.py
+include requirements-dev.lock
+include requirements.lock
+include requirements.txt
+include run_validation.sh
+recursive-include docs *.md
+recursive-include tests *.py *.rs
+recursive-include tools *.py
+global-exclude __pycache__
+global-exclude *.py[cod]

@@ -1,0 +1,124 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+env:
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  OMP_NUM_THREADS: "1"
+  OPENBLAS_NUM_THREADS: "1"
+  MKL_NUM_THREADS: "1"
+  NUMEXPR_NUM_THREADS: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+
+jobs:
+  validate:
+    name: Python ${{ matrix.python-version }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.12", "3.13"]
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+          cache-dependency-path: requirements-dev.lock
+
+      - name: Install locked dependencies and package
+        run: |
+          set -o pipefail
+          mkdir -p logs
+          python -m pip install --upgrade pip==26.1.2 2>&1 | tee logs/install.log
+          python -m pip install -r requirements-dev.lock 2>&1 | tee -a logs/install.log
+          python -m pip install --no-deps -e . 2>&1 | tee -a logs/install.log
+          python -m pip check 2>&1 | tee -a logs/install.log
+
+      - name: Compile current sources
+        run: |
+          set -o pipefail
+          python -m compileall -q itd_v29.py compare_scenarios.py oracle_harness.py itd_simulator itd_v29_core tools tests 2>&1 | tee logs/compile.log
+
+      - name: Run Ruff correctness checks
+        run: |
+          set -o pipefail
+          ruff check . 2>&1 | tee logs/ruff.log
+
+      - name: Run incremental type checks
+        run: |
+          set -o pipefail
+          mypy tools/check_manifest.py tools/check_commit_messages.py tools/check_v29_summary.py tools/deterministic_smoke.py 2>&1 | tee logs/mypy.log
+
+      - name: Run complete V29.18 validation
+        run: |
+          set -o pipefail
+          ./run_validation.sh 2>&1 | tee logs/validation.log
+
+      - name: Audit dependencies
+        if: matrix.python-version == '3.12'
+        run: |
+          set -o pipefail
+          pip-audit -r requirements-dev.lock --progress-spinner off 2>&1 | tee logs/pip-audit.log
+
+      - name: Verify tests left tracked files unchanged
+        run: |
+          git diff --exit-code
+          test -z "$(git status --porcelain=v1 --untracked-files=no)"
+
+      - name: Capture failure diagnostics
+        if: failure()
+        run: |
+          python -m pip list --format=freeze > logs/environment.txt
+          git status --short > logs/git-status.txt
+          git diff --binary > logs/repository.diff
+
+      - name: Upload failure logs
+        if: failure()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: failure-logs-python-${{ matrix.python-version }}
+          path: logs/
+          if-no-files-found: error
+
+  commit-policy:
+    name: Commit policy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
+        with:
+          python-version: "3.12"
+
+      - name: Reject forbidden trailers and unexpected identities
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          BASE_REF: ${{ github.base_ref }}
+          BEFORE_SHA: ${{ github.event.before }}
+          CURRENT_SHA: ${{ github.sha }}
+        run: |
+          if [[ "${EVENT_NAME}" == "pull_request" ]]; then
+            revision_range="origin/${BASE_REF}..HEAD"
+          elif [[ "${BEFORE_SHA}" == "0000000000000000000000000000000000000000" ]]; then
+            revision_range="${CURRENT_SHA}"
+          else
+            revision_range="${BEFORE_SHA}..${CURRENT_SHA}"
+          fi
+          python tools/check_commit_messages.py --require-identity "${revision_range}"
