@@ -13,7 +13,6 @@ from __future__ import annotations
 import numpy as np
 
 from compare_scenarios import numerical_vorticity
-
 from itd_v29_core.constants import BOUNDARY_MODES
 from itd_v29_core.spatial_geometry import (
     RectilinearGeometry,
@@ -301,7 +300,19 @@ def bounded(value: float) -> float:
 
         b(x) = x / (1 + x)
     """
-    value = max(0.0, float(value))
+    try:
+        value = float(value)
+    except (TypeError, ValueError, OverflowError) as error:
+        raise ValueError(
+            "La grandeur à borner doit être un nombre réel."
+        ) from error
+
+    if not np.isfinite(value):
+        raise ValueError(
+            "La grandeur à borner doit être finie."
+        )
+
+    value = max(0.0, value)
     return value / (1.0 + value)
 
 

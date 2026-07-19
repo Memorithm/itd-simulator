@@ -7,7 +7,8 @@ L'API historique reste réexportée par itd_v29.py.
 
 from __future__ import annotations
 
-import matplotlib.pyplot as plt
+from pathlib import Path
+
 import numpy as np
 
 from compare_scenarios import (
@@ -16,14 +17,17 @@ from compare_scenarios import (
     coherent_vortex,
     multi_vortex_field,
 )
-
 from itd_v29_core.constants import STRUCTURAL_LENGTH
-
 from itd_v29_core.simulation_engine import simulate
 
-from pathlib import Path
 
 def main() -> None:
+    import matplotlib
+
+    matplotlib.use("Agg")
+
+    import matplotlib.pyplot as plt
+
     cfg = Config()
 
     coordinates = np.linspace(

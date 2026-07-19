@@ -14,15 +14,14 @@ from itd_v29_core.constants import (
     STRUCTURAL_LENGTH,
     ZERO_THRESHOLD,
 )
-
 from itd_v29_core.spatial_geometry import normalize_spatial_geometry
-
 from itd_v29_core.spatial_operators import (
     bounded,
     scalar_gradient_with_boundary,
     spatial_mean,
     validate_boundary_mode,
 )
+
 
 def normalize_structural_weights(
     weights: object,
@@ -114,11 +113,54 @@ def structural_metrics(
             "Le champ de vorticité doit être 2D."
         )
 
+    if min(omega.shape) < 3:
+        raise ValueError(
+            "Le champ de vorticité doit contenir au moins "
+            "trois points par direction."
+        )
+
     if not np.all(np.isfinite(omega)):
         raise ValueError(
             "Le champ de vorticité contient une "
             "valeur non finie."
         )
+
+    previous = None
+    dt = None
+
+    if (previous_omega is None) != (delta_time is None):
+        raise ValueError(
+            "Le champ précédent et l'intervalle temporel "
+            "doivent être fournis ensemble."
+        )
+
+    if previous_omega is not None:
+        previous = np.asarray(previous_omega, dtype=np.float64)
+
+        if previous.shape != omega.shape:
+            raise ValueError(
+                "Les champs de vorticité successifs "
+                "doivent avoir la même forme."
+            )
+
+        if not np.all(np.isfinite(previous)):
+            raise ValueError(
+                "Le champ de vorticité précédent contient "
+                "une valeur non finie."
+            )
+
+        try:
+            dt = float(delta_time)
+        except (TypeError, ValueError, OverflowError) as error:
+            raise ValueError(
+                "L'intervalle temporel doit être un nombre réel."
+            ) from error
+
+        if not np.isfinite(dt) or dt <= 0.0:
+            raise ValueError(
+                "L'intervalle temporel doit être fini et "
+                "strictement positif."
+            )
 
     def mean_field(
         field: np.ndarray,
@@ -206,27 +248,12 @@ def structural_metrics(
 
     temporal_deformation = 0.0
 
-    if (
-        previous_omega is not None
-        and delta_time is not None
-        and delta_time > 0.0
-    ):
-        previous_omega = np.asarray(
-            previous_omega,
-            dtype=np.float64,
-        )
-
-        if previous_omega.shape != omega.shape:
-            raise ValueError(
-                "Les champs de vorticité successifs "
-                "doivent avoir la même forme."
-            )
-
+    if previous is not None:
         previous_rms = float(
             np.sqrt(
                 max(
                     mean_field(
-                        previous_omega**2
+                            previous**2
                     ),
                     0.0,
                 )
@@ -244,14 +271,14 @@ def structural_metrics(
                         mean_field(
                             (
                                 omega
-                                - previous_omega
+                                - previous
                             ) ** 2
                         ),
                         0.0,
                     )
                 )
                 / (
-                    delta_time
+                    dt
                     * reference_rms
                 )
             )

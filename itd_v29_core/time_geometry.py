@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import numpy as np
 
+
 class TemporalGeometry:
     """
     Géométrie temporelle discrète strictement croissante.

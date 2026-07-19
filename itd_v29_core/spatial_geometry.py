@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import numpy as np
 
+
 class SpatialGeometry:
     """
     Géométrie cartésienne uniforme bidimensionnelle.
@@ -502,29 +503,28 @@ def validate_mesh_geometry(
     y: object,
     geometry: SpatialGeometry | RectilinearGeometry,
 ) -> None:
-    if not isinstance(
-        geometry,
-        RectilinearGeometry,
-    ):
-        return
-
-    x_array = np.asarray(
-        x,
-        dtype=np.float64,
-    )
-
-    y_array = np.asarray(
-        y,
-        dtype=np.float64,
-    )
+    try:
+        x_array = np.asarray(x, dtype=np.float64)
+        y_array = np.asarray(y, dtype=np.float64)
+    except (TypeError, ValueError, OverflowError) as error:
+        raise ValueError(
+            "La grille spatiale doit contenir des coordonnées réelles."
+        ) from error
 
     if (
-        x_array.shape != geometry.shape
-        or y_array.shape != geometry.shape
+        x_array.ndim != 2
+        or y_array.ndim != 2
+        or x_array.shape != y_array.shape
     ):
         raise ValueError(
-            "La grille spatiale ne correspond pas "
-            "à la forme de la géométrie rectiligne."
+            "La grille spatiale doit être formée de deux "
+            "tableaux 2D de même forme."
+        )
+
+    if min(x_array.shape) < 3:
+        raise ValueError(
+            "La grille spatiale doit contenir au moins "
+            "trois points par direction."
         )
 
     if not (
@@ -532,18 +532,73 @@ def validate_mesh_geometry(
         and np.all(np.isfinite(y_array))
     ):
         raise ValueError(
-            "La grille spatiale contient une "
-            "valeur non finie."
+            "La grille spatiale contient une valeur non finie."
         )
 
+    if isinstance(geometry, RectilinearGeometry):
+        if (
+            x_array.shape != geometry.shape
+            or y_array.shape != geometry.shape
+        ):
+            raise ValueError(
+                "La grille spatiale ne correspond pas "
+                "à la forme de la géométrie rectiligne."
+            )
+
+        expected_x_axis = geometry.x_coordinates
+        expected_y_axis = geometry.y_coordinates
+    else:
+        expected_x_axis = x_array[0, :]
+        expected_y_axis = y_array[:, 0]
+
+        differences_x = np.diff(expected_x_axis)
+        differences_y = np.diff(expected_y_axis)
+
+        if not (
+            np.all(differences_x > 0.0)
+            and np.all(differences_y > 0.0)
+        ):
+            raise ValueError(
+                "Les axes de la grille spatiale doivent être "
+                "strictement croissants."
+            )
+
+        scale = max(
+            1.0,
+            abs(geometry.dx),
+            abs(geometry.dy),
+            float(np.max(np.abs(expected_x_axis))),
+            float(np.max(np.abs(expected_y_axis))),
+        )
+        spacing_tolerance = 128.0 * np.finfo(np.float64).eps * scale
+
+        if not (
+            np.allclose(
+                differences_x,
+                geometry.dx,
+                rtol=1.0e-12,
+                atol=spacing_tolerance,
+            )
+            and np.allclose(
+                differences_y,
+                geometry.dy,
+                rtol=1.0e-12,
+                atol=spacing_tolerance,
+            )
+        ):
+            raise ValueError(
+                "Les pas du maillage ne correspondent pas "
+                "à la géométrie uniforme."
+            )
+
     expected_x = np.broadcast_to(
-        geometry.x_coordinates,
-        geometry.shape,
+        expected_x_axis,
+        x_array.shape,
     )
 
     expected_y = np.broadcast_to(
-        geometry.y_coordinates[:, None],
-        geometry.shape,
+        expected_y_axis[:, None],
+        y_array.shape,
     )
 
     coordinate_scale = max(
@@ -551,14 +606,14 @@ def validate_mesh_geometry(
         float(
             np.max(
                 np.abs(
-                    geometry.x_coordinates
+                    expected_x_axis
                 )
             )
         ),
         float(
             np.max(
                 np.abs(
-                    geometry.y_coordinates
+                    expected_y_axis
                 )
             )
         ),
@@ -591,4 +646,3 @@ def validate_mesh_geometry(
             "Les coordonnées y ne correspondent pas "
             "à la géométrie rectiligne."
         )
-

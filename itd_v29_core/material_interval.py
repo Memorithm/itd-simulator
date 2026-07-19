@@ -10,17 +10,16 @@ from __future__ import annotations
 import numpy as np
 
 from itd_v29_core.constants import ZERO_THRESHOLD
-
 from itd_v29_core.spatial_geometry import (
     normalize_spatial_geometry,
     validate_field_shape_for_geometry,
 )
-
 from itd_v29_core.spatial_operators import (
     scalar_gradient_with_boundary,
     spatial_mean,
     validate_boundary_mode,
 )
+
 
 def validate_positive_time_interval(
     delta_time: object,

@@ -7,52 +7,46 @@ L'API historique reste réexportée par itd_v29.py.
 
 from __future__ import annotations
 
+from collections.abc import Callable
+
 import numpy as np
 
 from compare_scenarios import (
     Config,
     curvature_field,
 )
-
 from itd_v29_core.constants import (
     DEFAULT_STRUCTURAL_WEIGHTS,
     STRUCTURAL_COMPONENT_NAMES,
     STRUCTURAL_LENGTH,
     TEMPORAL_DEFORMATION_MODES,
 )
-
 from itd_v29_core.multiscale_structure import (
     derive_multiscale_profile,
     validate_structural_length_grid,
 )
-
 from itd_v29_core.periodic_transport import (
     transport_previous_vorticity_periodic,
     validate_periodic_transport_mesh,
     validate_transport_interpolation,
     validate_transport_trajectory_method,
 )
-
 from itd_v29_core.spatial_geometry import (
     normalize_spatial_geometry,
     spatial_geometry_metadata,
     validate_mesh_geometry,
 )
-
 from itd_v29_core.spatial_operators import (
     numerical_vorticity_with_boundary,
     spatial_mean,
     validate_boundary_mode,
 )
-
 from itd_v29_core.structural_metrics import (
     normalize_structural_weights,
     structural_metrics,
 )
-
 from itd_v29_core.time_geometry import normalize_time_grid
 
-from typing import Callable
 
 def validate_temporal_deformation_mode(
     mode: object,
@@ -106,6 +100,28 @@ def simulate(
         "midpoint_time_velocity"
     ),
 ) -> dict[str, object]:
+    if not callable(velocity_function):
+        raise ValueError("Le champ de vitesse doit être appelable.")
+
+    if not callable(curvature_function):
+        raise ValueError("Le champ de courbure doit être appelable.")
+
+    try:
+        characteristic_length = float(cfg.characteristic_length)
+    except (AttributeError, TypeError, ValueError, OverflowError) as error:
+        raise ValueError(
+            "La longueur caractéristique doit être un nombre réel."
+        ) from error
+
+    if (
+        not np.isfinite(characteristic_length)
+        or characteristic_length < 0.0
+    ):
+        raise ValueError(
+            "La longueur caractéristique doit être finie et "
+            "positive ou nulle."
+        )
+
     structural_length = float(structural_length)
 
     if (
@@ -135,6 +151,9 @@ def simulate(
         y,
         geometry,
     )
+
+    x = np.asarray(x, dtype=np.float64)
+    y = np.asarray(y, dtype=np.float64)
 
     temporal_deformation_mode = (
         validate_temporal_deformation_mode(
@@ -221,6 +240,15 @@ def simulate(
             time,
         )
 
+        vx = np.asarray(vx, dtype=np.float64)
+        vy = np.asarray(vy, dtype=np.float64)
+
+        if vx.shape != x.shape or vy.shape != x.shape:
+            raise ValueError(
+                "Le champ de vitesse doit avoir la même forme "
+                "que le maillage spatial."
+            )
+
         omega = numerical_vorticity_with_boundary(
             vx,
             vy,
@@ -250,9 +278,15 @@ def simulate(
             )
 
         curvature_weight = np.exp(
-            cfg.characteristic_length**2
+            characteristic_length**2
             * curvature
         )
+
+        if not np.all(np.isfinite(curvature_weight)):
+            raise ValueError(
+                "La pondération de courbure dépasse le domaine "
+                "numérique fini."
+            )
 
         intensity_rate[index] = spatial_mean(
             omega**2 * curvature_weight,

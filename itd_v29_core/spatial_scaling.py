@@ -2,19 +2,19 @@
 
 from __future__ import annotations
 
-from typing import Callable
+from collections.abc import Callable
 
 import numpy as np
 
 from itd_v29_core.geometric_transforms import (
     validate_transform_origin,
 )
-
 from itd_v29_core.spatial_geometry import (
     RectilinearGeometry,
     SpatialGeometry,
     normalize_spatial_geometry,
 )
+
 
 def validate_spatial_scale_factor(
     scale_factor: float,
