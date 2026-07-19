@@ -1,0 +1,17 @@
+cff-version: 1.2.0
+message: "If you use this software, cite this repository and the exact scientific model revision."
+type: software
+title: "ITD Simulator"
+version: 0.2.0
+authors:
+  - family-names: "Zekriti"
+    given-names: "Tarek"
+repository-code: "https://github.com/Memorithm/itd-simulator"
+url: "https://github.com/Memorithm/itd-simulator"
+keywords:
+  - "numerical simulation"
+  - "vorticity"
+  - "structural dynamics"
+abstract: >-
+  Deterministic research simulator for curvature-weighted rotational intensity
+  and the five-component ITD V29.18 structural signature.
