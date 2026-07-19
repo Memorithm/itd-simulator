@@ -59,6 +59,7 @@ python -m compileall -q .
 pytest -q
 ruff check .
 ./run_validation.sh
+ITD_REQUIRE_EXACT_SUMMARY=1 ./run_validation.sh  # reference environment only
 python itd_v29.py
 python oracle_harness.py /tmp/oracle_data.rs
 python oracle_harness.py --check tests/fixtures/oracle_data.rs
@@ -84,8 +85,10 @@ and compares tracked status before and after.
 
 ## What is and is not certified
 
-The tracked full-size summary is compared exactly in the NumPy 2.5.1 reference
-environment and within `rtol=1e-13`, `atol=1e-14` elsewhere. The Rust fixture
+The tracked full-size summary is compared exactly when the reference environment
+explicitly sets `ITD_REQUIRE_EXACT_SUMMARY=1`, and within `rtol=1e-13`,
+`atol=1e-14` by default on supported environments. NumPy version alone is not
+enough to claim bitwise identity across operating systems or CPU architectures. The Rust fixture
 comparison uses structural equality plus `rtol=1e-12`, `atol=1e-12` for float
 literals. Independent-process reduced scenarios must be byte-identical inside
 one environment.

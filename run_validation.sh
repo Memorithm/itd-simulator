@@ -3,6 +3,12 @@ set -Eeuo pipefail
 
 readonly ROOT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd -P)"
 readonly PYTHON_BIN="${PYTHON:-python}"
+readonly REQUIRE_EXACT_SUMMARY="${ITD_REQUIRE_EXACT_SUMMARY:-0}"
+
+if [[ "${REQUIRE_EXACT_SUMMARY}" != 0 && "${REQUIRE_EXACT_SUMMARY}" != 1 ]]; then
+    printf '%s\n' 'ITD_REQUIRE_EXACT_SUMMARY must be either 0 or 1.' >&2
+    exit 2
+fi
 
 export PYTHONDONTWRITEBYTECODE=1
 export PYTHONHASHSEED=0
@@ -66,7 +72,7 @@ summary_arguments=(
     "${ROOT_DIR}/itd_v29_results/summary.csv"
     "${TEMP_DIR}/main/itd_v29_results/summary.csv"
 )
-if [[ "$("${PYTHON_BIN}" -c 'import numpy; print(numpy.__version__)')" == '2.5.1' ]]; then
+if [[ "${REQUIRE_EXACT_SUMMARY}" == 1 ]]; then
     summary_arguments+=(--exact)
 fi
 "${PYTHON_BIN}" tools/check_v29_summary.py "${summary_arguments[@]}"
