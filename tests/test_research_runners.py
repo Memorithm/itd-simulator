@@ -37,7 +37,7 @@ def test_benchmark_is_deterministic() -> None:
     assert first == second
 
 
-def test_convergence_reports_second_order_for_taylor_green_enstrophy() -> None:
+def test_convergence_reports_second_order_for_taylor_green_mean_square() -> None:
     result = run_convergence((17, 33, 65), (16, 32, 64, 128))
     assert list(result["columns"]) == list(CONVERGENCE_COLUMNS)
     order_index = CONVERGENCE_COLUMNS.index("observed_order")
@@ -45,7 +45,8 @@ def test_convergence_reports_second_order_for_taylor_green_enstrophy() -> None:
     orders = [
         row[order_index]
         for row in result["rows"]
-        if row[study_index] == "taylor_green_enstrophy" and row[order_index] != "n/a"
+        if row[study_index] == "taylor_green_mean_square_vorticity"
+        and row[order_index] != "n/a"
     ]
     assert orders, "expected at least one estimable order"
     assert orders[-1] == abs(orders[-1])  # positive

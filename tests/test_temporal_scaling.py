@@ -109,6 +109,15 @@ def test_invalid_raw_rate_rejected(bad_rate: float) -> None:
         scale_temporal_deformation(bad_rate, TemporalScaleDefinition.from_external(1.0))
 
 
+def test_overflowing_product_is_rejected() -> None:
+    # Individually legal inputs whose product overflows must be rejected, not
+    # silently returned as inf.
+    with pytest.raises(ValueError):
+        scale_temporal_deformation(
+            1e300, TemporalScaleDefinition.from_external(1e300)
+        )
+
+
 @pytest.mark.parametrize("bad_dt", [0.0, -1.0, np.nan, np.inf])
 def test_invalid_delta_time_rejected(bad_dt: float) -> None:
     previous, current = _fields()

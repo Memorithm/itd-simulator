@@ -134,7 +134,7 @@ def _points_to_rows(
     return rows
 
 
-def _taylor_green_enstrophy(sizes: Sequence[int]) -> list[ConvergencePoint]:
+def _taylor_green_mean_square_vorticity(sizes: Sequence[int]) -> list[ConvergencePoint]:
     amplitude, wavenumber = 1.0, 1.0
     period = 2.0 * np.pi / wavenumber
     reference = ac.taylor_green_mean_square_vorticity(amplitude, wavenumber)
@@ -146,7 +146,7 @@ def _taylor_green_enstrophy(sizes: Sequence[int]) -> list[ConvergencePoint]:
         computed = float(spatial_mean(omega**2, grid.spacing, "periodic"))
         points.append(
             ConvergencePoint(
-                "taylor_green_enstrophy",
+                "taylor_green_mean_square_vorticity",
                 "taylor_green",
                 size,
                 grid.spacing,
@@ -212,8 +212,8 @@ def run_convergence(
 ) -> dict[str, Any]:
     """Run all convergence studies and return structured rows plus a summary."""
     studies = {
-        "taylor_green_enstrophy": (
-            _taylor_green_enstrophy(periodic_sizes),
+        "taylor_green_mean_square_vorticity": (
+            _taylor_green_mean_square_vorticity(periodic_sizes),
             "analytical",
         ),
         "taylor_green_heterogeneity": (

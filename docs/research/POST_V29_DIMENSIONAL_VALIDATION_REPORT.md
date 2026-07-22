@@ -63,8 +63,11 @@ The catalogue (`itd_research/analytical_cases.py`,
 `itd_research/benchmark_runner.py`) contains: zero field; solid-body rotation;
 uniform shear; Taylor-Green (periodic); Lamb-Oseen (regular core limit);
 counter-rotating pair; amplitude-scaled pair; structure-changed pair;
-translated periodic vortex. The quick and full suites both report **33/33**
-analytical checks passing.
+translated periodic vortex. Each check is classified so the categories stay
+distinct. The quick and full suites both report **33/33** checks passing,
+comprising **24 exact** algebraic identities, **3 continuum-limit** convergence
+checks, and **6 manufactured** qualitative checks — only the 24 exact checks are
+analytical identities.
 
 ## 7. Analytical derivations
 
@@ -74,7 +77,8 @@ against the implementation:
 * solid-body rotation: `omega = 2 Omega` exact; `H=L=Q=M=0`; intensity `4Omega^2`;
 * uniform shear: `omega = -gamma` exact; structural components `0`;
 * Taylor-Green: localization `= 5/4` reproduced to `4.4e-16`; sign mixing `= 1`
-  exactly; continuum enstrophy `U^2 k^2` and heterogeneity
+  exactly; continuum mean-square vorticity `<omega^2> = U^2 k^2` (enstrophy
+  `= <omega^2>/2 = U^2 k^2 / 2`) and heterogeneity
   `(pi^2/8) sqrt(1-64/pi^4) ≈ 0.7225075`;
 * amplitude scaling: `H,L,Q,M` invariant; intensity ratio `= (B/A)^2`;
 * identical/full-period-translation: raw temporal deformation exactly `0`.
@@ -86,7 +90,7 @@ Grid refinement (`itd_research/convergence.py`), observed orders
 
 | Study | N sequence | finest error | observed order (finest pair) |
 |---|---|---|---|
-| Taylor-Green enstrophy `<omega^2>` | 16,32,64,128 | 8.03e-4 | 1.999 |
+| Taylor-Green mean-square vorticity `<omega^2>` | 16,32,64,128 | 8.03e-4 | 1.999 |
 | Taylor-Green heterogeneity | 16,32,64,128 | 8.46e-4 | 2.000 |
 | Lamb-Oseen vorticity RMS error | 17,33,65,129 | 8.47e-4 | 1.990 |
 

@@ -324,6 +324,10 @@ def scale_temporal_deformation(
 
     tau, reference_values = definition.resolve()
     dimensionless = tau * rate
+    if not np.isfinite(dimensionless):
+        raise ValueError(
+            "dimensionless deformation exceeds the finite numeric range."
+        )
 
     warnings: list[str] = []
     if rate == 0.0:

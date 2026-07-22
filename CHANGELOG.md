@@ -13,8 +13,10 @@ Scientific model revision: **ITD V29.18** (numerical behavior preserved).
   research candidate: an explicit temporal-scale API (`external`,
   `observation_duration`, `turnover`, `vorticity_timescale` policies) that
   preserves the V29.18 raw temporal rate exactly and adds a dimensionless
-  candidate `D* = tau_ref * D`; a deterministic analytical benchmark catalogue;
-  established fluid-dynamics comparison diagnostics; grid-convergence and
+  candidate `D* = tau_ref * D`; a deterministic benchmark catalogue of
+  analytical and manufactured cases with classified checks (exact, continuum,
+  manufactured); established fluid-dynamics comparison diagnostics;
+  grid-convergence and
   sensitivity/invariance runners; a `python -m itd_research` command with
   quick/full modes, overwrite-safe atomic CSV/JSON output, and a manifest;
 - hand-derived analytical oracles (`tests/fixtures/analytical_oracles.json`) in

@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import math
 import os
 import platform
 import subprocess
@@ -79,11 +80,16 @@ def _jsonable(value: object) -> object:
     if isinstance(value, (int,)):
         return value
     if isinstance(value, float):
+        if not math.isfinite(value):
+            raise ValueError(f"non-finite float is not serialisable: {value!r}")
         return value
     if isinstance(value, (np.integer,)):
         return int(value)
     if isinstance(value, (np.floating,)):
-        return float(value)
+        coerced = float(value)
+        if not math.isfinite(coerced):
+            raise ValueError(f"non-finite float is not serialisable: {coerced!r}")
+        return coerced
     if isinstance(value, np.ndarray):
         return [_jsonable(item) for item in value.tolist()]
     if isinstance(value, Mapping):
@@ -154,6 +160,7 @@ def write_json(
         indent=2,
         sort_keys=True,
         ensure_ascii=True,
+        allow_nan=False,
     )
     _atomic_write_bytes(target, (text + "\n").encode("utf-8"))
     return target
@@ -163,7 +170,12 @@ def _format_cell(value: object) -> str:
     if isinstance(value, bool):
         return "true" if value else "false"
     if isinstance(value, (np.floating, float)):
-        return repr(float(value))
+        coerced = float(value)
+        if not math.isfinite(coerced):
+            raise ValueError(
+                f"non-finite value not permitted in CSV cell: {coerced!r}"
+            )
+        return repr(coerced)
     if isinstance(value, (np.integer, int)):
         return str(int(value))
     return str(value)
@@ -179,9 +191,10 @@ def write_csv(
 ) -> Path:
     """Write ``rows`` as deterministic CSV with a fixed header and ``\\n`` endings.
 
-    Floats are rendered with :func:`repr` for exact round-tripping; commas or
-    quotes are rejected inside cells to keep the format unambiguous without a
-    dialect dependency.
+    Finite floats are rendered with :func:`repr` for exact round-tripping;
+    non-finite floats are rejected. Commas, double quotes, and any control
+    character (including CR and LF) are rejected inside cells to keep the format
+    unambiguous without a dialect dependency.
     """
     target = _resolve_within(directory, name)
     if target.exists() and not overwrite:
@@ -194,7 +207,7 @@ def write_csv(
             raise ValueError("row width does not match the header width.")
         cells = [_format_cell(cell) for cell in row]
         for cell in cells:
-            if "," in cell or '"' in cell or "\n" in cell:
+            if "," in cell or '"' in cell or any(ord(ch) < 0x20 for ch in cell):
                 raise ValueError(f"unsupported character in CSV cell: {cell!r}")
         lines.append(",".join(cells))
     payload = ("\n".join(lines) + "\n").encode("utf-8")

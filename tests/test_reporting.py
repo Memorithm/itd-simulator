@@ -71,6 +71,28 @@ def test_write_json_rejects_unserialisable(tmp_path: Path) -> None:
         write_json(tmp_path, "bad.json", {"x": object()})
 
 
+@pytest.mark.parametrize("bad", [float("nan"), float("inf"), float("-inf")])
+def test_write_json_rejects_non_finite_floats(tmp_path: Path, bad: float) -> None:
+    with pytest.raises(ValueError):
+        write_json(tmp_path, "bad.json", {"x": bad})
+    with pytest.raises(ValueError):
+        write_json(tmp_path, "bad2.json", {"x": np.float64(bad)})
+
+
+@pytest.mark.parametrize("bad", [float("nan"), float("inf"), float("-inf")])
+def test_write_csv_rejects_non_finite_floats(tmp_path: Path, bad: float) -> None:
+    with pytest.raises(ValueError):
+        write_csv(tmp_path, "bad.csv", ("x",), [[bad]])
+    with pytest.raises(ValueError):
+        write_csv(tmp_path, "bad2.csv", ("x",), [[np.float64(bad)]])
+
+
+@pytest.mark.parametrize("control", ["\r", "\n", "\t", "\x00"])
+def test_write_csv_rejects_control_characters(tmp_path: Path, control: str) -> None:
+    with pytest.raises(ValueError):
+        write_csv(tmp_path, "bad.csv", ("x",), [[f"a{control}b"]])
+
+
 def test_prepare_output_directory_rejects_symlink(tmp_path: Path) -> None:
     real = tmp_path / "real_dir"
     real.mkdir()
