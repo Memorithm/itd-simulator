@@ -22,6 +22,10 @@ _NUMERICAL_MODULES = (
     "itd_research.sensitivity",
     "itd_research.reporting",
     "itd_research.plotting",
+    "itd_research.diagnostics_3d",
+    "itd_research.diagnostics_3d.operators",
+    "itd_research.diagnostics_3d.velocity_gradient",
+    "itd_research.diagnostics_3d.analytical_fields",
 )
 
 
