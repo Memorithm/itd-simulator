@@ -132,14 +132,16 @@ operators. Relationships:
 
 * ITD localization `= flatness - 1 = excess_kurtosis + 2` (cross-checked
   numerically);
-* for a curvature weight of 1, ITD intensity `= <omega^2> = 2 × enstrophy`; on
-  solid-body rotation both give `(2Omega)^2` — intensity and enstrophy carry the
-  same information for single-mode fields;
+* for a curvature weight of 1, ITD intensity `= <omega^2>` and enstrophy
+  `= <omega^2>/2`, so intensity `= 2 × enstrophy`; on solid-body rotation
+  intensity `= 4 Omega^2` and enstrophy `= 2 Omega^2`. They differ only by the
+  constant factor `1/2`, so for single-scale fields they carry equivalent
+  information;
 * roughness relates to the mean gradient norm normalized by vorticity RMS.
 
 Where a single vorticity magnitude scale is all that matters, intensity and
-enstrophy are nearly redundant. The structural vector adds information exactly
-when fields differ in shape at equal magnitude (next section).
+enstrophy are redundant (proportional). The structural vector adds information
+exactly when fields differ in shape at equal magnitude (next section).
 
 ## 11. Unit-invariance results
 
