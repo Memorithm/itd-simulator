@@ -1,0 +1,493 @@
+{
+  "model_baseline": "ITD V29.18",
+  "oracles": [
+    {
+      "boundary_convention": "finite",
+      "case": "zero_field",
+      "derivation": "omega = dvy/dx - dvx/dy = 0 everywhere; intensity = <omega^2 * exp(lc^2 R)> = 0.",
+      "domain": {
+        "kind": "finite",
+        "lower": -2.0,
+        "nodes": 65,
+        "upper": 2.0
+      },
+      "expected_value": 0.0,
+      "field_definition": "vx=0, vy=0",
+      "id": "zero_field.intensity",
+      "parameters": {},
+      "quantity": "intensity",
+      "source": "hand_derived",
+      "tolerance": 1e-12,
+      "units": "code T^-2 with unit curvature weight"
+    },
+    {
+      "boundary_convention": "finite",
+      "case": "zero_field",
+      "derivation": "Zero vorticity RMS is below the zero threshold; the V29.18 signature returns 0 by definition.",
+      "domain": {
+        "kind": "finite",
+        "lower": -2.0,
+        "nodes": 65,
+        "upper": 2.0
+      },
+      "expected_value": 0.0,
+      "field_definition": "vx=0, vy=0",
+      "id": "zero_field.heterogeneity",
+      "parameters": {},
+      "quantity": "heterogeneity",
+      "source": "hand_derived",
+      "tolerance": 1e-12,
+      "units": "dimensionless"
+    },
+    {
+      "boundary_convention": "finite",
+      "case": "zero_field",
+      "derivation": "Zero field returns a zero signature by the V29.18 zero-threshold rule.",
+      "domain": {
+        "kind": "finite",
+        "lower": -2.0,
+        "nodes": 65,
+        "upper": 2.0
+      },
+      "expected_value": 0.0,
+      "field_definition": "vx=0, vy=0",
+      "id": "zero_field.localization",
+      "parameters": {},
+      "quantity": "localization",
+      "source": "hand_derived",
+      "tolerance": 1e-12,
+      "units": "dimensionless"
+    },
+    {
+      "boundary_convention": "finite",
+      "case": "zero_field",
+      "derivation": "Zero field returns a zero signature by the V29.18 zero-threshold rule.",
+      "domain": {
+        "kind": "finite",
+        "lower": -2.0,
+        "nodes": 65,
+        "upper": 2.0
+      },
+      "expected_value": 0.0,
+      "field_definition": "vx=0, vy=0",
+      "id": "zero_field.roughness",
+      "parameters": {},
+      "quantity": "roughness",
+      "source": "hand_derived",
+      "tolerance": 1e-12,
+      "units": "dimensionless"
+    },
+    {
+      "boundary_convention": "finite",
+      "case": "zero_field",
+      "derivation": "Zero field returns a zero signature by the V29.18 zero-threshold rule.",
+      "domain": {
+        "kind": "finite",
+        "lower": -2.0,
+        "nodes": 65,
+        "upper": 2.0
+      },
+      "expected_value": 0.0,
+      "field_definition": "vx=0, vy=0",
+      "id": "zero_field.sign_mixing",
+      "parameters": {},
+      "quantity": "sign_mixing",
+      "source": "hand_derived",
+      "tolerance": 1e-12,
+      "units": "dimensionless"
+    },
+    {
+      "boundary_convention": "finite",
+      "case": "solid_body_rotation",
+      "derivation": "omega = dvy/dx - dvx/dy = Omega-(-Omega) = 2*Omega (uniform). intensity = <(2*Omega)^2> = 4*Omega^2 = 4.",
+      "domain": {
+        "kind": "finite",
+        "lower": -2.0,
+        "nodes": 65,
+        "upper": 2.0
+      },
+      "expected_value": 4.0,
+      "field_definition": "vx=-Omega*y, vy=Omega*x",
+      "id": "solid_body_rotation.intensity",
+      "parameters": {
+        "rotation_rate": 1.0
+      },
+      "quantity": "intensity",
+      "source": "hand_derived",
+      "tolerance": 1e-09,
+      "units": "code T^-2 with unit curvature weight"
+    },
+    {
+      "boundary_convention": "finite",
+      "case": "solid_body_rotation",
+      "derivation": "A uniform |omega| has zero spatial deviation, so heterogeneity = 0.",
+      "domain": {
+        "kind": "finite",
+        "lower": -2.0,
+        "nodes": 65,
+        "upper": 2.0
+      },
+      "expected_value": 0.0,
+      "field_definition": "vx=-Omega*y, vy=Omega*x",
+      "id": "solid_body_rotation.heterogeneity",
+      "parameters": {
+        "rotation_rate": 1.0
+      },
+      "quantity": "heterogeneity",
+      "source": "hand_derived",
+      "tolerance": 1e-09,
+      "units": "dimensionless"
+    },
+    {
+      "boundary_convention": "finite",
+      "case": "solid_body_rotation",
+      "derivation": "For a uniform field <omega^4>/<omega^2>^2 = 1, so localization = 1-1 = 0.",
+      "domain": {
+        "kind": "finite",
+        "lower": -2.0,
+        "nodes": 65,
+        "upper": 2.0
+      },
+      "expected_value": 0.0,
+      "field_definition": "vx=-Omega*y, vy=Omega*x",
+      "id": "solid_body_rotation.localization",
+      "parameters": {
+        "rotation_rate": 1.0
+      },
+      "quantity": "localization",
+      "source": "hand_derived",
+      "tolerance": 1e-09,
+      "units": "dimensionless"
+    },
+    {
+      "boundary_convention": "finite",
+      "case": "solid_body_rotation",
+      "derivation": "grad(omega) = 0 for a uniform vorticity field, so roughness = 0.",
+      "domain": {
+        "kind": "finite",
+        "lower": -2.0,
+        "nodes": 65,
+        "upper": 2.0
+      },
+      "expected_value": 0.0,
+      "field_definition": "vx=-Omega*y, vy=Omega*x",
+      "id": "solid_body_rotation.roughness",
+      "parameters": {
+        "rotation_rate": 1.0
+      },
+      "quantity": "roughness",
+      "source": "hand_derived",
+      "tolerance": 1e-09,
+      "units": "dimensionless"
+    },
+    {
+      "boundary_convention": "finite",
+      "case": "solid_body_rotation",
+      "derivation": "omega has a single sign so |<omega>| = <|omega|> and sign_mixing = 1 - 1 = 0.",
+      "domain": {
+        "kind": "finite",
+        "lower": -2.0,
+        "nodes": 65,
+        "upper": 2.0
+      },
+      "expected_value": 0.0,
+      "field_definition": "vx=-Omega*y, vy=Omega*x",
+      "id": "solid_body_rotation.sign_mixing",
+      "parameters": {
+        "rotation_rate": 1.0
+      },
+      "quantity": "sign_mixing",
+      "source": "hand_derived",
+      "tolerance": 1e-09,
+      "units": "dimensionless"
+    },
+    {
+      "boundary_convention": "finite",
+      "case": "uniform_shear",
+      "derivation": "omega = dvy/dx - dvx/dy = 0 - gamma = -gamma (uniform). intensity = <gamma^2> = 1.",
+      "domain": {
+        "kind": "finite",
+        "lower": -1.5,
+        "nodes": 65,
+        "upper": 1.5
+      },
+      "expected_value": 1.0,
+      "field_definition": "vx=gamma*y, vy=0",
+      "id": "uniform_shear.intensity",
+      "parameters": {
+        "shear_rate": 1.0
+      },
+      "quantity": "intensity",
+      "source": "hand_derived",
+      "tolerance": 1e-09,
+      "units": "code T^-2 with unit curvature weight"
+    },
+    {
+      "boundary_convention": "finite",
+      "case": "uniform_shear",
+      "derivation": "Uniform |omega| => zero deviation => heterogeneity = 0.",
+      "domain": {
+        "kind": "finite",
+        "lower": -1.5,
+        "nodes": 65,
+        "upper": 1.5
+      },
+      "expected_value": 0.0,
+      "field_definition": "vx=gamma*y, vy=0",
+      "id": "uniform_shear.heterogeneity",
+      "parameters": {
+        "shear_rate": 1.0
+      },
+      "quantity": "heterogeneity",
+      "source": "hand_derived",
+      "tolerance": 1e-09,
+      "units": "dimensionless"
+    },
+    {
+      "boundary_convention": "finite",
+      "case": "uniform_shear",
+      "derivation": "Uniform field => flatness 1 => localization 0.",
+      "domain": {
+        "kind": "finite",
+        "lower": -1.5,
+        "nodes": 65,
+        "upper": 1.5
+      },
+      "expected_value": 0.0,
+      "field_definition": "vx=gamma*y, vy=0",
+      "id": "uniform_shear.localization",
+      "parameters": {
+        "shear_rate": 1.0
+      },
+      "quantity": "localization",
+      "source": "hand_derived",
+      "tolerance": 1e-09,
+      "units": "dimensionless"
+    },
+    {
+      "boundary_convention": "finite",
+      "case": "uniform_shear",
+      "derivation": "Single-signed omega => sign_mixing 0.",
+      "domain": {
+        "kind": "finite",
+        "lower": -1.5,
+        "nodes": 65,
+        "upper": 1.5
+      },
+      "expected_value": 0.0,
+      "field_definition": "vx=gamma*y, vy=0",
+      "id": "uniform_shear.sign_mixing",
+      "parameters": {
+        "shear_rate": 1.0
+      },
+      "quantity": "sign_mixing",
+      "source": "hand_derived",
+      "tolerance": 1e-09,
+      "units": "dimensionless"
+    },
+    {
+      "boundary_convention": "periodic",
+      "case": "taylor_green",
+      "derivation": "omega=2Uk sin(kx)sin(ky). Period-averaged sin^4=3/8, sin^2=1/2 (exact on an endpoint-excluded grid, N>=5). <omega^4>/<omega^2>^2 = (3/8)^2/(1/4)^2 = 9/4. localization = 9/4 - 1 = 5/4.",
+      "domain": {
+        "kind": "periodic",
+        "nodes": 64,
+        "period": 6.283185307179586
+      },
+      "expected_value": 1.25,
+      "field_definition": "vx=U sin(kx)cos(ky), vy=-U cos(kx)sin(ky)",
+      "id": "taylor_green.localization",
+      "parameters": {
+        "amplitude": 1.0,
+        "wavenumber": 1.0
+      },
+      "quantity": "localization",
+      "source": "hand_derived",
+      "tolerance": 1e-09,
+      "units": "dimensionless"
+    },
+    {
+      "boundary_convention": "periodic",
+      "case": "taylor_green",
+      "derivation": "<omega> = 0 exactly on the symmetric periodic grid, so sign_mixing = 1 - 0 = 1.",
+      "domain": {
+        "kind": "periodic",
+        "nodes": 64,
+        "period": 6.283185307179586
+      },
+      "expected_value": 1.0,
+      "field_definition": "vx=U sin(kx)cos(ky), vy=-U cos(kx)sin(ky)",
+      "id": "taylor_green.sign_mixing",
+      "parameters": {
+        "amplitude": 1.0,
+        "wavenumber": 1.0
+      },
+      "quantity": "sign_mixing",
+      "source": "hand_derived",
+      "tolerance": 1e-09,
+      "units": "dimensionless"
+    },
+    {
+      "boundary_convention": "periodic",
+      "case": "identical_fields",
+      "derivation": "RMS(omega_i - omega_{i-1}) = 0 when the fields are identical, so the raw rate is exactly 0.",
+      "domain": {
+        "kind": "periodic",
+        "nodes": 64,
+        "period": 6.283185307179586
+      },
+      "expected_value": 0.0,
+      "field_definition": "omega_i = omega_{i-1} (Taylor-Green snapshot repeated)",
+      "id": "identical_consecutive_fields.raw_temporal_deformation",
+      "parameters": {
+        "amplitude": 1.0,
+        "delta_time": 0.25,
+        "wavenumber": 1.0
+      },
+      "quantity": "raw_temporal_deformation",
+      "source": "hand_derived",
+      "tolerance": 1e-12,
+      "units": "T^-1"
+    },
+    {
+      "boundary_convention": "periodic",
+      "case": "full_period_translation",
+      "derivation": "A translation by an integer number of full periods maps each node to an identical sampled value, so omega is unchanged and the raw rate is exactly 0.",
+      "domain": {
+        "kind": "periodic",
+        "nodes": 64,
+        "period": 6.283185307179586
+      },
+      "expected_value": 0.0,
+      "field_definition": "Taylor-Green pattern translated by exactly one spatial period in x",
+      "id": "full_period_translation.raw_temporal_deformation",
+      "parameters": {
+        "amplitude": 1.0,
+        "delta_time": 0.25,
+        "wavenumber": 1.0
+      },
+      "quantity": "raw_temporal_deformation",
+      "source": "hand_derived",
+      "tolerance": 1e-12,
+      "units": "T^-1"
+    },
+    {
+      "boundary_convention": "periodic",
+      "case": "amplitude_scaling",
+      "derivation": "intensity = <omega^2> scales as amplitude^2, so ratio = (B/A)^2 = 16.",
+      "domain": {
+        "kind": "periodic",
+        "nodes": 64,
+        "period": 3.141592653589793
+      },
+      "expected_value": 16.0,
+      "field_definition": "Taylor-Green at amplitudes A and B on the same grid",
+      "id": "amplitude_scaling.intensity_ratio",
+      "parameters": {
+        "amplitude_a": 1.0,
+        "amplitude_b": 4.0,
+        "wavenumber": 2.0
+      },
+      "quantity": "intensity_ratio",
+      "source": "hand_derived",
+      "tolerance": 1e-09,
+      "units": "dimensionless ratio"
+    },
+    {
+      "boundary_convention": "periodic",
+      "case": "amplitude_scaling",
+      "derivation": "heterogeneity is scale-invariant: multiplying omega by a constant cancels in the ratio, so the two amplitudes give identical values.",
+      "domain": {
+        "kind": "periodic",
+        "nodes": 64,
+        "period": 3.141592653589793
+      },
+      "expected_value": 0.0,
+      "field_definition": "Taylor-Green at amplitudes A and B on the same grid",
+      "id": "amplitude_scaling.heterogeneity_invariance",
+      "parameters": {
+        "amplitude_a": 1.0,
+        "amplitude_b": 4.0,
+        "wavenumber": 2.0
+      },
+      "quantity": "heterogeneity_delta",
+      "source": "hand_derived",
+      "tolerance": 1e-12,
+      "units": "dimensionless"
+    },
+    {
+      "boundary_convention": "periodic",
+      "case": "amplitude_scaling",
+      "derivation": "localization is scale-invariant; the amplitude cancels in <omega^4>/<omega^2>^2.",
+      "domain": {
+        "kind": "periodic",
+        "nodes": 64,
+        "period": 3.141592653589793
+      },
+      "expected_value": 0.0,
+      "field_definition": "Taylor-Green at amplitudes A and B on the same grid",
+      "id": "amplitude_scaling.localization_invariance",
+      "parameters": {
+        "amplitude_a": 1.0,
+        "amplitude_b": 4.0,
+        "wavenumber": 2.0
+      },
+      "quantity": "localization_delta",
+      "source": "hand_derived",
+      "tolerance": 1e-12,
+      "units": "dimensionless"
+    },
+    {
+      "boundary_convention": "periodic",
+      "case": "amplitude_scaling",
+      "derivation": "roughness ell_s <|grad omega|>/omega_rms is scale-invariant; amplitude cancels.",
+      "domain": {
+        "kind": "periodic",
+        "nodes": 64,
+        "period": 3.141592653589793
+      },
+      "expected_value": 0.0,
+      "field_definition": "Taylor-Green at amplitudes A and B on the same grid",
+      "id": "amplitude_scaling.roughness_invariance",
+      "parameters": {
+        "amplitude_a": 1.0,
+        "amplitude_b": 4.0,
+        "wavenumber": 2.0
+      },
+      "quantity": "roughness_delta",
+      "source": "hand_derived",
+      "tolerance": 1e-12,
+      "units": "dimensionless"
+    },
+    {
+      "boundary_convention": "periodic",
+      "case": "amplitude_scaling",
+      "derivation": "sign_mixing depends only on sign structure, which amplitude scaling preserves.",
+      "domain": {
+        "kind": "periodic",
+        "nodes": 64,
+        "period": 3.141592653589793
+      },
+      "expected_value": 0.0,
+      "field_definition": "Taylor-Green at amplitudes A and B on the same grid",
+      "id": "amplitude_scaling.sign_mixing_invariance",
+      "parameters": {
+        "amplitude_a": 1.0,
+        "amplitude_b": 4.0,
+        "wavenumber": 2.0
+      },
+      "quantity": "sign_mixing_delta",
+      "source": "hand_derived",
+      "tolerance": 1e-12,
+      "units": "dimensionless"
+    }
+  ],
+  "purpose": "Hand-derived analytical oracles for the post-V29 research phase. Every value here is derived by hand from the field definition and is independent of the Python implementation. These are NOT implementation-generated snapshots: the Python-to-Rust fixture (tests/fixtures/oracle_data.rs) is a separate regression reference and must never be mixed with this category. A future pure-Rust suite can consume these records without importing any Python-generated numerical output.",
+  "schema": "itd-analytical-oracles/1",
+  "source_categories": {
+    "hand_derived": "Closed-form value obtained by hand from the field definition.",
+    "manufactured_solution": "Qualitative property of a constructed field (kept in the benchmark runner, not here).",
+    "regression_reference": "Implementation snapshot (kept in oracle_data.rs, not here).",
+    "symbolic_derivation": "Value obtained via computer algebra with a retained human-readable derivation (none used here)."
+  }
+}
