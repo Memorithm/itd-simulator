@@ -5,10 +5,11 @@ as a single-author research project by Tarek Zekriti.
 
 ## Before proposing code
 
-No software licence or external-contribution agreement has been selected.
-Until those legal terms are explicit, use issues for reproducible bug reports,
-scientific questions, test cases, and review observations; do not submit code
-for incorporation. See `docs/license_decision.md`.
+The source is dual-licensed (PolyForm Noncommercial 1.0.0 plus a commercial
+option; see `LICENSING.md`). An external-contribution-rights agreement has **not**
+yet been selected. Until that policy is explicit, use issues for reproducible bug
+reports, scientific questions, test cases, and review observations; do not submit
+code for incorporation. See `docs/license_decision.md`.
 
 Do not include confidential data, credentials, third-party code, or material
 whose redistribution rights are unclear. Security reports follow `SECURITY.md`.

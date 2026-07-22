@@ -98,3 +98,13 @@ A changed fixture must include:
 Implementation snapshots and analytical expected values must remain labelled
 separately. A snapshot change cannot override a contradictory analytical
 invariant without resolving the underlying scientific or implementation issue.
+
+## Separate hand-derived analytical oracles
+
+`tests/fixtures/analytical_oracles.json` is a distinct, hand-derived analytical
+oracle set (see `docs/research/ANALYTICAL_ORACLES.md`). Unlike `oracle_data.rs`,
+its values are derived by hand from the field definitions and are independent of
+the Python implementation. A future pure-Rust suite can consume that JSON
+without importing any Python-generated numerical output. The two categories must
+never be merged: the Rust snapshot is a regression reference; the JSON oracles
+are independent analytical expectations.

@@ -70,6 +70,18 @@ Run report-producing commands from a temporary working directory if the Git
 checkout must remain byte-for-byte clean. `run_validation.sh` already does so
 and compares tracked status before and after.
 
+The post-V29 research suite is deterministic and writes only into an explicit
+output directory (never into the tracked tree):
+
+```bash
+python -m itd_research --quick --output /tmp/itd-research-quick
+python -m itd_research --full  --output /tmp/itd-research-full
+```
+
+Repeated runs in one locked environment are byte-identical (verified by
+comparing the JSON/CSV artifacts). `run_validation.sh` runs the quick suite into
+a temporary directory as part of the standard validation.
+
 ## Updating dependencies
 
 1. Read upstream Python and wheel compatibility metadata for every direct

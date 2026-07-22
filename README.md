@@ -81,6 +81,26 @@ advanced, and legacy compatibility names. The implementation is in
 `itd_v29_core/`; `import itd_v29` remains supported. The packaged namespace
 `itd_simulator` re-exports the same objects.
 
+## Post-V29 research namespace
+
+`itd_research/` is an isolated research namespace layered on top of the
+certified, immutable `ITD V29.18` baseline. It studies a dimensionless
+reformulation of temporal deformation, provides analytical/manufactured
+benchmarks, established-diagnostic comparisons, convergence and sensitivity
+runners, and hand-derived analytical oracles. It never modifies V29.18, is never
+imported by `itd_v29_core`, and importing it does not initialize Matplotlib.
+
+It is **not** a certified scientific revision; `MODEL_REVISION` remains
+`ITD V29.18`. Run the deterministic research suite into an explicit directory:
+
+```bash
+python -m itd_research --quick --output /tmp/itd-research-quick
+python -m itd_research --full  --output /tmp/itd-research-full
+```
+
+The specification, oracle derivations, and results are in
+[`docs/research/`](docs/research/).
+
 ## Release integrity
 
 The previously unexplained SHA-256 belongs specifically to the public V10
@@ -103,7 +123,9 @@ fixtures, tolerances, inputs, and execution environments. They do not establish
 ITD as a validated physical observable, a universal complexity measure, an
 entropy, or a replacement for Shannon information or established measures.
 
-No software licence has been selected. Public visibility does not itself grant
-permission to copy, modify, redistribute, or commercially reuse the source.
-The owner decision and consequences are summarized in
-[`docs/license_decision.md`](docs/license_decision.md).
+The source is dual-licensed: the **PolyForm Noncommercial License 1.0.0**
+([`LICENSE`](LICENSE)) permits noncommercial and personal use, while **any
+commercial use requires a separate written commercial licence** from the
+copyright holder, Tarek Zekriti (zekrititarek@gmail.com). Public visibility does
+not itself grant commercial rights. See [`LICENSING.md`](LICENSING.md) and the
+consequences summary in [`docs/license_decision.md`](docs/license_decision.md).

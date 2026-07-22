@@ -17,6 +17,11 @@ archive is claimed until a reviewed release is published.
   material and is not evidence for V29.18.
 - No `itd_v29_core` module imports the `itd_v29` facade.
 - The detailed certification report is available in `itd_v29_results/v29_18_entrypoint_certification.md`.
+- A separate, isolated `itd_research/` namespace hosts a **post-V29 research
+  candidate** (a dimensionless temporal-deformation study). It does not modify
+  V29.18, is never imported by `itd_v29_core`, and is not a certified scientific
+  revision. `MODEL_REVISION` remains `ITD V29.18`. See
+  `docs/research/POST_V29_DIMENSIONAL_VALIDATION_REPORT.md`.
 
 These results are relative to the declared test suites, analytical cases,
 implementation-generated oracle fixture, tolerances, dependencies, and

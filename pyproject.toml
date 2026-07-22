@@ -8,6 +8,8 @@ version = "0.2.0"
 description = "Deterministic research simulator for curvature-weighted rotational intensity and structural dynamics"
 readme = "README.md"
 requires-python = ">=3.11"
+license = "PolyForm-Noncommercial-1.0.0"
+license-files = ["LICENSE", "LICENSING.md"]
 authors = [
   { name = "Tarek Zekriti", email = "194770978+CHECKUPAUTO@users.noreply.github.com" },
 ]
@@ -37,7 +39,7 @@ Repository = "https://github.com/Memorithm/itd-simulator"
 Issues = "https://github.com/Memorithm/itd-simulator/issues"
 
 [tool.setuptools]
-packages = ["itd_simulator", "itd_v29_core"]
+packages = ["itd_simulator", "itd_v29_core", "itd_research"]
 py-modules = ["compare_scenarios", "itd_v29"]
 
 [tool.pytest.ini_options]

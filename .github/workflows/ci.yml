@@ -50,7 +50,7 @@ jobs:
       - name: Compile current sources
         run: |
           set -o pipefail
-          python -m compileall -q itd_v29.py compare_scenarios.py oracle_harness.py itd_simulator itd_v29_core tools tests 2>&1 | tee logs/compile.log
+          python -m compileall -q itd_v29.py compare_scenarios.py oracle_harness.py itd_simulator itd_v29_core itd_research tools tests 2>&1 | tee logs/compile.log
 
       - name: Run Ruff correctness checks
         run: |
@@ -60,7 +60,7 @@ jobs:
       - name: Run incremental type checks
         run: |
           set -o pipefail
-          mypy tools/check_manifest.py tools/check_commit_messages.py tools/check_v29_summary.py tools/deterministic_smoke.py 2>&1 | tee logs/mypy.log
+          mypy tools/check_manifest.py tools/check_commit_messages.py tools/check_v29_summary.py tools/deterministic_smoke.py itd_research 2>&1 | tee logs/mypy.log
 
       - name: Run complete V29.18 validation
         run: |

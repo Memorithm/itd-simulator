@@ -87,7 +87,9 @@ The first four are dimensionless when \(\ell_s\) shares the coordinate length
 unit. As implemented, \(D_i\) has inverse-time dimensions unless time was
 nondimensionalized beforehand. Consequently, changing the time unit can change
 the scalar aggregation. This is an explicit numerical limitation, not a hidden
-claim of unit invariance.
+claim of unit invariance. A separate, isolated research study of an explicit
+dimensionless reformulation \(D^\* = \tau_{\rm ref} D\) (which preserves this raw
+rate) is documented under `docs/research/`; it does not change V29.18.
 
 For a numerically zero vorticity field, all five components and the structural
 score are defined as zero.
