@@ -26,6 +26,7 @@ _NUMERICAL_MODULES = (
     "itd_research.diagnostics_3d.operators",
     "itd_research.diagnostics_3d.velocity_gradient",
     "itd_research.diagnostics_3d.analytical_fields",
+    "itd_research.diagnostics_3d.itd_3d",
     "itd_research.io",
     "itd_research.io.field_data",
     "itd_research.io.metadata",
