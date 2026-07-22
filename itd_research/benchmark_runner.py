@@ -458,7 +458,7 @@ def case_translated_vortex(res: BenchmarkResolution) -> dict[str, Any]:
         vy = -amplitude * np.cos(phase) * np.sin(wavenumber * y)
         return np.asarray(vx, dtype=np.float64), np.asarray(vy, dtype=np.float64)
 
-    times = np.linspace(0.0, 2.0, 9, dtype=np.float64)
+    times: FloatArray = np.linspace(0.0, 2.0, 9, dtype=np.float64)
     cfg = Config(characteristic_length=0.5)
 
     eulerian = simulate(

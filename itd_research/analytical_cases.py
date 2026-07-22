@@ -54,7 +54,9 @@ def finite_grid(node_count: int, lower: float, upper: float) -> Grid:
         raise ValueError("A finite grid needs at least three nodes per axis.")
     if not (np.isfinite(lower) and np.isfinite(upper)) or upper <= lower:
         raise ValueError("Require finite bounds with upper > lower.")
-    coordinates = np.linspace(lower, upper, node_count, dtype=np.float64)
+    coordinates: FloatArray = np.linspace(lower, upper, node_count, dtype=np.float64)
+    x: FloatArray
+    y: FloatArray
     x, y = np.meshgrid(coordinates, coordinates, indexing="xy")
     spacing = float(coordinates[1] - coordinates[0])
     return Grid(x, y, spacing, "finite", node_count)
@@ -69,7 +71,9 @@ def periodic_grid(node_count: int, period: float, origin: float = 0.0) -> Grid:
     if not np.isfinite(origin):
         raise ValueError("origin must be finite.")
     spacing = float(period) / float(node_count)
-    coordinates = origin + np.arange(node_count, dtype=np.float64) * spacing
+    coordinates: FloatArray = origin + np.arange(node_count, dtype=np.float64) * spacing
+    x: FloatArray
+    y: FloatArray
     x, y = np.meshgrid(coordinates, coordinates, indexing="xy")
     return Grid(x, y, spacing, "periodic", node_count)
 
