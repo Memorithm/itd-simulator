@@ -37,7 +37,7 @@ Repository = "https://github.com/Memorithm/itd-simulator"
 Issues = "https://github.com/Memorithm/itd-simulator/issues"
 
 [tool.setuptools]
-packages = ["itd_simulator", "itd_v29_core"]
+packages = ["itd_simulator", "itd_v29_core", "itd_research"]
 py-modules = ["compare_scenarios", "itd_v29"]
 
 [tool.pytest.ini_options]

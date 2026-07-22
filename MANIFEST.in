@@ -13,7 +13,7 @@ include requirements.lock
 include requirements.txt
 include run_validation.sh
 recursive-include docs *.md
-recursive-include tests *.py *.rs
+recursive-include tests *.py *.rs *.json
 recursive-include tools *.py
 global-exclude __pycache__
 global-exclude *.py[cod]
