@@ -15,6 +15,7 @@ from __future__ import annotations
 
 from itd_research.diagnostics_3d.analytical_fields import (
     Grid3D,
+    abc_flow,
     axisymmetric_stretch_rotation_gradient,
     burgers_vortex,
     burgers_vortex_axial_vorticity,
@@ -27,6 +28,11 @@ from itd_research.diagnostics_3d.analytical_fields import (
     simple_shear_gradient,
     taylor_green_3d,
     vortex_tube,
+)
+from itd_research.diagnostics_3d.itd_3d import (
+    ITD3DResult,
+    evaluate_itd3d,
+    spatial_mean_3d,
 )
 from itd_research.diagnostics_3d.operators import (
     partial_derivative,
@@ -76,4 +82,9 @@ __all__ = (
     "burgers_vortex_axial_vorticity",
     "taylor_green_3d",
     "vortex_tube",
+    "abc_flow",
+    # experimental 3D ITD candidate
+    "evaluate_itd3d",
+    "ITD3DResult",
+    "spatial_mean_3d",
 )

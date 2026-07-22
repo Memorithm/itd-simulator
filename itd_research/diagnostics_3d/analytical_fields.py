@@ -195,6 +195,21 @@ def taylor_green_3d(
     return u.astype(np.float64), v.astype(np.float64), w.astype(np.float64)
 
 
+def abc_flow(
+    grid: Grid3D, a: float = 1.0, b: float = 1.0, c: float = 1.0
+) -> tuple[FloatArray, FloatArray, FloatArray]:
+    """Arnold-Beltrami-Childress flow, a Beltrami flow with ``curl u = u``.
+
+    ``u = a sin z + c cos y``, ``v = b sin x + a cos z``, ``w = c sin y + b cos x``
+    on a periodic domain. Because the vorticity equals the velocity, the
+    normalized helicity is 1 everywhere -- a clean helicity oracle.
+    """
+    u = a * np.sin(grid.zz) + c * np.cos(grid.yy)
+    v = b * np.sin(grid.xx) + a * np.cos(grid.zz)
+    w = c * np.sin(grid.yy) + b * np.cos(grid.xx)
+    return u.astype(np.float64), v.astype(np.float64), w.astype(np.float64)
+
+
 def vortex_tube(
     grid: Grid3D, circulation: float, core_radius: float, axis: str = "z"
 ) -> tuple[FloatArray, FloatArray, FloatArray]:
