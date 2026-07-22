@@ -1,6 +1,8 @@
 include CHANGELOG.md
 include CITATION.cff
 include CONTRIBUTING.md
+include LICENSE
+include LICENSING.md
 include MANIFEST.sha256
 include MODEL_REVISION
 include MODEL_STATUS.md

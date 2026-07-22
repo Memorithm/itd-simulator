@@ -123,7 +123,9 @@ fixtures, tolerances, inputs, and execution environments. They do not establish
 ITD as a validated physical observable, a universal complexity measure, an
 entropy, or a replacement for Shannon information or established measures.
 
-No software licence has been selected. Public visibility does not itself grant
-permission to copy, modify, redistribute, or commercially reuse the source.
-The owner decision and consequences are summarized in
-[`docs/license_decision.md`](docs/license_decision.md).
+The source is dual-licensed: the **PolyForm Noncommercial License 1.0.0**
+([`LICENSE`](LICENSE)) permits noncommercial and personal use, while **any
+commercial use requires a separate written commercial licence** from the
+copyright holder, Tarek Zekriti (zekrititarek@gmail.com). Public visibility does
+not itself grant commercial rights. See [`LICENSING.md`](LICENSING.md) and the
+consequences summary in [`docs/license_decision.md`](docs/license_decision.md).

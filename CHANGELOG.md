@@ -9,6 +9,12 @@ Scientific model revision: **ITD V29.18** (numerical behavior preserved).
 
 ### Added
 
+- software licence (owner decision, 2026-07-22): dual-licensed under the
+  PolyForm Noncommercial License 1.0.0 (`LICENSE`) with a separate written
+  commercial licence required for commercial use (`LICENSING.md`), matching the
+  `Memorithm/scirust` model; declared `license = "PolyForm-Noncommercial-1.0.0"`
+  with `LICENSE`/`LICENSING.md` as package licence files; README, CONTRIBUTING,
+  CITATION, and `docs/license_decision.md` updated accordingly;
 - isolated `itd_research/` namespace for a post-V29 dimensional-validation
   research candidate: an explicit temporal-scale API (`external`,
   `observation_duration`, `turnover`, `vorticity_timescale` policies) that

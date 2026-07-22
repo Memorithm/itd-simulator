@@ -3,6 +3,7 @@ message: "If you use this software, cite this repository and the exact scientifi
 type: software
 title: "ITD Simulator"
 version: 0.2.0
+license: PolyForm-Noncommercial-1.0.0
 authors:
   - family-names: "Zekriti"
     given-names: "Tarek"
