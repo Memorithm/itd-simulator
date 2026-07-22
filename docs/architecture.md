@@ -9,9 +9,20 @@ itd_v29_core/                 current V29.18 numerical implementation
 compare_scenarios.py          deterministic fields and shared configuration
 itd_v29_core/entrypoint.py    plotting/report-producing command
 oracle_harness.py             Python-to-Rust reference fixture generator
+itd_research/                 isolated post-V29 research namespace (not V29.18)
 tools/                        validation, manifest, policy, and smoke utilities
 tests/                        focused analytical and regression validators
 ```
+
+## Research namespace boundary
+
+`itd_research/` depends on `itd_v29_core` (one-way); no core module imports
+`itd_research`, enforced by an AST test. Its numerical modules import no plotting
+library; only `itd_research/plotting.py` imports Matplotlib, and it does so
+lazily inside `render_plots`. The research CLI (`python -m itd_research`) writes
+only into an explicitly chosen output directory with overwrite-safe atomic
+writes, so ordinary research runs never modify tracked files. It is a post-V29
+research candidate, not a certified revision.
 
 The facade contains no function definitions. Its `__all__` is composed from
 `STABLE_PUBLIC_API`, `ADVANCED_PUBLIC_API`, and

@@ -9,6 +9,20 @@ Scientific model revision: **ITD V29.18** (numerical behavior preserved).
 
 ### Added
 
+- isolated `itd_research/` namespace for a post-V29 dimensional-validation
+  research candidate: an explicit temporal-scale API (`external`,
+  `observation_duration`, `turnover`, `vorticity_timescale` policies) that
+  preserves the V29.18 raw temporal rate exactly and adds a dimensionless
+  candidate `D* = tau_ref * D`; a deterministic analytical benchmark catalogue;
+  established fluid-dynamics comparison diagnostics; grid-convergence and
+  sensitivity/invariance runners; a `python -m itd_research` command with
+  quick/full modes, overwrite-safe atomic CSV/JSON output, and a manifest;
+- hand-derived analytical oracles (`tests/fixtures/analytical_oracles.json`) in
+  a category strictly separate from the implementation-generated Rust snapshot;
+- research documentation under `docs/research/` (specification, analytical
+  oracle derivations, and the dimensional-validation report);
+- focused research test suite and CI/validation coverage of the research quick
+  suite (V29.18 behaviour unchanged);
 - installable package metadata, `python -m itd_simulator`, and console entry
   point while retaining `import itd_v29`;
 - focused analytical, API, oracle, robustness, and determinism pytest suite;
