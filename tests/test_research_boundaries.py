@@ -71,6 +71,15 @@ _NUMERICAL_MODULES = (
     "itd_research.generalization.transfer",
     "itd_research.industrial",
     "itd_research.industrial.readiness",
+    "itd_research.hard_prediction",
+    "itd_research.hard_prediction.protocol",
+    "itd_research.hard_prediction.degradation",
+    "itd_research.hard_prediction.models",
+    "itd_research.hard_prediction.flows",
+    "itd_research.hard_prediction.evaluation",
+    "itd_research.ood",
+    "itd_research.ood.reference",
+    "itd_research.ood.abstention",
 )
 
 
