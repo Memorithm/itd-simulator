@@ -1,0 +1,8 @@
+[package]
+name = "itd-diagnostics"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[dependencies]
+itd-field = { path = "../itd-field" }

@@ -1,0 +1,16 @@
+[workspace]
+resolver = "2"
+members = [
+    "crates/itd-field",
+    "crates/itd-diagnostics",
+    "crates/itd-result",
+]
+
+# Pure-std Rust research reference for a SUBSET of ITD diagnostics (Mission 5, H36).
+# No external crates, so `cargo build`/`cargo test` run fully offline. This does NOT
+# reproduce the full certified V29.18 signature (finite-boundary operator +
+# structural_metrics); it reproduces a well-defined periodic-central-difference subset
+# and proves Python<->Rust equivalence on it. It is never the scientific oracle.
+
+[profile.release]
+opt-level = 3
