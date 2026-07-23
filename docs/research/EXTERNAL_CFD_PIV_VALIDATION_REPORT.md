@@ -174,7 +174,7 @@ Each status states the evidence class explicitly.
 |---|---|---|---|
 | **H1** | At similar global enstrophy, the ITD structural vector distinguishes differently organised fields | **supported** | Controlled equal-enstrophy pair (§5b): identical enstrophy (0.49840), ITD localization separated ~55× and heterogeneity 8×. Demonstrated on constructed fields, not yet on an external equal-enstrophy pair |
 | **H2** | ITD temporal channels detect annotated transitions better than intensity alone | **partially supported (synthetic)** | Vortex-merger sequence (§5c): an ITD-independent marker (significant rotation regions) transitions 2 → 1 while ITD localization/intensity co-vary. Mechanism shown on synthetic data; **not** tested on externally annotated transitions |
-| **H3** | Transport compensation reduces false temporal response from pure translation | **supported (controlled)** | Residual/Eulerian = 0.033 on an exact spectral translation; demonstrated on synthetic controlled data, not yet on external time series |
+| **H3** | Transport compensation reduces false temporal response from pure translation | **supported** | Synthetic pure translation: residual/Eulerian = 0.033 (~97 % removed). Genuine time-resolved DNS (§7b): 48 % of the raw Eulerian change of \|omega\| removed, the rest genuine deformation (stretching). The transport-vs-deformation split works on real external data |
 | **H4** | ITD components are stable under reasonable mesh/PIV-processing changes | **supported** | External field metrics stable under 1×/2×/3× decimation (§5); consistent with the Mission-1 convergence/sensitivity studies |
 | **H5** | ITD is complementary to Q/swirling/lambda_2, not a duplicate | **supported** | On real data Jaccard(high|ω|,Q>0)=0.245 and corr(|ω|,swirl)=0.54; on pure shear the overlap is exactly 0. ITD's vorticity basis captures different structure than rotation-based methods |
 | **H6** | A meaningful 3D extension needs orientation/stretching/helicity channels | **supported** | Confirmed on a genuine JHTDB DNS cutout (§9): orientation dispersion 0.88, normalized helicity ≈ 0, and a **positive** mean vortex-stretching rate (+2.9) — all genuinely 3D, physically correct, and without 2D analogue. Analytical oracles (ABC helicity = 1, Burgers stretching = a) confirm the code. Remaining: multiple regions/datasets and volumetric experimental data |
@@ -213,8 +213,17 @@ independent 3D CFD, component rms 0.5524, raw data not committed per JHTDB terms
 
 The genuinely 3D ITD channels — which have no 2D analogue — are all physically
 correct on real turbulence, and the two established rotation criteria (Q and
-lambda_2) agree at Jaccard 0.87. Full details in `ITD_3D_CANDIDATE_REPORT.md`.
-This is one cutout: evidence, not a statistical campaign.
+lambda_2) agree at Jaccard 0.87.
+
+An **ensemble of six `24^3` cutouts** at different origins confirms robustness:
+the vortex-stretching rate is **positive in all six boxes** (+2.33 ± 0.91), the
+normalized helicity scatters symmetrically about zero (+0.03 ± 0.13), and
+Jaccard(Q, lambda_2) is 0.892 ± 0.009. A **time-resolved** query of one box
+(`dt = 0.002`) shows transport compensation removing 48 % of the raw Eulerian
+change of \|omega\|, the remainder being genuine deformation (stretching) — the
+honest real-data counterpart to the 97 %-removed synthetic pure translation.
+Full details in `ITD_3D_CANDIDATE_REPORT.md` §4. This is one dataset and a small
+ensemble: early evidence, not a full statistical campaign.
 
 ## 8. Limitations
 

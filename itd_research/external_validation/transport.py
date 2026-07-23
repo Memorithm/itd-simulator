@@ -114,6 +114,58 @@ def transport_decomposition(
     )
 
 
+def transport_decomposition_3d(
+    scalar_before: FloatArray,
+    scalar_after: FloatArray,
+    u: FloatArray,
+    v: FloatArray,
+    w: FloatArray,
+    x: object,
+    y: object,
+    z: object,
+    delta_time: float,
+    boundary_mode: str = "finite",
+) -> TransportDecomposition:
+    """3D analogue of :func:`transport_decomposition`.
+
+    ``Ds/Dt ~= partial s/partial t + u.grad s`` for a 3D scalar. On real
+    turbulence the advective term captures the (large) transport of the scalar by
+    the flow, and the residual is the material change -- for vorticity magnitude
+    that residual is the deformation (vortex stretching), not translation.
+    """
+    dt = float(delta_time)
+    if not np.isfinite(dt) or dt <= 0.0:
+        raise ValueError("delta_time must be finite and strictly positive.")
+    boundary_mode = validate_boundary_mode(boundary_mode)
+    s0 = np.asarray(scalar_before, dtype=np.float64)
+    s1 = np.asarray(scalar_after, dtype=np.float64)
+    u_field = np.asarray(u, dtype=np.float64)
+    v_field = np.asarray(v, dtype=np.float64)
+    w_field = np.asarray(w, dtype=np.float64)
+    if not (s0.shape == s1.shape == u_field.shape == v_field.shape == w_field.shape):
+        raise ValueError("all fields must share a shape.")
+    x_coords = validate_axis_coordinates(x, "x")
+    y_coords = validate_axis_coordinates(y, "y")
+    z_coords = validate_axis_coordinates(z, "z")
+    if s0.shape != (z_coords.size, y_coords.size, x_coords.size):
+        raise ValueError("field shape does not match the (z, y, x) coordinates.")
+
+    eulerian: FloatArray = (s1 - s0) / dt
+    ds_dx = partial_derivative(s0, x_coords, axis=2, boundary_mode=boundary_mode)
+    ds_dy = partial_derivative(s0, y_coords, axis=1, boundary_mode=boundary_mode)
+    ds_dz = partial_derivative(s0, z_coords, axis=0, boundary_mode=boundary_mode)
+    advective: FloatArray = u_field * ds_dx + v_field * ds_dy + w_field * ds_dz
+    residual: FloatArray = eulerian + advective
+    return TransportDecomposition(
+        eulerian_change=eulerian,
+        advective_term=advective,
+        material_residual=residual,
+        eulerian_rms=_rms(eulerian),
+        advective_rms=_rms(advective),
+        residual_rms=_rms(residual),
+    )
+
+
 def translate_periodic(
     field: FloatArray, shift_x: float = 0.0, shift_y: float = 0.0
 ) -> FloatArray:

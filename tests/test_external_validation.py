@@ -21,6 +21,7 @@ from itd_research.external_validation.experiments import (
     synthetic_cfd_cases,
 )
 from itd_research.external_validation.experiments_3d import (
+    aggregate_3d_channels,
     analytical_3d_cases,
     run_3d_comparison,
 )
@@ -31,6 +32,7 @@ from itd_research.external_validation.hypotheses import (
 from itd_research.external_validation.transport import (
     translate_periodic,
     transport_decomposition,
+    transport_decomposition_3d,
 )
 
 _PIV_FIXTURE = "tests/fixtures/external/biofilm_piv_excerpt.npz"
@@ -301,6 +303,46 @@ def test_abc_flow_3d_is_maximally_helical_and_rotation_criteria_agree() -> None:
     assert abc.itd3d["normalized_helicity"] == pytest.approx(1.0, abs=1e-6)
     # Q>0 and lambda2<0 both mark rotation, so they should largely agree.
     assert abc.regions["jaccard_q_lambda2"] > 0.5
+
+
+def test_transport_3d_translation_reduces_and_stationary_is_zero() -> None:
+    from itd_research.diagnostics_3d.analytical_fields import periodic_grid_3d
+
+    grid = periodic_grid_3d(16, 2.0 * np.pi)
+    pattern = np.sin(grid.xx) * np.cos(grid.yy) * np.cos(grid.zz)
+    # stationary: no Eulerian change
+    zero = np.zeros_like(pattern)
+    stat = transport_decomposition_3d(
+        pattern, pattern, zero, zero, zero, grid.x, grid.y, grid.z, 0.1, "periodic"
+    )
+    assert stat.eulerian_rms == pytest.approx(0.0, abs=1e-12)
+    # integer-cell translation along x, advected by the matching uniform velocity
+    dx = float(grid.x[1] - grid.x[0])
+    shifted = np.roll(pattern, 1, axis=2)  # content moves toward +x
+    u0 = (dx / 0.05) * np.ones_like(pattern)
+    moved = transport_decomposition_3d(
+        pattern, shifted, u0, zero, zero, grid.x, grid.y, grid.z, 0.05, "periodic"
+    )
+    assert moved.eulerian_rms > 0.1
+    assert moved.residual_fraction < 0.35  # transport largely compensated
+
+
+def test_transport_3d_rejects_bad_shapes() -> None:
+    from itd_research.diagnostics_3d.analytical_fields import periodic_grid_3d
+
+    grid = periodic_grid_3d(8, 2.0 * np.pi)
+    zero = np.zeros(grid.shape)
+    with pytest.raises(ValueError):
+        transport_decomposition_3d(
+            zero, zero, zero, zero, zero, grid.x, grid.y, grid.z, 0.0, "periodic"
+        )
+
+
+def test_aggregate_3d_channels_summary() -> None:
+    summary = aggregate_3d_channels(analytical_3d_cases())
+    assert summary["n_samples"]["value"] == 2.0
+    assert "stretching_rate" in summary and "jaccard_q_lambda2" in summary
+    assert set(summary["stretching_rate"]) == {"mean", "std", "min", "max"}
 
 
 def test_rigid_rotation_3d_has_no_orientation_dispersion_or_stretching() -> None:

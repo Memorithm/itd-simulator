@@ -38,6 +38,7 @@ from itd_research.external_validation.experiments import (
 )
 from itd_research.external_validation.experiments_3d import (
     Comparison3DResult,
+    aggregate_3d_channels,
     analytical_3d_cases,
     external_3d_case,
     run_3d_comparison,
@@ -50,6 +51,7 @@ from itd_research.external_validation.transport import (
     TransportDecomposition,
     translate_periodic,
     transport_decomposition,
+    transport_decomposition_3d,
 )
 
 __all__ = (
@@ -72,7 +74,9 @@ __all__ = (
     "run_3d_comparison",
     "analytical_3d_cases",
     "external_3d_case",
+    "aggregate_3d_channels",
     "TransportDecomposition",
     "transport_decomposition",
+    "transport_decomposition_3d",
     "translate_periodic",
 )

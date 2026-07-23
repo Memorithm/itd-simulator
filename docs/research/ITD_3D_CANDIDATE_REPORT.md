@@ -74,18 +74,61 @@ rate recovers the cascade mechanism. That the two independent rotation criteria
 (Q and lambda_2) agree at Jaccard 0.87 also validates the established-diagnostic
 implementations on real data.
 
+### 4.1 Ensemble across six independent DNS regions
+
+To distinguish a robust property from a single-box coincidence, six `24^3`
+cutouts were taken at different origins across the domain (component rms 0.46 to
+0.87 — genuine spatial variation). Summary (`aggregate_3d_channels`):
+
+| Channel | mean ± std | range | note |
+|---|--:|--:|---|
+| vortex-stretching rate | +2.33 ± 0.91 | [+1.14, +3.48] | **positive in 6/6 boxes** (cascade) |
+| Jaccard(Q>0, lambda_2<0) | 0.892 ± 0.009 | [0.876, 0.905] | criteria agree, very stable |
+| normalized helicity | +0.027 ± 0.130 | [−0.11, +0.26] | scattered about 0 (no net handedness) |
+| rotation fraction (Q>0) | 0.376 ± 0.058 | [0.29, 0.44] | consistent |
+| orientation dispersion | 0.657 ± 0.168 | [0.39, 0.90] | high; smaller boxes cancel less, so lower/more variable than the `32^3` box (0.88) |
+
+The **positive mean vortex-stretching rate in every box** and the **helicity
+scattered symmetrically about zero** are the robust, physically expected
+signatures of forced isotropic turbulence. Orientation dispersion is
+domain-size sensitive (a smaller box has less orientation cancellation), stated
+rather than hidden.
+
+### 4.2 Time-resolved transport versus deformation (real DNS)
+
+The same box was queried at consecutive DNS times (`dt = 0.002`). The 3D
+transport decomposition of the vorticity magnitude separates transport from
+material change:
+
+| Quantity | Value |
+|---|--:|
+| rms Eulerian change d\|omega\|/dt | 966 |
+| rms advective term u.grad\|omega\| | 803 |
+| rms residual (material change) | 506 |
+| residual / Eulerian | 0.524 |
+
+Transport compensation removes ~48 % of the raw Eulerian change; the large
+remaining residual is **genuine deformation** (in 3D, vorticity magnitude is not
+materially conserved — vortex stretching changes it). This is the honest contrast
+with the synthetic pure-translation test (residual fraction 0.033, ~97 % removed):
+a rigidly translated pattern is almost all transport, whereas real turbulence
+carries substantial genuine deformation. The residual connects directly to the
+positive stretching-rate channel above.
+
 ## 5. Status and what remains
 
 * **Code verification:** complete on exact 3D analytical inputs.
 * **Numerical validation:** magnitude channels amplitude-invariant; nonlinear
   fields (Burgers, Taylor-Green) recovered to discretisation error.
-* **External validation:** the candidate was run on a genuine external 3D DNS
-  field (§4) and its genuinely-3D channels are physically correct. This
-  **supports** hypothesis H6 — that a meaningful 3D extension requires
-  orientation/stretching/helicity channels. Remaining: multiple DNS regions/times
-  and datasets for statistics; a *volumetric experimental* (tomographic PIV)
-  field; and independent review. A single `32^3` cutout is evidence, not a full
-  statistical campaign.
+* **External validation:** the candidate was run on genuine external 3D DNS —
+  a `32^3` cutout (§4), a six-region ensemble (§4.1), and a time-resolved series
+  (§4.2) — and its genuinely-3D channels are physically correct and robust across
+  regions. This **supports** hypothesis H6 — that a meaningful 3D extension
+  requires orientation/stretching/helicity channels. Remaining: other DNS
+  datasets (channel, transitional boundary layer) and, ideally, a *volumetric
+  experimental* (tomographic PIV) field; and independent review. The ensemble is
+  small (six `24^3` boxes from one dataset), so it is early statistical evidence,
+  not a full campaign.
 
 ## 6. Decision
 

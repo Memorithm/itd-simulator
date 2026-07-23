@@ -134,6 +134,38 @@ def run_3d_comparison(
     )
 
 
+def aggregate_3d_channels(
+    results: list[Comparison3DResult],
+    keys: tuple[str, ...] = (
+        "orientation_dispersion", "normalized_helicity", "stretching_rate",
+        "localization", "heterogeneity",
+    ),
+    region_keys: tuple[str, ...] = (
+        "rotation_fraction_q", "lambda2_vortex_fraction", "jaccard_q_lambda2",
+    ),
+) -> dict[str, dict[str, float]]:
+    """Mean/std/min/max of key 3D channels across an ensemble of cutouts.
+
+    Turns a set of independent boxes into a small statistical summary, so a robust
+    property (for example a consistently positive vortex-stretching rate) can be
+    distinguished from a single-box coincidence.
+    """
+    summary: dict[str, dict[str, float]] = {"n_samples": {"value": float(len(results))}}
+    for key in keys:
+        values = np.array([r.itd3d[key] for r in results], dtype=np.float64)
+        summary[key] = {
+            "mean": float(np.mean(values)), "std": float(np.std(values)),
+            "min": float(np.min(values)), "max": float(np.max(values)),
+        }
+    for key in region_keys:
+        values = np.array([r.regions[key] for r in results], dtype=np.float64)
+        summary[key] = {
+            "mean": float(np.mean(values)), "std": float(np.std(values)),
+            "min": float(np.min(values)), "max": float(np.max(values)),
+        }
+    return summary
+
+
 def analytical_3d_cases() -> list[Comparison3DResult]:
     """Two exact 3D fields exercising the genuinely 3D channels in CI."""
     from itd_research.diagnostics_3d import analytical_fields as af
