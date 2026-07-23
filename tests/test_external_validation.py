@@ -23,7 +23,9 @@ from itd_research.external_validation.experiments import (
 from itd_research.external_validation.experiments_3d import (
     aggregate_3d_channels,
     analytical_3d_cases,
+    fluctuation_intensity,
     run_3d_comparison,
+    transition_markers,
 )
 from itd_research.external_validation.hypotheses import (
     equal_enstrophy_separation,
@@ -336,6 +338,37 @@ def test_transport_3d_rejects_bad_shapes() -> None:
         transport_decomposition_3d(
             zero, zero, zero, zero, zero, grid.x, grid.y, grid.z, 0.0, "periodic"
         )
+
+
+def test_fluctuation_intensity_zero_for_homogeneous_profile() -> None:
+    from itd_research.diagnostics_3d.analytical_fields import finite_grid_3d
+
+    grid = finite_grid_3d(12, -1.0, 1.0)
+    # a pure y-profile (varies only with y) has no fluctuation about its z/x mean
+    smooth = np.tanh(grid.yy)
+    assert fluctuation_intensity(smooth) == pytest.approx(0.0, abs=1e-12)
+    # adding z/x structure raises the fluctuation intensity above zero
+    perturbed = smooth + 0.3 * np.sin(grid.xx) * np.cos(grid.zz)
+    assert fluctuation_intensity(perturbed) > 0.1
+
+
+def test_transition_markers_laminar_vs_turbulent_like() -> None:
+    from itd_research.diagnostics_3d.analytical_fields import finite_grid_3d
+
+    grid = finite_grid_3d(16, -1.0, 1.0)
+    zero = np.zeros(grid.shape)
+    laminar_u = np.tanh(2.0 * grid.yy)  # smooth shear, no 3D structure
+    laminar = transition_markers(laminar_u, zero, zero, grid.x, grid.y, grid.z, "finite")
+    # deterministic multi-scale perturbation stands in for turbulent structure
+    turb_u = laminar_u + 0.4 * np.sin(3 * grid.xx) * np.cos(3 * grid.zz) * np.cos(2 * grid.yy)
+    turb_v = 0.4 * np.cos(3 * grid.xx) * np.sin(3 * grid.zz)
+    turbulent = transition_markers(turb_u, turb_v, zero, grid.x, grid.y, grid.z, "finite")
+    assert set(laminar) == {
+        "fluctuation_intensity", "vorticity_rms", "rotation_fraction_q",
+        "itd_intensity", "itd_localization",
+    }
+    assert laminar["fluctuation_intensity"] == pytest.approx(0.0, abs=1e-12)
+    assert turbulent["fluctuation_intensity"] > laminar["fluctuation_intensity"] + 0.1
 
 
 def test_aggregate_3d_channels_summary() -> None:

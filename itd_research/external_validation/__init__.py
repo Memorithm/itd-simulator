@@ -41,7 +41,9 @@ from itd_research.external_validation.experiments_3d import (
     aggregate_3d_channels,
     analytical_3d_cases,
     external_3d_case,
+    fluctuation_intensity,
     run_3d_comparison,
+    transition_markers,
 )
 from itd_research.external_validation.hypotheses import (
     equal_enstrophy_separation,
@@ -75,6 +77,8 @@ __all__ = (
     "analytical_3d_cases",
     "external_3d_case",
     "aggregate_3d_channels",
+    "fluctuation_intensity",
+    "transition_markers",
     "TransportDecomposition",
     "transport_decomposition",
     "transport_decomposition_3d",

@@ -84,10 +84,18 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--token", default=_TEST_TOKEN)
     parser.add_argument("--time", type=float, default=0.0)
     parser.add_argument("--origin", nargs=3, type=int, default=[200, 300, 400],
-                        metavar=("IX", "IY", "IZ"), help="start node indices")
-    parser.add_argument("--size", type=int, default=24, help="cube edge in nodes")
+                        metavar=("IX", "IY", "IZ"), help="node mode: start node indices")
+    parser.add_argument("--size", type=int, default=24, help="node mode: cube edge in nodes")
     parser.add_argument("--spacing", type=float, default=_DEFAULT_SPACING)
-    parser.add_argument("--spatial", default="None", help="spatial interpolation")
+    parser.add_argument("--coords", nargs=3, type=float, default=None,
+                        metavar=("X0", "Y0", "Z0"),
+                        help="physical mode: box origin in dataset coordinates")
+    parser.add_argument("--extent", nargs=3, type=float, default=None,
+                        metavar=("LX", "LY", "LZ"), help="physical mode: box extents")
+    parser.add_argument("--shape", nargs=3, type=int, default=None,
+                        metavar=("NX", "NY", "NZ"), help="physical mode: points per axis")
+    parser.add_argument("--spatial", default=None,
+                        help="spatial interpolation (default: None for node mode, Lag6 for physical)")
     parser.add_argument("--chunk", type=int, default=4096, help="max points per request")
     parser.add_argument("--output", required=True)
     parser.add_argument("--overwrite", action="store_true")
@@ -97,12 +105,23 @@ def main(argv: list[str] | None = None) -> int:
     if output.exists() and not arguments.overwrite:
         raise SystemExit(f"refusing to overwrite {output} (use --overwrite)")
 
-    n = int(arguments.size)
-    ix, iy, iz = arguments.origin
-    spacing = float(arguments.spacing)
-    x = (ix + np.arange(n)) * spacing
-    y = (iy + np.arange(n)) * spacing
-    z = (iz + np.arange(n)) * spacing
+    physical = arguments.coords is not None
+    spatial = arguments.spatial or ("Lag6" if physical else "None")
+    if physical:
+        if arguments.extent is None or arguments.shape is None:
+            raise SystemExit("physical mode needs --coords, --extent, and --shape")
+        nx, ny, nz = arguments.shape
+        x = np.linspace(arguments.coords[0], arguments.coords[0] + arguments.extent[0], nx)
+        y = np.linspace(arguments.coords[1], arguments.coords[1] + arguments.extent[1], ny)
+        z = np.linspace(arguments.coords[2], arguments.coords[2] + arguments.extent[2], nz)
+        spacing = float("nan")
+    else:
+        nx = ny = nz = int(arguments.size)
+        ix, iy, iz = arguments.origin
+        spacing = float(arguments.spacing)
+        x = (ix + np.arange(nx)) * spacing
+        y = (iy + np.arange(ny)) * spacing
+        z = (iz + np.arange(nz)) * spacing
 
     # points ordered z-outer, y, x-inner to match (nz, ny, nx) reshape
     points = [(float(px), float(py), float(pz)) for pz in z for py in y for px in x]
@@ -110,14 +129,14 @@ def main(argv: list[str] | None = None) -> int:
     for start in range(0, len(points), arguments.chunk):
         batch = points[start:start + arguments.chunk]
         text = _post(_soap_envelope(arguments.token, arguments.dataset,
-                                    arguments.time, arguments.spatial, batch))
+                                    arguments.time, spatial, batch))
         found = _VECTOR.findall(text)
         if len(found) != len(batch):
             raise SystemExit(f"expected {len(batch)} vectors, parsed {len(found)}")
         values.extend(found)
         print(f"  fetched {start + len(batch)}/{len(points)} points", file=sys.stderr)
 
-    array = np.array(values, dtype=np.float64).reshape(n, n, n, 3)
+    array = np.array(values, dtype=np.float64).reshape(nz, ny, nx, 3)
     if not np.all(np.isfinite(array)):
         raise SystemExit("received a non-finite velocity value")
     u, v, w = array[..., 0], array[..., 1], array[..., 2]
@@ -126,8 +145,8 @@ def main(argv: list[str] | None = None) -> int:
 
     digest = hashlib.sha256(output.read_bytes()).hexdigest()
     rms = float(np.sqrt(np.mean(u**2 + v**2 + w**2) / 3.0))
-    print(f"wrote {output}  shape=({n},{n},{n})  component_rms={rms:.4f}")
-    print(f"dataset={arguments.dataset} origin={arguments.origin} spacing={spacing:.6g}")
+    print(f"wrote {output}  shape=({nz},{ny},{nx})  spatial={spatial}  component_rms={rms:.4f}")
+    print(f"dataset={arguments.dataset} time={arguments.time}")
     print(f"sha256={digest}")
     return 0
 

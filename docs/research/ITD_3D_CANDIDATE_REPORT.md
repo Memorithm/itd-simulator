@@ -115,6 +115,30 @@ a rigidly translated pattern is almost all transport, whereas real turbulence
 carries substantial genuine deformation. The residual connects directly to the
 positive stretching-rate channel above.
 
+### 4.3 A second, anisotropic dataset: turbulent channel flow (Re_tau = 1000)
+
+Isotropic turbulence is homogeneous; to test whether the channels discriminate
+flow *type*, two `20^3` blocks were taken from the JHTDB `channel` dataset — a
+near-wall/log block (`y in [-0.95, -0.55]`, `y+ ~ 50-450`) and a core block
+(`y in [-0.2, 0.2]`) — via Lag6 interpolation.
+
+| Field | orientation dispersion | localization | stretching rate | Jaccard(Q, lambda_2) |
+|---|--:|--:|--:|--:|
+| channel near-wall | 0.810 | 5.09 | +0.32 | 0.861 |
+| channel core | 0.972 | 1.50 | +0.15 | 0.890 |
+| isotropic (32³) | 0.880 | 14.24 | +2.88 | 0.872 |
+
+The **within-dataset** contrast is the clean result (same box size, same
+interpolation): the near-wall region — where the mean shear aligns vorticity —
+has **lower orientation dispersion** (0.81 vs 0.97) and **higher localization**
+(5.1 vs 1.5) than the more isotropic core. The orientation channel therefore
+distinguishes the anisotropic wall region from the core, which a magnitude-only
+diagnostic cannot. Across all three flow types the two rotation criteria agree at
+Jaccard 0.86-0.89, confirming the established-diagnostic implementations are not
+flow-specific. (Absolute magnitudes are not comparable across datasets: channel
+and isotropic use different normalisations, and orientation dispersion is
+domain-size sensitive, §4.1.)
+
 ## 5. Status and what remains
 
 * **Code verification:** complete on exact 3D analytical inputs.

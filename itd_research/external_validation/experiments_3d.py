@@ -134,6 +134,51 @@ def run_3d_comparison(
     )
 
 
+def fluctuation_intensity(
+    u: FloatArray, homogeneous_axes: tuple[int, ...] = (0, 2)
+) -> float:
+    """RMS velocity fluctuation about the mean profile over homogeneous directions.
+
+    An **ITD-independent** turbulence-intensity marker: it subtracts the mean
+    taken over the statistically homogeneous directions (default: axes 0 and 2,
+    i.e. spanwise ``z`` and streamwise ``x`` for a boundary layer) and returns the
+    RMS of the remainder. It is low in laminar flow and rises across transition.
+    """
+    array = np.asarray(u, dtype=np.float64)
+    mean = np.mean(array, axis=homogeneous_axes, keepdims=True)
+    return float(np.sqrt(np.mean((array - mean) ** 2)))
+
+
+def transition_markers(
+    u: FloatArray,
+    v: FloatArray,
+    w: FloatArray,
+    x: FloatArray,
+    y: FloatArray,
+    z: FloatArray,
+    boundary_mode: str = "finite",
+) -> dict[str, float]:
+    """ITD-independent and ITD markers for a station in a transitional flow.
+
+    Returns the ITD-independent fluctuation intensity and vorticity RMS, the
+    rotation fraction, and the ITD intensity/localization. Across a streamwise
+    sequence the fluctuation intensity rises and the ITD localization falls
+    through the laminar-to-turbulent transition.
+    """
+    gradient = velocity_gradient_3d(u, v, w, x, y, z, boundary_mode)
+    omega = vorticity_3d_from_gradient(gradient)
+    abs_omega = np.sqrt(np.sum(omega**2, axis=-1))
+    q_field = q_criterion(gradient)
+    signature = evaluate_itd3d(u, v, w, x, y, z, boundary_mode)
+    return {
+        "fluctuation_intensity": fluctuation_intensity(u),
+        "vorticity_rms": float(np.sqrt(np.mean(abs_omega**2))),
+        "rotation_fraction_q": float(np.mean(q_field > 0.0)),
+        "itd_intensity": signature.intensity,
+        "itd_localization": signature.localization,
+    }
+
+
 def aggregate_3d_channels(
     results: list[Comparison3DResult],
     keys: tuple[str, ...] = (
