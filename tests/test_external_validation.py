@@ -24,6 +24,8 @@ from itd_research.external_validation.experiments_3d import (
     aggregate_3d_channels,
     analytical_3d_cases,
     fluctuation_intensity,
+    intermittency_factor,
+    laminar_reference_profile,
     run_3d_comparison,
     temporal_intermittency,
     transition_markers,
@@ -390,6 +392,28 @@ def test_temporal_intermittency_detects_a_burst() -> None:
     assert summary["peak_frame"] == 2  # the burst frame
     assert summary["max_over_min"] > 5.0  # strong temporal modulation
     assert len(summary["fluctuation_intensity"]) == 4  # type: ignore[arg-type]
+
+
+def test_intermittency_factor_rises_from_laminar_to_turbulent() -> None:
+    rng_free = np.linspace(0.0, 1.0, 8)  # deterministic wall-normal profile
+    ny, nz, nx = 8, 24, 4
+    profile = rng_free  # laminar u(y)
+    laminar = np.broadcast_to(profile[None, :, None], (nz, ny, nx)).copy()
+    reference = laminar_reference_profile([laminar, laminar])
+    # deterministic "turbulent" perturbation added to a chosen number of columns
+    def make(turbulent_columns: int) -> np.ndarray:
+        field = laminar.copy()
+        pert = np.zeros((nz, ny, nx))
+        idx = np.arange(nz) < turbulent_columns
+        pert[idx] = 0.5  # strong, uniform-per-column perturbation
+        return field + pert
+    threshold = 0.1
+    gamma_none = intermittency_factor([make(0)], reference, threshold)
+    gamma_half = intermittency_factor([make(12)], reference, threshold)
+    gamma_all = intermittency_factor([make(24)], reference, threshold)
+    assert gamma_none == pytest.approx(0.0)
+    assert gamma_half == pytest.approx(0.5)
+    assert gamma_all == pytest.approx(1.0)
 
 
 def test_aggregate_3d_channels_summary() -> None:

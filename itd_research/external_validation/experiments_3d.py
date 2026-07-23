@@ -179,6 +179,41 @@ def transition_markers(
     }
 
 
+def laminar_reference_profile(u_frames: list[FloatArray]) -> FloatArray:
+    """Mean wall-normal velocity profile ``u(y)`` from (mostly-laminar) frames.
+
+    Averages a set of ``(nz, ny, nx)`` streamwise-velocity snapshots over time,
+    spanwise ``z`` (axis 0) and streamwise ``x`` (axis 2), leaving the wall-normal
+    profile used as the laminar reference for intermittency detection.
+    """
+    stacked = np.stack([np.asarray(u, dtype=np.float64) for u in u_frames])
+    return np.asarray(np.mean(stacked, axis=(0, 1, 3)), dtype=np.float64)
+
+
+def intermittency_factor(
+    u_frames: list[FloatArray], reference_profile: FloatArray, threshold: float
+) -> float:
+    """Fraction of (spanwise column, time) samples that are turbulent.
+
+    For each frame and each spanwise column, the wall-normal/streamwise RMS of
+    ``u`` minus the laminar reference profile is a local turbulence level; a
+    column-time sample counts as turbulent when it exceeds ``threshold``. The
+    intermittency factor gamma is the turbulent fraction over all samples. Averaging
+    over spanwise columns removes the streak dependence that makes a single-line
+    estimate non-monotonic, so gamma(x) rises smoothly through the transition.
+    """
+    reference = np.asarray(reference_profile, dtype=np.float64)
+    turbulent = 0
+    total = 0
+    for u in u_frames:
+        array = np.asarray(u, dtype=np.float64)
+        fluctuation = array - reference[None, :, None]
+        column_rms = np.sqrt(np.mean(fluctuation**2, axis=(1, 2)))  # (nz,)
+        turbulent += int(np.count_nonzero(column_rms > float(threshold)))
+        total += int(column_rms.size)
+    return turbulent / total if total > 0 else 0.0
+
+
 def temporal_intermittency(
     frames: list[tuple[FloatArray, FloatArray, FloatArray, FloatArray, FloatArray, FloatArray]],
     boundary_mode: str = "finite",

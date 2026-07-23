@@ -173,7 +173,7 @@ Each status states the evidence class explicitly.
 | # | Hypothesis | Status | Evidence |
 |---|---|---|---|
 | **H1** | At similar global enstrophy, the ITD structural vector distinguishes differently organised fields | **supported** | Controlled equal-enstrophy pair (§5b): identical enstrophy (0.49840), ITD localization separated ~55× and heterogeneity 8×. Demonstrated on constructed fields, not yet on an external equal-enstrophy pair |
-| **H2** | ITD channels detect annotated transitions | **supported** | Synthetic vortex merger (§5c) and, on real data, the JHTDB transitional boundary layer (§7c): in **space**, the fluctuation intensity rises ~3× at the (externally characterised) onset while ITD localization falls 12 → 2; in **time**, a turbulent spot at the transition midpoint bursts the fluctuation intensity 2.1× as it passes the station. ITD channels track both. Still single-station/single-window: indicative, not a statistical intermittency campaign |
+| **H2** | ITD channels detect annotated transitions | **supported, with a caveat** | On the JHTDB transitional boundary layer (§7c): in **space** the fluctuation intensity rises ~3× at the onset and (at a fixed spanwise line) ITD localization falls 12 → 2; in **time** a turbulent spot bursts the fluctuation intensity 2.1×; the statistical intermittency factor gamma(x) rises smoothly 0.08 → 0.85 across five stations. **Caveat (kept, not hidden):** spanwise-averaged, ITD localization only weakly tracks gamma (≈ −0.29) — the sharp fixed-line drop is partly a spanwise-sampling effect; ITD intensity tracks the transition more robustly |
 | **H3** | Transport compensation reduces false temporal response from pure translation | **supported** | Synthetic pure translation: residual/Eulerian = 0.033 (~97 % removed). Genuine time-resolved DNS (§7b): 48 % of the raw Eulerian change of \|omega\| removed, the rest genuine deformation (stretching). The transport-vs-deformation split works on real external data |
 | **H4** | ITD components are stable under reasonable mesh/PIV-processing changes | **supported** | External field metrics stable under 1×/2×/3× decimation (§5); consistent with the Mission-1 convergence/sensitivity studies |
 | **H5** | ITD is complementary to Q/swirling/lambda_2, not a duplicate | **supported** | On real data Jaccard(high|ω|,Q>0)=0.245 and corr(|ω|,swirl)=0.54; on pure shear the overlap is exactly 0. ITD's vorticity basis captures different structure than rotation-based methods |
@@ -262,9 +262,32 @@ over `t = 0 … 70` (`temporal_intermittency`) show the fluctuation intensity
 again, with the ITD localization dipping through the burst. This is the temporal
 counterpart of the streamwise scan — a turbulent spot detected as it passes the
 station in *time*, not just in space — and it addresses the "time-tracked
-transition" item directly, on genuine external DNS. It remains a single station
-over one window: indicative, not a statistical characterisation of the
-intermittency factor.
+transition" item directly, on genuine external DNS.
+
+### Statistical intermittency factor gamma(x)
+
+Promoting the single-station result to a statistical characterisation:
+`intermittency_factor` computes the intermittency factor gamma(x) — the fraction
+of (spanwise-column, time) samples that are turbulent — from **spanwise-wide**
+blocks (`z`-extent ~60, 24 columns) at five stations, six times each (144 samples
+per station). Averaging over spanwise columns removes the streak dependence that
+made a single-line estimate non-monotonic:
+
+| x | 200 | 260 | 320 | 400 | 500 |
+|---|--:|--:|--:|--:|--:|
+| gamma(x) | 0.08 | 0.24 | 0.41 | 0.72 | 0.85 |
+| block-mean ITD intensity | 0.054 | 0.052 | 0.050 | 0.046 | 0.037 |
+| block-mean ITD localization | 6.2 | 6.8 | 6.9 | 6.8 | 5.8 |
+
+gamma(x) now rises smoothly 0.08 -> 0.85 through the transition — a clean,
+standard characterisation. **Honest refinement:** on these spanwise-averaged
+blocks the ITD intensity decreases only mildly and the ITD localization is nearly
+flat (correlation with gamma about -0.29), i.e. the sharp `12 -> 2` localization
+drop reported in the fixed-spanwise-line scan above is **partly a spanwise
+-sampling effect**, not solely a transition effect. The ITD channels still respond
+to transition (the intensity and the fixed-line/temporal signals), but a
+spanwise-averaged localization is not a strong predictor of gamma(x). This
+correction is kept rather than hidden.
 
 ## 8. Limitations
 
