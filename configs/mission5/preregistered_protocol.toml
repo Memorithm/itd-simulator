@@ -1,0 +1,178 @@
+# Mission 5 -- preregistered protocol for genuine external cross-code validation.
+#
+# Machine-readable preregistration, committed BEFORE final cross-code / external
+# evaluation. Its SHA-256 is recorded in docs/research/MISSION5_FINAL_REPORT.md and
+# checked at runtime. Once final evaluation begins the [final_holdout] section and the
+# locked decisions are IMMUTABLE: no feature/label/threshold/preprocessing/model change
+# and no removal of difficult cases afterwards. Final external-holdout results are never
+# used to redesign the experiment.
+#
+# Environment honesty (unchanged from Mission 4, re-verified): NO OpenFOAM/Nek5000, NO
+# CI network download, no h5py/netCDF4/vtk/sklearn. cargo/rustc ARE available, so the
+# Rust equivalence path is achievable. Therefore:
+#   achievable here : H29 (cross-CODE, two in-repo numerical methods), H31 (near-OOD),
+#                     H33 (degradation-specific value), H34 (profile stability),
+#                     H35 (full-volume 3D perf), H36 (Rust equivalence).
+#   BLOCKED here     : H27/H28 (external prediction/incremental value -- no integrable
+#                     external labelled dataset in CI), H30 (cross-institution),
+#                     H32 (strongly-vortical annotated PIV).
+# "cross-code" here means two INDEPENDENT numerical methods in this repo (pseudo-spectral
+# spectral3d vs a new finite-difference projection solver) on the SAME physics
+# (Taylor-Green); it is NOT cross-institution and is labelled as such everywhere.
+
+schema = "itd-mission5-preregistration/1"
+baseline_commit = "c1983d384c49d0b6905c8a77e01e9f263c0903fd"
+model_revision_preserved = "ITD V29.18"
+determinism = { pythonhashseed = 0, threads = 1, dtype = "float64", rng = "numpy.default_rng(seed)" }
+added_value_margin = 0.02   # unchanged from Mission 4; not lowered after seeing results
+
+# --- Correcting the Mission 4 confound (section 5): separate the effects ---------------
+[confound_separation]
+mission4_confounded = ["solver", "dimensionality", "event_type", "flow_family", "label", "mechanism"]
+test_A = "same physics (Taylor-Green), different solver: spectral3d vs finite-difference projection"
+test_B = "same solver (spectral3d), different physics: Taylor-Green vs co-rotating tubes"
+test_C = "same physics+solver, different resolution: 24^3 vs 32^3 vs 48^3"
+test_D = "same event simulated vs experimentally measured -> BLOCKED (no PIV/experiment integrable)"
+
+# --- Hypotheses H27-H36 (verdict in {supported within tested scope, partially supported,
+#     not supported, inconclusive, blocked}) --------------------------------------------
+[[hypothesis]]
+id = "H27"
+statement = "ITD predicts an independently-labelled event in an external CFD/DNS/PIV dataset."
+gate = "N"
+achievability = "blocked (no external labelled dataset integrable in this CI environment)"
+
+[[hypothesis]]
+id = "H28"
+statement = "Adding ITD to strong established diagnostics gives a preregistered credible improvement on EXTERNAL holdouts."
+gate = "O"
+achievability = "blocked (no external holdout); the achievable proxy is H29's cross-code holdout"
+
+[[hypothesis]]
+id = "H29"
+statement = "A predictor calibrated on one solver transfers to another solver simulating substantially the same physics (Taylor-Green), AND adding ITD adds credible value on the cross-code holdout."
+gate = "P"
+achievability = "achievable: spectral3d (dev) -> finite-difference (holdout), same physics"
+decision_rule = "report cross-code AUC AND the added-value CI (established vs established+ITD) on the FD holdout"
+
+[[hypothesis]]
+id = "H30"
+statement = "A calibration from one institution's data remains useful on another institution's dataset."
+gate = "Q"
+achievability = "blocked (one source only)"
+
+[[hypothesis]]
+id = "H31"
+statement = "The abstention layer reduces risk under SUBTLE domain shifts while preserving useful coverage."
+gate = "R"
+achievability = "achievable: near-OOD via untrained circulation/viscosity/spacing/resolution"
+decision_rule = "near-OOD abstention must lower selective risk AND keep in-domain coverage >= 0.5 AND not abstain on > 50% of near-OOD that is still predictable"
+
+[[hypothesis]]
+id = "H32"
+statement = "ITD channels/predictions agree with independently documented vortex events in time-resolved PIV."
+gate = "S"
+achievability = "blocked (no strongly-vortical annotated time-resolved PIV integrable)"
+
+[[hypothesis]]
+id = "H33"
+statement = "ITD adds MORE incremental value under noise/masking/partial observation than on clean complete fields."
+gate = "none"
+achievability = "achievable: compare added-value(clean) vs added-value(degraded)"
+
+[[hypothesis]]
+id = "H34"
+statement = "Event-specific channel profiles remain stable across at least two sources (solvers/seeds)."
+gate = "none"
+achievability = "achievable: compare per-channel importance across spectral3d and FD Taylor-Green"
+
+[[hypothesis]]
+id = "H35"
+statement = "Full-volume ITD-3D (no planar reduction) meets declared performance envelopes for selected grids."
+gate = "T"
+achievability = "achievable: VOL-3D-XS/S/M 32/48/64^3, all 3D channels"
+
+[[hypothesis]]
+id = "H36"
+statement = "The initial Rust implementation reproduces the authoritative Python reference within locked tolerances."
+gate = "U"
+achievability = "achievable (cargo/rustc present): 2D ITD signature + result contract"
+tolerance = "relative <= 1e-9 on smooth fields for the 2D signature vector"
+
+# --- Datasets / sources (locked roles) ------------------------------------------------
+[[source]]
+id = "taylorgreen_spectral3d"
+kind = "local-solver (pseudo-spectral)"
+role = "cross-code development (H29)"
+
+[[source]]
+id = "taylorgreen_finitedifference"
+kind = "local-solver (finite-difference projection, NEW independent code)"
+role = "cross-code final holdout (H29)"
+
+[[source]]
+id = "merger_spectral_ns"
+kind = "local-solver (2D pseudo-spectral)"
+role = "near-OOD in-distribution reference (H31)"
+
+[[source]]
+id = "cylinder_re3900"
+kind = "external-DNS (time-resolved cylinder wake)"
+role = "PRIMARY external target -- integration attempted; BLOCKED-by-{network,size} in CI"
+
+# --- Events and labels (ITD-INDEPENDENT ONLY) -----------------------------------------
+[event_labels]
+allowed = ["enstrophy-production peak (Taylor-Green breakdown)", "core-count topology change (merger)",
+           "lift zero-crossing / shedding phase (cylinder, if integrated)", "published core tracks"]
+forbidden = ["any ITD channel", "an ITD-maximising threshold"]
+provenance_required = true
+
+# --- Features, baselines, models, splits, metrics (locked) ----------------------------
+[features]
+established = ["enstrophy", "palinstrophy", "vorticity_rms", "vorticity_flatness", "q_positive_fraction", "swirl_mean"]
+itd = ["intensity", "heterogeneity", "localization", "roughness", "sign_mixing", "temporal_deformation", "structure_score"]
+added_value_pair = { base = "established", augmented = "established + itd" }
+also_report = ["itd_only", "established_only", "established+itd", "single_physical_scalar", "persistence", "temporal_baseline"]
+
+[splits]
+isolation = "by_source_and_simulation_seed"
+cross_code_dev = "taylorgreen_spectral3d seeds 10-15"
+cross_code_holdout = "taylorgreen_finitedifference seeds 90-95"
+rule = "the holdout SOURCE (finite-difference) is never used for threshold/feature selection"
+
+[metrics]
+prediction = ["roc_auc", "pr_auc", "balanced_accuracy", "median_lead_time", "false_alarms_per_time", "missed_event_rate", "brier"]
+event_level_required = true
+confidence_interval = "grouped bootstrap resampling whole runs, 2000 resamples, seed 5150"
+added_value_test = "paired grouped bootstrap of AUC(established+itd) - AUC(established)"
+
+[models]
+primary = ["regularized_logistic_regression", "linear_discriminant_analysis"]
+prohibited_as_primary = ["deep_neural_network"]
+normalization = "train-source statistics only"
+hyperparameters = { logistic_ridge = 0.001, logistic_iters = 40 }
+
+[policies]
+resolution_matching = "compare integral/phase/spectral metrics and event times, NEVER pointwise across different grids/methods"
+temporal_alignment = "normalized physical time; event-anchored"
+missing_data = "mask-aware; strict vs repaired reported separately"
+prohibited_post_hoc = ["change features/labels/thresholds/preprocessing/hyperparameters", "remove difficult cases", "lower the 0.02 margin"]
+compute_limits = { final_holdout_evaluations = 1, ci = "tiny deterministic fixtures only" }
+evidence_classes = ["analytical", "manufactured", "local-solver", "external-CFD", "external-DNS", "experimental-PIV", "cross-code", "cross-institution", "performance", "software-equivalence"]
+
+# --- Full performance workloads (H35) -------------------------------------------------
+[full_volume]
+workloads = ["VOL-3D-XS=32", "VOL-3D-S=48", "VOL-3D-M=64"]
+channels_required = ["gradient", "vorticity", "q_criterion", "lambda2", "swirling_strength",
+                     "orientation_dispersion", "helicity_mean", "normalized_helicity", "stretching_rate"]
+no_planar_reduction = true
+
+# --- Final held-out configuration -- IMMUTABLE once evaluation begins -----------------
+[final_holdout]
+frozen = true
+cross_code_source = "taylorgreen_finitedifference"
+seeds = [90, 91, 92, 93, 94, 95]
+horizons_frames = [2, 4, 6]
+added_value_margin = 0.02
+evaluations_allowed = 1
+note = "Evaluated exactly once, after the spectral3d development is frozen. The report records this file's SHA-256."

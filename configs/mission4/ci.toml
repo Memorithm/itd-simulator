@@ -1,0 +1,15 @@
+# Bounded, offline CI configuration for the Mission 4 hard-prediction quick suite.
+# The `validate` subcommand uses tiny deterministic fixtures regardless of this file;
+# it is kept so the CI command line matches the documented protocol and so the quick
+# knobs are visible. Never triggers a network fetch.
+
+schema = "itd-mission4-ci/1"
+
+[quick]
+family = "merger"
+horizon = 4
+development_seeds = [10, 11, 12]
+holdout_seeds = [90, 91, 92]
+merger = { nodes = 56, steps = 2000, record_every = 100 }
+bootstrap = 200
+note = "tiny CI pipeline check, NOT a scientific result"

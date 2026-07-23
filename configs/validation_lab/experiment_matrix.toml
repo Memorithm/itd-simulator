@@ -1,0 +1,218 @@
+# ITD validation-laboratory experiment matrix (post-V29 research phase).
+#
+# Machine-readable catalogue of controlled experiments. Each entry declares its
+# ground truth, prediction target, ITD channels, comparison diagnostics, and
+# evidence class. "source" is a local deterministic solver/analytical field, or a
+# registered external dataset id (see datasets/registry.json). Experiments whose
+# source is external and not yet integrated are marked evidence_class = "blocked".
+#
+# This file is descriptive, not executable on its own; the runner
+# (itd_research.validation_lab) reads it and executes the feasible rows.
+
+schema = "itd-validation-lab/1"
+
+[[experiment]]
+experiment_id = "an_solid_rotation"
+flow_family = "laminar_coherent"
+source = "analytical:rigid_rotation"
+dimensionality = "3D"
+solver_or_dataset = "analytical_fields"
+ground_truth = "constant vorticity, zero strain, zero stretching"
+prediction_target = "none"
+itd_channels = ["intensity", "orientation_dispersion", "stretching_rate", "normalized_helicity"]
+comparison_diagnostics = ["q_criterion", "lambda2", "swirling_strength"]
+resolution = "17^3"
+time_window = "single_snapshot"
+threshold_policy = "n/a"
+random_seed = 0
+expected_runtime_class = "fast"
+evidence_class = "analytical"
+
+[[experiment]]
+experiment_id = "an_burgers_stretching"
+flow_family = "laminar_coherent"
+source = "analytical:burgers_vortex"
+dimensionality = "3D"
+solver_or_dataset = "analytical_fields"
+ground_truth = "stretching_rate == axial strain a (exact)"
+prediction_target = "none"
+itd_channels = ["stretching_rate"]
+comparison_diagnostics = ["q_criterion"]
+resolution = "65^3"
+time_window = "single_snapshot"
+threshold_policy = "n/a"
+random_seed = 0
+expected_runtime_class = "fast"
+evidence_class = "analytical"
+
+[[experiment]]
+experiment_id = "an_abc_helicity"
+flow_family = "laminar_coherent"
+source = "analytical:abc_flow"
+dimensionality = "3D"
+solver_or_dataset = "analytical_fields"
+ground_truth = "curl u = u -> normalized helicity = 1"
+prediction_target = "none"
+itd_channels = ["normalized_helicity", "orientation_dispersion"]
+comparison_diagnostics = ["q_criterion", "lambda2"]
+resolution = "24^3"
+time_window = "single_snapshot"
+threshold_policy = "n/a"
+random_seed = 0
+expected_runtime_class = "fast"
+evidence_class = "analytical"
+
+[[experiment]]
+experiment_id = "sol_taylor_green_breakdown"
+flow_family = "transitional"
+source = "spectral3d:taylor_green"
+dimensionality = "3D"
+solver_or_dataset = "spectral3d_local_solver"
+ground_truth = "energy/dissipation/enstrophy time series; resolution-qualified"
+prediction_target = "enstrophy_production_peak"
+itd_channels = ["stretching_rate", "intensity", "localization", "orientation_dispersion"]
+comparison_diagnostics = ["enstrophy", "q_criterion", "lambda2"]
+resolution = "32^3,48^3,64^3"
+time_window = "t=0..10"
+threshold_policy = "flow_specific"
+random_seed = 0
+expected_runtime_class = "medium"
+evidence_class = "local_solver"
+
+[[experiment]]
+experiment_id = "sol_corotating_merger_3d"
+flow_family = "transitional"
+source = "spectral3d:corotating_tubes"
+dimensionality = "3D"
+solver_or_dataset = "spectral3d_local_solver"
+ground_truth = "rotation-component count 2->1 (ITD-independent)"
+prediction_target = "merger_onset"
+itd_channels = ["stretching_rate", "orientation_dispersion", "localization", "temporal_deformation"]
+comparison_diagnostics = ["q_criterion", "lambda2", "swirling_strength"]
+resolution = "48^3"
+time_window = "t=0..T_merge"
+threshold_policy = "flow_specific"
+random_seed = 0
+expected_runtime_class = "medium"
+evidence_class = "local_solver"
+
+[[experiment]]
+experiment_id = "sol_decaying_hit"
+flow_family = "turbulent"
+source = "spectral3d:isotropic_seed"
+dimensionality = "3D"
+solver_or_dataset = "spectral3d_local_solver"
+ground_truth = "decaying isotropic turbulence (under-resolved at these sizes)"
+prediction_target = "none"
+itd_channels = ["stretching_rate", "orientation_dispersion", "normalized_helicity", "localization"]
+comparison_diagnostics = ["enstrophy", "q_criterion", "lambda2"]
+resolution = "32^3,64^3"
+time_window = "t=0..5"
+threshold_policy = "n/a"
+random_seed = 12345
+expected_runtime_class = "medium"
+evidence_class = "local_solver"
+
+[[experiment]]
+experiment_id = "ext_jhtdb_isotropic"
+flow_family = "turbulent"
+source = "external:jhtdb_isotropic1024"
+dimensionality = "3D"
+solver_or_dataset = "jhtdb_getvelocity"
+ground_truth = "genuine DNS; established diagnostics as reference"
+prediction_target = "none"
+itd_channels = ["stretching_rate", "orientation_dispersion", "normalized_helicity"]
+comparison_diagnostics = ["q_criterion", "lambda2", "swirling_strength"]
+resolution = "24^3,32^3"
+time_window = "t=0 and short series"
+threshold_policy = "flow_specific"
+random_seed = 0
+expected_runtime_class = "network"
+evidence_class = "external_dns"
+
+[[experiment]]
+experiment_id = "ext_channel_wall_vs_core"
+flow_family = "turbulent"
+source = "external:jhtdb_channel"
+dimensionality = "3D"
+solver_or_dataset = "jhtdb_getvelocity"
+ground_truth = "anisotropic wall-bounded turbulence"
+prediction_target = "none"
+itd_channels = ["orientation_dispersion", "localization", "stretching_rate"]
+comparison_diagnostics = ["q_criterion", "lambda2"]
+resolution = "20^3"
+time_window = "t=0"
+threshold_policy = "flow_specific"
+random_seed = 0
+expected_runtime_class = "network"
+evidence_class = "external_dns"
+
+[[experiment]]
+experiment_id = "ext_transition_bl"
+flow_family = "transitional"
+source = "external:jhtdb_transition_bl"
+dimensionality = "3D"
+solver_or_dataset = "jhtdb_getvelocity"
+ground_truth = "documented laminar->turbulent transition; intermittency factor gamma(x)"
+prediction_target = "transition_onset"
+itd_channels = ["intensity", "localization", "fluctuation_intensity"]
+comparison_diagnostics = ["q_criterion", "vorticity_rms"]
+resolution = "12x16x14 blocks"
+time_window = "streamwise scan + temporal"
+threshold_policy = "flow_specific"
+random_seed = 0
+expected_runtime_class = "network"
+evidence_class = "external_dns"
+
+[[experiment]]
+experiment_id = "ext_biofilm_piv"
+flow_family = "wall_bounded_shear"
+source = "external:biofilm_piv_boundary_layer"
+dimensionality = "2D"
+solver_or_dataset = "experimental_piv"
+ground_truth = "measured mean field; agreement with Q/swirl only"
+prediction_target = "none"
+itd_channels = ["intensity", "sign_mixing", "localization"]
+comparison_diagnostics = ["q_criterion", "okubo_weiss", "swirling_strength"]
+resolution = "224x406 valid rect"
+time_window = "single_snapshot"
+threshold_policy = "flow_specific"
+random_seed = 0
+expected_runtime_class = "network"
+evidence_class = "experimental_piv"
+
+# --- Registered but blocked / out-of-scope (never claimed as supported) ---
+
+[[experiment]]
+experiment_id = "ext_tomographic_piv_vortex_ring"
+flow_family = "vortex_interaction"
+source = "external:tomographic_piv_candidate"
+dimensionality = "3D"
+solver_or_dataset = "volumetric_piv"
+ground_truth = "unknown until a suitable dataset is located"
+prediction_target = "vortex_ring_instability"
+itd_channels = ["stretching_rate", "orientation_dispersion"]
+comparison_diagnostics = ["q_criterion", "lambda2"]
+resolution = "unknown"
+time_window = "unknown"
+threshold_policy = "unknown"
+random_seed = 0
+expected_runtime_class = "blocked"
+evidence_class = "blocked"
+
+[[experiment]]
+experiment_id = "compressible_reacting_mhd"
+flow_family = "out_of_scope"
+source = "none"
+dimensionality = "3D"
+solver_or_dataset = "none"
+ground_truth = "requires different governing equations and units review"
+prediction_target = "none"
+itd_channels = []
+comparison_diagnostics = []
+resolution = "n/a"
+time_window = "n/a"
+threshold_policy = "n/a"
+random_seed = 0
+expected_runtime_class = "blocked"
+evidence_class = "blocked"

@@ -1,0 +1,11 @@
+# Validation-laboratory CI configuration: tiny, deterministic, offline.
+# Used by `python -m itd_research.validation_lab run --config configs/validation_lab/ci.toml`.
+schema = "itd-validation-lab-run/1"
+
+[sampling]
+nodes = 24
+subcubes_per_axis = 3
+
+[ablation]
+# transparent leave-one-flow-out family classification; baselines included
+include_baselines = true
