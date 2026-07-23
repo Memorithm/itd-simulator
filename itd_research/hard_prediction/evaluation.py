@@ -204,6 +204,29 @@ def _grouped_auc_ci(
     return float(np.quantile(vals, 0.025)), float(np.quantile(vals, 0.975))
 
 
+def feature_set_auc(
+    dev: list[LabeledRun], holdout: list[LabeledRun], names: tuple[str, ...],
+    model_ctor: Callable[[], object] = LogisticRegression,
+) -> float:
+    """Held-out ROC-AUC of a feature set (train on dev, score holdout)."""
+    scores, labels, _ = _train_score(dev, holdout, names, model_ctor)
+    return roc_auc(scores, labels)
+
+
+def single_channel_aucs(
+    dev: list[LabeledRun], holdout: list[LabeledRun], names: tuple[str, ...]
+) -> dict[str, float]:
+    """Per-channel held-out AUC (H25: which channels predict which event)."""
+    return {name: feature_set_auc(dev, holdout, (name,)) for name in names}
+
+
+def cross_solver_auc(
+    train_family: list[LabeledRun], test_family: list[LabeledRun], names: tuple[str, ...]
+) -> float:
+    """H19: train on one solver family, score another (same feature space)."""
+    return feature_set_auc(train_family, test_family, names)
+
+
 def evaluate_feature_set(
     dev: list[LabeledRun], holdout: list[LabeledRun], name: str, names: tuple[str, ...],
     *, bootstrap: int = 2000, seed: int = 4242,
