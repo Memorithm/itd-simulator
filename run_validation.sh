@@ -41,7 +41,7 @@ trap cleanup EXIT INT TERM
 cd -- "${ROOT_DIR}"
 readonly STATUS_BEFORE="$(git status --porcelain=v1 --untracked-files=no)"
 
-printf '%s\n' '[1/24] Compile current Python sources'
+printf '%s\n' '[1/27] Compile current Python sources'
 "${PYTHON_BIN}" -m compileall -q \
     itd_v29.py \
     compare_scenarios.py \
@@ -52,18 +52,18 @@ printf '%s\n' '[1/24] Compile current Python sources'
     tools \
     tests
 
-printf '%s\n' '[2/24] Run the V29.18 pytest validator suite'
+printf '%s\n' '[2/27] Run the V29.18 pytest validator suite'
 "${PYTHON_BIN}" -m pytest -q
 
-printf '%s\n' '[3/24] Verify modular architecture dependencies'
+printf '%s\n' '[3/27] Verify modular architecture dependencies'
 "${PYTHON_BIN}" tools/test_dependency_analyser.py
 
-printf '%s\n' '[4/24] Run independent-process deterministic smoke checks'
+printf '%s\n' '[4/27] Run independent-process deterministic smoke checks'
 "${PYTHON_BIN}" tools/deterministic_smoke.py > "${TEMP_DIR}/smoke-a.json"
 "${PYTHON_BIN}" tools/deterministic_smoke.py > "${TEMP_DIR}/smoke-b.json"
 cmp --silent "${TEMP_DIR}/smoke-a.json" "${TEMP_DIR}/smoke-b.json"
 
-printf '%s\n' '[5/24] Run the current V29 simulator and certify its summary'
+printf '%s\n' '[5/27] Run the current V29 simulator and certify its summary'
 mkdir -- "${TEMP_DIR}/main"
 (
     cd -- "${TEMP_DIR}/main"
@@ -78,88 +78,88 @@ if [[ "${REQUIRE_EXACT_SUMMARY}" == 1 ]]; then
 fi
 "${PYTHON_BIN}" tools/check_v29_summary.py "${summary_arguments[@]}"
 
-printf '%s\n' '[6/24] Verify the complete public manifest'
+printf '%s\n' '[6/27] Verify the complete public manifest'
 "${PYTHON_BIN}" tools/check_manifest.py
 
-printf '%s\n' '[7/24] Generate and compare the Rust oracle reference'
+printf '%s\n' '[7/27] Generate and compare the Rust oracle reference'
 "${PYTHON_BIN}" oracle_harness.py "${TEMP_DIR}/oracle_data.rs" \
     > "${TEMP_DIR}/oracle-generate.log"
 "${PYTHON_BIN}" oracle_harness.py \
     --check tests/fixtures/oracle_data.rs \
     > "${TEMP_DIR}/oracle-check.log"
 
-printf '%s\n' '[8/24] Run the deterministic post-V29 research quick suite'
+printf '%s\n' '[8/27] Run the deterministic post-V29 research quick suite'
 "${PYTHON_BIN}" -m itd_research --quick --output "${TEMP_DIR}/research-quick" \
     > "${TEMP_DIR}/research-quick.log"
 
-printf '%s\n' '[9/24] Run the external-validation quick suite (ITD vs established diagnostics)'
+printf '%s\n' '[9/27] Run the external-validation quick suite (ITD vs established diagnostics)'
 "${PYTHON_BIN}" -m itd_research.external_validation --quick \
     --output "${TEMP_DIR}/external-validation" \
     > "${TEMP_DIR}/external-validation.log"
 
-printf '%s\n' '[10/24] Run the spectral3d Gate-A validation (3D Navier-Stokes solver)'
+printf '%s\n' '[10/27] Run the spectral3d Gate-A validation (3D Navier-Stokes solver)'
 "${PYTHON_BIN}" -m itd_research.spectral3d validate --quick \
     --output "${TEMP_DIR}/spectral3d" \
     > "${TEMP_DIR}/spectral3d.log"
 
-printf '%s\n' '[11/24] Run the validation-laboratory quick suite (channel dependence + ablation)'
+printf '%s\n' '[11/27] Run the validation-laboratory quick suite (channel dependence + ablation)'
 "${PYTHON_BIN}" -m itd_research.validation_lab run \
     --config configs/validation_lab/ci.toml \
     --output "${TEMP_DIR}/validation-lab" \
     > "${TEMP_DIR}/validation-lab.log"
 
-printf '%s\n' '[12/24] Run the merger-prediction quick pipeline (H7, leakage-safe)'
+printf '%s\n' '[12/27] Run the merger-prediction quick pipeline (H7, leakage-safe)'
 "${PYTHON_BIN}" -m itd_research.prediction run --quick \
     --output "${TEMP_DIR}/prediction" \
     > "${TEMP_DIR}/prediction.log"
 
-printf '%s\n' '[13/24] Run the cross-flow transfer/generalization studies (H8/H9/H10/H13)'
+printf '%s\n' '[13/27] Run the cross-flow transfer/generalization studies (H8/H9/H10/H13)'
 "${PYTHON_BIN}" -m itd_research.generalization run \
     --output "${TEMP_DIR}/generalization" \
     > "${TEMP_DIR}/generalization.log"
 
-printf '%s\n' '[14/24] Write the industrial-readiness maturity assessment (H16)'
+printf '%s\n' '[14/27] Write the industrial-readiness maturity assessment (H16)'
 "${PYTHON_BIN}" -m itd_research.industrial assess \
     --output "${TEMP_DIR}/industrial" \
     > "${TEMP_DIR}/industrial.log"
 
-printf '%s\n' '[15/24] Run the hard-prediction quick pipeline (Mission 4, H17/H18/H21/H22)'
+printf '%s\n' '[15/27] Run the hard-prediction quick pipeline (Mission 4, H17/H18/H21/H22)'
 "${PYTHON_BIN}" -m itd_research.hard_prediction validate \
     --config configs/mission4/ci.toml \
     --output "${TEMP_DIR}/hard-prediction" \
     > "${TEMP_DIR}/hard-prediction.log"
 
-printf '%s\n' '[16/24] Run the OOD detection/abstention quick pipeline (Mission 4, H23)'
+printf '%s\n' '[16/27] Run the OOD detection/abstention quick pipeline (Mission 4, H23)'
 "${PYTHON_BIN}" -m itd_research.ood validate \
     --output "${TEMP_DIR}/ood" \
     > "${TEMP_DIR}/ood.log"
 
-printf '%s\n' '[17/24] Run the end-to-end product latency benchmark (Mission 4, H26)'
+printf '%s\n' '[17/27] Run the end-to-end product latency benchmark (Mission 4, H26)'
 "${PYTHON_BIN}" -m itd_research.product bench --repeats 10 \
     --output "${TEMP_DIR}/end-to-end" \
     > "${TEMP_DIR}/end-to-end.log"
 
-printf '%s\n' '[18/24] Run the same-physics cross-code quick study (Mission 5, H29)'
+printf '%s\n' '[18/27] Run the same-physics cross-code quick study (Mission 5, H29)'
 "${PYTHON_BIN}" -m itd_research.cross_code validate \
     --output "${TEMP_DIR}/cross-code" \
     > "${TEMP_DIR}/cross-code.log"
 
-printf '%s\n' '[19/24] Run the near-OOD abstention quick campaign (Mission 5, H31)'
+printf '%s\n' '[19/27] Run the near-OOD abstention quick campaign (Mission 5, H31)'
 "${PYTHON_BIN}" -m itd_research.ood_near validate \
     --output "${TEMP_DIR}/near-ood" \
     > "${TEMP_DIR}/near-ood.log"
 
-printf '%s\n' '[20/24] Run the event-profile stability quick study (Mission 5, H34)'
+printf '%s\n' '[20/27] Run the event-profile stability quick study (Mission 5, H34)'
 "${PYTHON_BIN}" -m itd_research.profiles validate \
     --output "${TEMP_DIR}/profiles" \
     > "${TEMP_DIR}/profiles.log"
 
-printf '%s\n' '[21/24] Run the full-volume ITD-3D benchmark (Mission 5, H35)'
+printf '%s\n' '[21/27] Run the full-volume ITD-3D benchmark (Mission 5, H35)'
 "${PYTHON_BIN}" -m itd_research.full_volume bench --repeats 3 --only VOL-3D-XS \
     --output "${TEMP_DIR}/full-volume" \
     > "${TEMP_DIR}/full-volume.log"
 
-printf '%s\n' '[22/24] Verify Python<->Rust equivalence (Mission 5, H36; skipped if no cargo)'
+printf '%s\n' '[22/27] Verify Python<->Rust equivalence (Mission 5, H36; skipped if no cargo)'
 if command -v cargo > /dev/null 2>&1; then
     ( cd -- "${ROOT_DIR}/itd-rs" && CARGO_NET_OFFLINE=true cargo test --workspace --quiet ) \
         > "${TEMP_DIR}/rust-equivalence.log" 2>&1
@@ -167,7 +167,22 @@ else
     printf '%s\n' '  cargo not found; Rust equivalence skipped (offline env)'
 fi
 
-printf '%s\n' '[23/24] (reserved for external holdout; blocked offline)'
+printf '%s\n' '[23/27] Run the competent-baseline cross-code campaign (Mission 6, H37-H42)'
+"${PYTHON_BIN}" -m itd_research.cross_code campaign --quick \
+    --output "${TEMP_DIR}/cross-code-competent" \
+    > "${TEMP_DIR}/cross-code-competent.log"
+
+printf '%s\n' '[24/27] Run the shift-aware calibrated-abstention campaign (Mission 6, H43-H45)'
+"${PYTHON_BIN}" -m itd_research.ood_shift validate \
+    --output "${TEMP_DIR}/ood-shift" \
+    > "${TEMP_DIR}/ood-shift.log"
+
+printf '%s\n' '[25/27] Verify full-volume shared-gradient equivalence (Mission 6, H48)'
+"${PYTHON_BIN}" -m itd_research.full_volume optimize --repeats 2 --only VOL-3D-XS \
+    --output "${TEMP_DIR}/full-volume-optimized" \
+    > "${TEMP_DIR}/full-volume-optimized.log"
+
+printf '%s\n' '[26/27] (reserved for external holdout; blocked offline)'
 
 if [[ "${run_legacy}" == true ]]; then
     printf '%s\n' '[optional] Run the historical V10-only validator'
@@ -179,7 +194,7 @@ if [[ "${run_legacy}" == true ]]; then
     ) > "${TEMP_DIR}/legacy-v10.log"
 fi
 
-printf '%s\n' '[24/24] Verify validation did not modify tracked files'
+printf '%s\n' '[27/27] Verify validation did not modify tracked files'
 readonly STATUS_AFTER="$(git status --porcelain=v1 --untracked-files=no)"
 if [[ "${STATUS_AFTER}" != "${STATUS_BEFORE}" ]]; then
     printf '%s\n' 'Tracked repository state changed during validation.' >&2

@@ -102,8 +102,16 @@ def evaluate_itd3d(
     curvature: FloatArray | None = None,
     characteristic_length: float = 0.5,
     structural_length: float = 0.5,
+    gradient: FloatArray | None = None,
 ) -> ITD3DResult:
-    """Evaluate the experimental 3D ITD channels for one velocity snapshot."""
+    """Evaluate the experimental 3D ITD channels for one velocity snapshot.
+
+    ``gradient`` optionally supplies a precomputed velocity-gradient tensor (shape
+    ``(nz, ny, nx, 3, 3)``) from an identical :func:`velocity_gradient_3d` call, so a
+    caller that already has it (e.g. shared with the established Q/lambda2/swirl
+    diagnostics) can avoid recomputing it. Supplying it is numerically identical to
+    recomputing it -- it only removes duplicate work, never changes the result.
+    """
     boundary_mode = validate_boundary_mode(boundary_mode)
     x_coords = validate_axis_coordinates(x, "x")
     y_coords = validate_axis_coordinates(y, "y")
@@ -119,9 +127,15 @@ def evaluate_itd3d(
     v_field = np.asarray(v, dtype=np.float64)
     w_field = np.asarray(w, dtype=np.float64)
 
-    gradient = velocity_gradient_3d(
-        u_field, v_field, w_field, x_coords, y_coords, z_coords, boundary_mode
-    )
+    if gradient is None:
+        gradient = velocity_gradient_3d(
+            u_field, v_field, w_field, x_coords, y_coords, z_coords, boundary_mode
+        )
+    else:
+        gradient = np.asarray(gradient, dtype=np.float64)
+        expected_shape = (*u_field.shape, 3, 3)
+        if gradient.shape != expected_shape:
+            raise ValueError(f"gradient shape {gradient.shape} must be {expected_shape}.")
     omega = vorticity_3d_from_gradient(gradient)  # (nz, ny, nx, 3)
     magnitude = np.sqrt(np.sum(omega**2, axis=-1))
 
