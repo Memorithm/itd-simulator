@@ -35,6 +35,11 @@ _NUMERICAL_MODULES = (
     "itd_research.io.vtk",
     "itd_research.io.openfoam",
     "itd_research.io.piv",
+    "itd_research.external_validation",
+    "itd_research.external_validation.comparison",
+    "itd_research.external_validation.synthetic_flows",
+    "itd_research.external_validation.transport",
+    "itd_research.external_validation.experiments",
 )
 
 
