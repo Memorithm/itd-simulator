@@ -1,0 +1,2 @@
+# SHA-256 of the offline fixture campaign JSON (environment block excluded)
+mission7_external.fixture.campaign  ce63bb90182a5ec75602e57837c466c26431122875bd97ef5dffd8d99c6b904e

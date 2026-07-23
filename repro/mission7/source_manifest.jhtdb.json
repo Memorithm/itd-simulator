@@ -1,0 +1,102 @@
+{
+  "source_id": "jhtdb_isotropic1024coarse",
+  "institution": "Johns Hopkins University (JHTDB)",
+  "service": "GetVelocity SOAP web service",
+  "token": "edu.jhu.pha.turbulence.testing-201406 (public testing token)",
+  "licence": "JHTDB terms of use + citation policy (https://turbulence.pha.jhu.edu)",
+  "retrieved": "2026-07-23",
+  "cutout": {
+    "origin": [
+      128,
+      256,
+      384
+    ],
+    "size": 16,
+    "dt": 0.1,
+    "n_frames_short": 16
+  },
+  "redistribution": "raw NOT committed; regenerate via tools/datasets/fetch_jhtdb_cutout.py",
+  "frames": [
+    {
+      "time": 0.0,
+      "file": "frame_00.npz",
+      "sha256": "fd9312ba4ad1711c1b59b46c5d4cd03a7e42a6f4e9ccc6e96b7a68a12f1f82dc"
+    },
+    {
+      "time": 0.1,
+      "file": "frame_01.npz",
+      "sha256": "9b1815c809d3ee58de2290bc71709091faca08f01679714b1ad699a8d7a16f4f"
+    },
+    {
+      "time": 0.2,
+      "file": "frame_02.npz",
+      "sha256": "40945a0a6bb50ad5515f0c8812e2d5da9cfe9b7b66b84d8772d959315d9e6ced"
+    },
+    {
+      "time": 0.3,
+      "file": "frame_03.npz",
+      "sha256": "ef9315263e09097a46e9bb9a3fe4ceea3eb771a8c77c4dc5d4e85b5319f49e8f"
+    },
+    {
+      "time": 0.4,
+      "file": "frame_04.npz",
+      "sha256": "aad697919b5d70347e2fd3c154baf071e5a4d18ff83ce5f62d6d907d4cf4d95d"
+    },
+    {
+      "time": 0.5,
+      "file": "frame_05.npz",
+      "sha256": "b65e9cd6b49304783e04c3a3f5ae9ae4f6ac9293af3ea606ae5cf89dcb89760c"
+    },
+    {
+      "time": 0.6,
+      "file": "frame_06.npz",
+      "sha256": "c2954a89abc973e421e4bf9e6ad606397e6c17766a983f6494b92a8858878234"
+    },
+    {
+      "time": 0.7,
+      "file": "frame_07.npz",
+      "sha256": "5d039dc01a1c77bd1789d4f982ea7275748574a10283bd321bd57b0ff6e37cb1"
+    },
+    {
+      "time": 0.8,
+      "file": "frame_08.npz",
+      "sha256": "371c55e1d65f1c195cd8ec83a146fa51911b0ba0dace0469979f6ca177482322"
+    },
+    {
+      "time": 0.9,
+      "file": "frame_09.npz",
+      "sha256": "7b42a74f6f12142402a47dc62010c3329b6b5ae00932e67f4d4b395f34e35ede"
+    },
+    {
+      "time": 1.0,
+      "file": "frame_10.npz",
+      "sha256": "8206752960ede87cb8e7bc928eca9399c0fc98411d0d3002a181ae2dbc9117dd"
+    },
+    {
+      "time": 1.1,
+      "file": "frame_11.npz",
+      "sha256": "70cd3dac91097189fb845b96c75f20f17e1cd230bb32df9121e53a06676c552b"
+    },
+    {
+      "time": 1.2,
+      "file": "frame_12.npz",
+      "sha256": "4b7491208e2491c7ada9a2e8f2664778456e68977349fd893715acc2865ed74a"
+    },
+    {
+      "time": 1.3,
+      "file": "frame_13.npz",
+      "sha256": "e4a8d14e19e6e3ab11ccb5544aabd991dad667d48852394cb280160cd1932b6e"
+    },
+    {
+      "time": 1.4,
+      "file": "frame_14.npz",
+      "sha256": "d97be967978f3287e259c1989430cae8d8b05df0d11429c24813c34de9a00de4"
+    },
+    {
+      "time": 1.5,
+      "file": "frame_15.npz",
+      "sha256": "e0cddbc872afa4c528b587e6e4fa1c00a5d714286abbaa57d73913f559f03d26"
+    }
+  ],
+  "vol32_sha256": "8dac13c40bca31a167ae9b686cfc7e4bc63ca5271ef8fe90d1aeb24fba471ce0"
+}
