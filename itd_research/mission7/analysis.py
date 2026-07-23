@@ -105,7 +105,7 @@ def rank_complementarity(
     traj: DiagnosticTrajectories, *, reference: str = "enstrophy", distinct_threshold: float = 0.3,
 ) -> ComplementarityResult:
     """Which ITD channels are rank-distinct from the reference established scalar (H54)."""
-    ref = np.asarray(traj.established[reference], dtype=np.float64)
+    ref: FloatArray = np.asarray(traj.established[reference], dtype=np.float64)
     corr = {name: _spearman(np.asarray(vals, dtype=np.float64), ref) for name, vals in traj.itd.items()}
     distinct = [name for name, rho in corr.items() if not np.isnan(rho) and abs(rho) < distinct_threshold]
     return ComplementarityResult(reference=reference, correlations=corr, distinct_channels=distinct)
@@ -119,7 +119,7 @@ def label_enstrophy_event(
     The threshold is fixed from the development frames only (no holdout-label fitting);
     a frame is positive iff its enstrophy exceeds it. Uses ONLY established enstrophy.
     """
-    enst = np.asarray(traj.established["enstrophy"], dtype=np.float64)
+    enst: FloatArray = np.asarray(traj.established["enstrophy"], dtype=np.float64)
     threshold = float(np.quantile(enst[:dev_frames], quantile)) if dev_frames > 0 else float(np.quantile(enst, quantile))
     labels = (enst > threshold).astype(np.int64)
     return labels, threshold
