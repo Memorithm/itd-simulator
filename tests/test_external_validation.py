@@ -20,6 +20,10 @@ from itd_research.external_validation.experiments import (
     run_case,
     synthetic_cfd_cases,
 )
+from itd_research.external_validation.hypotheses import (
+    equal_enstrophy_separation,
+    vortex_merger_sequence,
+)
 from itd_research.external_validation.transport import (
     translate_periodic,
     transport_decomposition,
@@ -251,6 +255,35 @@ def test_external_piv_fixture_loads_and_is_shear_dominated() -> None:
     assert result.itd["sign_mixing"] < 0.05
     # High-vorticity region does not coincide with the rotation region.
     assert result.regions["jaccard_highomega_rotation"] < 0.5
+
+
+# --------------------------------------------------------------------------- #
+# Hypothesis demonstrations H1 and H2.                                        #
+# --------------------------------------------------------------------------- #
+
+
+def test_equal_enstrophy_but_itd_vector_separates() -> None:
+    result = equal_enstrophy_separation()
+    assert result["enstrophy_matched"] is True
+    assert result["enstrophy_a"] == pytest.approx(result["enstrophy_b"], rel=1e-6)
+    # The scalar (enstrophy) is identical; the ITD localization is not close.
+    assert result["localization_ratio"] > 10.0
+    assert result["heterogeneity_ratio"] > 2.0
+
+
+def test_vortex_merger_transition_two_to_one() -> None:
+    frames = vortex_merger_sequence()
+    counts = [int(frame["significant_rotation_regions"]) for frame in frames]
+    assert max(counts) >= 2  # two distinct vortices early
+    assert counts[-1] == 1  # merged into one at the end
+    # The count is monotone non-increasing across the merge (no spurious splitting).
+    assert all(counts[i] >= counts[i + 1] for i in range(len(counts) - 1))
+
+
+def test_vortex_merger_first_frame_has_no_temporal_deformation() -> None:
+    frames = vortex_merger_sequence()
+    # The first frame has no predecessor, so temporal deformation is exactly zero.
+    assert frames[0]["itd_temporal_deformation"] == pytest.approx(0.0, abs=1e-12)
 
 
 def test_external_piv_field_to_case_crops_masked_region() -> None:

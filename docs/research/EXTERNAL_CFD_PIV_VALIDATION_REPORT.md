@@ -126,14 +126,52 @@ Same external field and region, decimated by 1×/2×/3×:
 
 The comparison metrics are stable under a 3× resolution change.
 
+## 5b. Equal enstrophy, different ITD vector (H1)
+
+Two velocity fields are built with **identical enstrophy** — a distributed
+Taylor-Green checkerboard and a single concentrated Lamb-Oseen vortex, the latter
+rescaled so its enstrophy matches exactly. The magnitude-based ITD components are
+amplitude-invariant, so the rescaling removes the only scalar that could separate
+them without manufacturing the result:
+
+| Quantity | Distributed (A) | Concentrated (B) |
+|---|--:|--:|
+| enstrophy | 0.49840 | 0.49840 (matched to 1e-6) |
+| ITD heterogeneity | 0.73 | 5.79 |
+| ITD localization | 1.25 | 68.6 |
+
+Enstrophy cannot tell the two fields apart; the ITD localization separates them by
+**~55×** and heterogeneity by **8×**. This is the central ITD claim, shown
+quantitatively: the structural vector carries organisation information a scalar
+does not.
+
+## 5c. Transition detection across a vortex merger (H2 mechanism, synthetic)
+
+A kinematic sequence of two co-rotating vortices at decreasing separation. The
+count of **significant** rotation regions (connected `Q > 0` components of at
+least 8 cells, filtering strain-fragmentation) is an ITD-independent transition
+marker:
+
+| separation | 3.0 | 2.5 | 2.0 | 1.5 | 1.2 | 1.0 | 0.6 | 0.3 |
+|---|--:|--:|--:|--:|--:|--:|--:|--:|
+| significant rotation regions | 2 | 2 | 2 | 2 | 1 | 1 | 1 | 1 |
+| ITD localization | 29.1 | 29.1 | 29.1 | 28.5 | 27.6 | 28.3 | 40.9 | 53.9 |
+| ITD intensity | 0.235 | 0.235 | 0.235 | 0.237 | 0.248 | 0.267 | 0.350 | 0.432 |
+
+The region count drops 2 → 1 at the merger, and ITD localization/intensity rise as
+the merged core concentrates. This demonstrates the mechanism H2 relies on — an
+ITD-independent marker flags a topological transition while the ITD channels
+co-vary — but it is a **synthetic** demonstration, not a test on externally
+annotated data.
+
 ## 6. Hypothesis assessment (H1–H6)
 
 Each status states the evidence class explicitly.
 
 | # | Hypothesis | Status | Evidence |
 |---|---|---|---|
-| **H1** | At similar global enstrophy, the ITD structural vector distinguishes differently organised fields | **partially supported** | Rigid rotation (heterogeneity 0, localization 0) vs Lamb-Oseen (localization 19) vs Stuart roll-up (localization 167) separate cleanly; a controlled equal-enstrophy external pair was not constructed |
-| **H2** | ITD temporal channels detect annotated transitions better than intensity alone | **inconclusive** | Requires time-resolved external data with independent transition labels; only single snapshots were available. The temporal machinery (transport module) is in place and verified, but no annotated external transition was processed |
+| **H1** | At similar global enstrophy, the ITD structural vector distinguishes differently organised fields | **supported** | Controlled equal-enstrophy pair (§5b): identical enstrophy (0.49840), ITD localization separated ~55× and heterogeneity 8×. Demonstrated on constructed fields, not yet on an external equal-enstrophy pair |
+| **H2** | ITD temporal channels detect annotated transitions better than intensity alone | **partially supported (synthetic)** | Vortex-merger sequence (§5c): an ITD-independent marker (significant rotation regions) transitions 2 → 1 while ITD localization/intensity co-vary. Mechanism shown on synthetic data; **not** tested on externally annotated transitions |
 | **H3** | Transport compensation reduces false temporal response from pure translation | **supported (controlled)** | Residual/Eulerian = 0.033 on an exact spectral translation; demonstrated on synthetic controlled data, not yet on external time series |
 | **H4** | ITD components are stable under reasonable mesh/PIV-processing changes | **supported** | External field metrics stable under 1×/2×/3× decimation (§5); consistent with the Mission-1 convergence/sensitivity studies |
 | **H5** | ITD is complementary to Q/swirling/lambda_2, not a duplicate | **supported** | On real data Jaccard(high|ω|,Q>0)=0.245 and corr(|ω|,swirl)=0.54; on pure shear the overlap is exactly 0. ITD's vorticity basis captures different structure than rotation-based methods |

@@ -40,6 +40,7 @@ _NUMERICAL_MODULES = (
     "itd_research.external_validation.synthetic_flows",
     "itd_research.external_validation.transport",
     "itd_research.external_validation.experiments",
+    "itd_research.external_validation.hypotheses",
 )
 
 

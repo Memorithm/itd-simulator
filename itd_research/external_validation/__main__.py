@@ -28,6 +28,10 @@ from itd_research.external_validation.experiments import (
     run_suite,
     synthetic_cfd_cases,
 )
+from itd_research.external_validation.hypotheses import (
+    equal_enstrophy_separation,
+    vortex_merger_sequence,
+)
 from itd_research.external_validation.transport import (
     translate_periodic,
     transport_decomposition,
@@ -189,12 +193,16 @@ def main(argv: list[str] | None = None) -> int:
 
     results = run_suite(cases)
     transport = _transport_demonstration()
+    h1 = equal_enstrophy_separation()
+    merger = vortex_merger_sequence()
 
     payload: dict[str, object] = {
         "environment": environment_metadata(),
         "external_piv_source": external_note,
         "results": [result.as_dict() for result in results],
         "transport_h3": transport,
+        "equal_enstrophy_h1": h1,
+        "vortex_merger_h2": merger,
     }
     artifacts = [
         write_json(directory, "external_validation.json", payload, overwrite=arguments.overwrite),
@@ -220,13 +228,28 @@ def main(argv: list[str] | None = None) -> int:
                    name="external_validation_manifest.json", overwrite=arguments.overwrite)
 
     failures = _check_invariants(results)
+    # H1: equal enstrophy, the ITD vector must still separate the two fields.
+    if not h1["enstrophy_matched"]:
+        failures.append("equal_enstrophy_h1: enstrophy was not matched")
+    if not (isinstance(h1["localization_ratio"], float) and h1["localization_ratio"] > 5.0):
+        failures.append("equal_enstrophy_h1: ITD localization should separate the fields (>5x)")
+    # H2: the significant-rotation-region count must drop from two to one at merger.
+    region_counts: list[int] = []
+    for frame in merger:
+        value = frame["significant_rotation_regions"]
+        if isinstance(value, int):
+            region_counts.append(value)
+    if not (region_counts and max(region_counts) >= 2 and region_counts[-1] == 1):
+        failures.append("vortex_merger_h2: significant rotation regions should go 2 -> 1")
+
     if failures:
         print("external-validation invariants FAILED:")
         for message in failures:
             print(f"  - {message}")
         return 1
     print(f"external-validation suite: {len(results)} cases, invariants PASSED "
-          f"(transport H3 residual fraction {transport['residual_fraction']:.3f}).")
+          f"(H3 residual fraction {transport['residual_fraction']:.3f}; "
+          f"H1 localization ratio {h1['localization_ratio']:.1f}x).")
     return 0
 
 
