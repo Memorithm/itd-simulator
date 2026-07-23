@@ -80,6 +80,9 @@ _NUMERICAL_MODULES = (
     "itd_research.ood",
     "itd_research.ood.reference",
     "itd_research.ood.abstention",
+    "itd_research.product",
+    "itd_research.product.result",
+    "itd_research.product.pipeline",
 )
 
 
