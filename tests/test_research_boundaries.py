@@ -58,6 +58,9 @@ _NUMERICAL_MODULES = (
     "itd_research.validation_lab.flows",
     "itd_research.validation_lab.sampling",
     "itd_research.validation_lab.ablation",
+    "itd_research.realtime",
+    "itd_research.realtime.streaming",
+    "itd_research.realtime.benchmarks",
 )
 
 
