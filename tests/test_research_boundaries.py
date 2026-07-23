@@ -104,6 +104,12 @@ _NUMERICAL_MODULES = (
     "itd_research.external_validation.cylinder_re3900",
     "itd_research.external_validation.cylinder_re3900.metadata",
     "itd_research.external_validation.cylinder_re3900.integration",
+    "itd_research.mission7",
+    "itd_research.mission7.ingestion",
+    "itd_research.mission7.physics",
+    "itd_research.mission7.analysis",
+    "itd_research.mission7.fixtures",
+    "itd_research.mission7.campaign",
 )
 
 

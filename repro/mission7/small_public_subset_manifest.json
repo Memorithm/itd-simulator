@@ -1,0 +1,29 @@
+{
+  "schema": "itd-mission7-subset/1",
+  "note": "No third-party raw data is committed. Regenerate the exact tiny subset with the command below; checksums must match.",
+  "jhtdb_short_sequence": {
+    "command": "for i in $(seq 0 15); do python tools/datasets/fetch_jhtdb_cutout.py --dataset isotropic1024coarse --origin 128 256 384 --size 16 --time $(python -c \"print(f'{0.1*$i:.2f}')\") --output frame_$(printf %02d $i).npz; done",
+    "frame_sha256": [
+      "fd9312ba4ad1711c1b59b46c5d4cd03a7e42a6f4e9ccc6e96b7a68a12f1f82dc",
+      "9b1815c809d3ee58de2290bc71709091faca08f01679714b1ad699a8d7a16f4f",
+      "40945a0a6bb50ad5515f0c8812e2d5da9cfe9b7b66b84d8772d959315d9e6ced",
+      "ef9315263e09097a46e9bb9a3fe4ceea3eb771a8c77c4dc5d4e85b5319f49e8f",
+      "aad697919b5d70347e2fd3c154baf071e5a4d18ff83ce5f62d6d907d4cf4d95d",
+      "b65e9cd6b49304783e04c3a3f5ae9ae4f6ac9293af3ea606ae5cf89dcb89760c",
+      "c2954a89abc973e421e4bf9e6ad606397e6c17766a983f6494b92a8858878234",
+      "5d039dc01a1c77bd1789d4f982ea7275748574a10283bd321bd57b0ff6e37cb1",
+      "371c55e1d65f1c195cd8ec83a146fa51911b0ba0dace0469979f6ca177482322",
+      "7b42a74f6f12142402a47dc62010c3329b6b5ae00932e67f4d4b395f34e35ede",
+      "8206752960ede87cb8e7bc928eca9399c0fc98411d0d3002a181ae2dbc9117dd",
+      "70cd3dac91097189fb845b96c75f20f17e1cd230bb32df9121e53a06676c552b",
+      "4b7491208e2491c7ada9a2e8f2664778456e68977349fd893715acc2865ed74a",
+      "e4a8d14e19e6e3ab11ccb5544aabd991dad667d48852394cb280160cd1932b6e",
+      "d97be967978f3287e259c1989430cae8d8b05df0d11429c24813c34de9a00de4",
+      "e0cddbc872afa4c528b587e6e4fa1c00a5d714286abbaa57d73913f559f03d26"
+    ]
+  },
+  "biofilm_piv": {
+    "registry_id": "biofilm_piv_boundary_layer",
+    "sha256": "107ba49251eb28d454696157791e963ef2829bec2d714920b45f9519862d37b3"
+  }
+}
