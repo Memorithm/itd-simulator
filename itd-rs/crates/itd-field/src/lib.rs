@@ -58,6 +58,28 @@ pub fn vorticity(u: &Field2D, v: &Field2D, h: f64) -> Field2D {
     Field2D::new(ny, nx, w)
 }
 
+/// Mean squared gradient `<(df/dx)^2 + (df/dy)^2>` via periodic central differences.
+///
+/// Same axis convention and spacing as [`vorticity`]. Used for palinstrophy
+/// `0.5 * <|grad omega|^2>`. Deterministic row-major accumulation.
+pub fn grad_sq_mean(f: &Field2D, h: f64) -> f64 {
+    let (ny, nx) = (f.ny, f.nx);
+    let inv = 1.0 / (2.0 * h);
+    let mut acc = 0.0_f64;
+    for r in 0..ny {
+        let rp = (r + 1) % ny;
+        let rm = (r + ny - 1) % ny;
+        for c in 0..nx {
+            let cp = (c + 1) % nx;
+            let cm = (c + nx - 1) % nx;
+            let df_dx = (f.at(r, cp) - f.at(r, cm)) * inv;
+            let df_dy = (f.at(rp, c) - f.at(rm, c)) * inv;
+            acc += df_dx * df_dx + df_dy * df_dy;
+        }
+    }
+    acc / ((ny * nx) as f64)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

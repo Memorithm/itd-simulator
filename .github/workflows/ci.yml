@@ -118,7 +118,10 @@ jobs:
         run: |
           if [[ "${EVENT_NAME}" == "pull_request" ]]; then
             revision_range="origin/${BASE_REF}..${PR_HEAD_SHA}"
-          elif [[ "${BEFORE_SHA}" == "0000000000000000000000000000000000000000" ]]; then
+          elif [[ "${BEFORE_SHA}" == "0000000000000000000000000000000000000000" ]] \
+            || ! git cat-file -e "${BEFORE_SHA}^{commit}" 2>/dev/null; then
+            # New branch, or a force-push whose previous SHA is no longer reachable:
+            # fall back to the range since the default branch instead of a broken diff.
             branch_base="$(git merge-base "origin/${DEFAULT_BRANCH}" "${CURRENT_SHA}")"
             revision_range="${branch_base}..${CURRENT_SHA}"
           else

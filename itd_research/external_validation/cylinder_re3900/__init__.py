@@ -10,9 +10,28 @@ fabricated. Experimental research; does not modify ``ITD V29.18``.
 
 from __future__ import annotations
 
+from itd_research.external_validation.cylinder_re3900.integration import (
+    EVIDENCE_LEVELS,
+    WORKFLOW_STAGES,
+    IntegrationStatus,
+    SchemaResult,
+    manifest_schema,
+    validate_manifest,
+    workflow_status,
+)
 from itd_research.external_validation.cylinder_re3900.metadata import (
     CYLINDER_RE3900,
     CylinderDatasetMetadata,
 )
 
-__all__ = ["CYLINDER_RE3900", "CylinderDatasetMetadata"]
+__all__ = [
+    "CYLINDER_RE3900",
+    "EVIDENCE_LEVELS",
+    "WORKFLOW_STAGES",
+    "CylinderDatasetMetadata",
+    "IntegrationStatus",
+    "SchemaResult",
+    "manifest_schema",
+    "validate_manifest",
+    "workflow_status",
+]
