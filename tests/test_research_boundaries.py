@@ -52,6 +52,12 @@ _NUMERICAL_MODULES = (
     "itd_research.spectral3d.simulation",
     "itd_research.spectral3d.vorticity_budget",
     "itd_research.spectral3d.checkpoint",
+    "itd_research.validation_lab",
+    "itd_research.validation_lab.statistics",
+    "itd_research.validation_lab.candidates",
+    "itd_research.validation_lab.flows",
+    "itd_research.validation_lab.sampling",
+    "itd_research.validation_lab.ablation",
 )
 
 
