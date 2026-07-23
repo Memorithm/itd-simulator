@@ -1,0 +1,195 @@
+# Mission 7 -- preregistered protocol: external evidence acquisition and independent
+# replication.
+#
+# Committed BEFORE final external analysis. Its SHA-256 is recorded in
+# docs/research/MISSION7_FINAL_REPORT.md. Once final evaluation begins the
+# [final_holdout] section and locked decisions are IMMUTABLE: no feature/label/threshold/
+# preprocessing/model change and no removal of difficult cases. Signs are never reversed
+# after viewing holdout labels; success margins are not lowered; a below-chance baseline
+# is never used as evidence of ITD value.
+#
+# KEY ENVIRONMENT CHANGE vs Mission 6: this development session has OUTBOUND HTTPS via the
+# agent proxy, so genuine external ingestion is ACHIEVABLE here (Mission 6 was network-
+# blocked). Normal CI remains offline and must never touch the network.
+
+schema = "itd-mission7-preregistration/1"
+baseline_commit = "720a2adaef7798a6c745e25f68db87830b0840ff"
+model_revision_preserved = "ITD V29.18"
+determinism = { pythonhashseed = 0, threads = 1, dtype = "float64", rng = "numpy.default_rng(seed)" }
+added_value_margin = 0.02
+
+# --- Central question --------------------------------------------------------------------
+# Does ITD provide reproducible structural, diagnostic or predictive information on
+# genuinely external fluid-dynamics data generated independently of this repository?
+# A negative, partial or blocked answer is acceptable and must be preserved.
+
+# --- External datasets (locked; real, independent, verified in this session) -------------
+[[dataset]]
+id = "jhtdb_isotropic1024coarse"
+role = "primary_external_dns"
+institution = "Johns Hopkins University (JHTDB)"
+kind = "DNS, forced isotropic turbulence, 3D velocity, time-resolvable"
+access = "public GetVelocity SOAP web service, testing token edu.jhu.pha.turbulence.testing-201406"
+licence = "JHTDB terms of use + citation policy (https://turbulence.pha.jhu.edu)"
+redistribution = "raw NOT committed; reproduced via tools/datasets/fetch_jhtdb_cutout.py; checksums recorded"
+evidence_class = "external-DNS"
+independent_of_repo = true
+
+[[dataset]]
+id = "biofilm_piv_boundary_layer"
+role = "experimental_control_second_source"
+institution = "United States Naval Academy / University of Virginia"
+kind = "experimental PIV, 2D, TIME-AVERAGED boundary-layer mean + Reynolds stresses"
+access = "Zenodo record 1175014 (CC-BY-4.0), tools/datasets/fetch_dataset.py"
+doi = "10.5281/zenodo.1175014"
+sha256 = "107ba49251eb28d454696157791e963ef2829bec2d714920b45f9519862d37b3"
+evidence_class = "experimental-PIV"
+independent_of_repo = true
+note = "SHEAR-DOMINATED, time-averaged. Used as a physical-validation + cross-source + OOD CONTROL. NEVER presented as positive coherent-vortex-event validation (per Mission 7 sec. 14)."
+
+# --- Attempted but not secured in this session (honest blocked targets) ------------------
+[[blocked_target]]
+id = "cylinder_re3900"
+reason = "authoritative time-resolved cylinder-wake DNS source (PMC8713130) not fetchable as a manageable, redistribution-clear file in this session; GB-scale. Workflow + contract remain in place (Mission 6)."
+status = "blocked"
+
+[[blocked_target]]
+id = "time_resolved_coherent_vortex_piv"
+reason = "classic small cylinder-wake snapshot mirrors (dmdbook/PyDMD/databook) returned 403/404; no small redistributable time-resolved coherent-vortex PIV secured."
+status = "blocked"
+
+# --- Evidence ladder (report the achieved level per source) ------------------------------
+[evidence_ladder]
+levels = ["E0_metadata_verified", "E1_raw_file_verified", "E2_field_parsed",
+  "E3_coords_units_validated", "E4_snapshot_converted", "E5_short_sequence_converted",
+  "E6_physical_statistics_reproduced", "E7_diagnostics_executed", "E8_event_labelled",
+  "E9_predictive_development", "E10_locked_external_holdout"]
+
+# --- Ingestion + security limits (offline-testable) --------------------------------------
+[ingestion_limits]
+max_raw_file_bytes = 2_147_483_648
+max_extracted_bytes = 4_294_967_296
+max_grid_cells = 67_108_864
+max_frames = 4096
+max_variables = 64
+max_memory_estimate_bytes = 4_294_967_296
+defends_against = ["path_traversal", "unsafe_archive_extraction", "symlink_overwrite",
+  "decompression_bomb", "malformed_headers", "integer_overflow_dims", "oversized_arrays",
+  "excessive_frames", "checksum_mismatch", "nan_inf_propagation", "unit_mismatch",
+  "axis_permutation", "endianness_mismatch", "timestamp_disorder", "duplicate_frames"]
+
+# --- Physical validation (must pass before predictive claims) ----------------------------
+[physical_validation]
+jhtdb_isotropic = ["component_isotropy (u',v',w' rms within tolerance)",
+  "solenoidal (mean |div u| / (urms/dx) small)", "urms in documented range",
+  "energy stationarity across frames"]
+biofilm_piv = ["monotone near-wall mean-velocity increase", "non-negative tke",
+  "boundary-layer-like wall-normal profile"]
+tolerances = { isotropy_rel = 0.35, divergence_rel = 0.30, urms_low = 0.3, urms_high = 1.2 }
+rule = "H52/H53 are NOT attempted on a source that fails physical validation."
+
+# --- Features + diagnostics --------------------------------------------------------------
+[features]
+itd_3d = ["intensity", "heterogeneity", "localization", "roughness",
+  "orientation_dispersion", "helicity_mean", "normalized_helicity", "stretching_rate"]
+established_3d = ["enstrophy", "q_positive_fraction", "lambda2_negative_fraction", "swirl_mean"]
+also_report = ["simple_scalar", "established_only", "itd_only", "established+itd"]
+
+# --- Independent external event (ITD-INDEPENDENT) ----------------------------------------
+[event]
+definition = "extreme-enstrophy burst: frame-local enstrophy exceeding a high quantile of the DEVELOPMENT frames' enstrophy; computed from ESTABLISHED diagnostics only"
+independence = "event uses ONLY established vorticity/enstrophy; ITD channels never used to define it"
+alternative_labels = ["q_criterion_positive_fraction_peak"]
+disagreement_policy = "if labels disagree, preserve and report the disagreement; do not pick the label that flatters ITD"
+
+# --- Locked prediction protocol ----------------------------------------------------------
+[prediction]
+partitions = ["development", "calibration", "final_external_holdout"]
+partition_by = "temporal blocks of the external sequence; adjacent frames never split across train/test"
+baselines = ["persistence", "simple_physical_scalar", "established_only", "itd_only", "established+itd"]
+h53_rule = "AUC(established+ITD) - AUC(established) must exceed 0.02 with CI excluding 0 on the final external holdout; below-chance baselines never used as evidence"
+lead_time = "report event lead time, false alarms, missed events"
+negative_policy = "a negative or inconclusive external result is preserved verbatim; not re-optimised"
+
+# --- OOD / abstention (real shifts) ------------------------------------------------------
+[ood_shift]
+shifts = ["local_solver -> external_DNS", "external_DNS -> experimental_PIV",
+  "high_res -> low_res", "complete_field -> masked_field", "numerical -> noisy_measurement"]
+report = ["domain_score", "shift_type", "severity", "raw_confidence", "adjusted_confidence",
+  "decision", "false_confidence", "unnecessary_abstention", "selective_risk", "coverage"]
+rule = "utility weights NOT tuned after observing the final external holdout; binary and three-state reported separately"
+
+# --- Reproducibility + independent replication -------------------------------------------
+[reproducibility]
+bundle = "repro/mission7/ (README, environment, commands, expected checksums, small public subset manifest)"
+replication_targets = ["clean local venv", "second Python interpreter", "second machine/OS/CI runner or external person"]
+rule = "NOT called independently reproduced if only the original environment reran it"
+
+# --- Hypotheses H49-H60 ------------------------------------------------------------------
+[[hypothesis]]
+id = "H49"
+statement = "A real external time-resolved flow dataset is downloaded, checksum-verified, converted and reproduced with complete provenance."
+gate = "AD"
+[[hypothesis]]
+id = "H50"
+statement = "Converted external fields reproduce published/independently-expected physical quantities within declared tolerances."
+gate = "AE"
+[[hypothesis]]
+id = "H51"
+statement = "ITD channels are physically interpretable on genuine external data."
+gate = "AD"
+[[hypothesis]]
+id = "H52"
+statement = "ITD predicts an independently-labelled external vortex/enstrophy event with useful lead time."
+gate = "AG"
+[[hypothesis]]
+id = "H53"
+statement = "Adding ITD to a competent established baseline gives a preregistered improvement on an external holdout."
+gate = "AH"
+[[hypothesis]]
+id = "H54"
+statement = "At least one ITD channel provides reproducible information not captured by established diagnostics on the external data."
+gate = "AD"
+[[hypothesis]]
+id = "H55"
+statement = "A calibration developed on one source stays useful on a second independent source."
+gate = "AI"
+[[hypothesis]]
+id = "H56"
+statement = "The OOD/abstention system behaves sensibly under real source/resolution/measurement shifts."
+gate = "AK"
+[[hypothesis]]
+id = "H57"
+statement = "ITD agrees with independently-documented coherent-vortex events in time-resolved PIV/PTV data."
+gate = "AJ"
+[[hypothesis]]
+id = "H58"
+statement = "The full-volume pipeline processes real external 3D fields within declared memory/latency envelopes."
+gate = "AD"
+[[hypothesis]]
+id = "H59"
+statement = "An independent user can reproduce at least one external result from manifests, commands and public data."
+gate = "AL"
+[[hypothesis]]
+id = "H60"
+statement = "A result is reproduced on a second machine/OS/Python environment or by an external person/runner."
+gate = "AL"
+
+# --- Policies ----------------------------------------------------------------------------
+[policies]
+prohibited_post_hoc = ["change features/labels/thresholds/preprocessing/hyperparameters",
+  "remove difficult cases", "reverse signs after viewing holdout", "lower success margins",
+  "use a below-chance baseline as evidence", "choose the event definition that flatters ITD",
+  "present a synthetic fixture or the mean-PIV control as coherent-vortex validation"]
+guardrails = ["itd_v29_core unchanged", "itd_v29.py unchanged", "MODEL_REVISION unchanged",
+  "itd_simulator unchanged", "oracles/hashes/summaries unchanged", "one-way dependency research->core",
+  "no V29.19/V30/certified-ITD-3D/universal-threshold/production-ITD", "M3-M6 negatives preserved"]
+compute_limits = { final_holdout_evaluations = 1, ci = "offline, tiny deterministic fixtures only" }
+
+# --- Final held-out configuration -- IMMUTABLE once evaluation begins --------------------
+[final_holdout]
+frozen = true
+source = "jhtdb_isotropic1024coarse time-resolved sequence, final temporal block"
+added_value_margin = 0.02
+evaluations_allowed = 1
+note = "Evaluated once after development is frozen. The report records this file's SHA-256."
