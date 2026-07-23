@@ -1,0 +1,225 @@
+# Mission 4 -- preregistered protocol for hard external predictive validation of ITD.
+#
+# This file is the machine-readable preregistration. It is written BEFORE running
+# the final held-out tests. Its SHA-256 is recorded in
+# docs/research/HARD_EXTERNAL_PREDICTIVE_VALIDATION_REPORT.md. Once final evaluation
+# begins, the [final_holdout] section and every locked decision below are IMMUTABLE:
+# no feature, label, threshold, preprocessing, or model-hyperparameter change, and no
+# removal of difficult cases, may be made afterwards. Any later analysis is labelled
+# exploratory and never replaces a preregistered result.
+#
+# Scope honesty (environment-bound): this container has NO OpenFOAM/Nek5000 and no
+# network dataset download in CI; h5py/netCDF4/vtk/sklearn are absent. The achievable
+# evidence classes here are LOCAL-SOLVER held-out flows (2D spectral_ns, 3D spectral3d)
+# and ONE external experimental PIV field (biofilm, already committed). Genuinely
+# external CFD/DNS/tomographic-PIV integration is gated behind manual download
+# workflows and is marked "blocked" where unavailable -- never faked.
+
+schema = "itd-mission4-preregistration/1"
+baseline_commit = "4101245e9cf0ac69da5dc132fb7187ff06e39286"
+model_revision_preserved = "ITD V29.18"
+determinism = { pythonhashseed = 0, threads = 1, dtype = "float64", rng = "numpy.default_rng(seed)" }
+
+# ---------------------------------------------------------------------------
+# Primary hypotheses (locked). Each maps to a decision gate (G..M). Verdicts are one
+# of: supported within tested scope | partially supported | not supported |
+# inconclusive | blocked.
+# ---------------------------------------------------------------------------
+[[hypothesis]]
+id = "H17"
+statement = "ITD predicts difficult vortex transitions on held-out flows with useful lead time."
+gate = "G"
+class = "primary"
+target_events = ["weak co-rotating pairing", "Taylor-Green breakdown", "vortex fragmentation"]
+
+[[hypothesis]]
+id = "H18"
+statement = "Adding ITD to a locked established-diagnostic set improves held-out prediction beyond a grouped-bootstrap CI."
+gate = "H"
+class = "primary"
+decision_rule = "established+ITD minus established: 95% grouped-bootstrap CI of the AUC difference must exclude 0 by >= 0.02."
+
+[[hypothesis]]
+id = "H19"
+statement = "A predictor calibrated on one solver retains useful performance on another solver."
+gate = "I"
+class = "secondary"
+scope = "achievable: 2D spectral_ns <-> 3D spectral3d midplane (different dimensionality/numerics). External finite-volume (OpenFOAM) is BLOCKED (no solver in env)."
+
+[[hypothesis]]
+id = "H20"
+statement = "A predictor calibrated on one data source transfers to an independent institution/repository."
+gate = "I"
+class = "secondary"
+scope = "BLOCKED in CI: only one external source (biofilm PIV) is downloadable/committed; cross-institution transfer needs a second external source (manual workflow)."
+
+[[hypothesis]]
+id = "H21"
+statement = "ITD retains useful information after realistic noise, filtering, masking, and downsampling."
+gate = "J"
+class = "primary"
+levels = { noise = [0.0, 0.01, 0.02, 0.05, 0.10], downsample = [1, 2, 4], mask_fraction = [0.0, 0.1, 0.2] }
+
+[[hypothesis]]
+id = "H22"
+statement = "ITD remains useful when only part of the domain is observed."
+gate = "J"
+class = "primary"
+windows = ["full", "upstream_half", "downstream_half", "central_crop", "boundary_crop"]
+
+[[hypothesis]]
+id = "H23"
+statement = "The system can identify flows for which its calibration is unreliable and abstain rather than mispredict."
+gate = "K"
+class = "primary"
+decision_rule = "abstention must reduce selective risk on out-of-distribution flows without collapsing coverage below 0.5 on in-distribution flows."
+
+[[hypothesis]]
+id = "H24"
+statement = "Time-resolved PIV shows ITD changes before independently annotated vortex events."
+gate = "L"
+class = "secondary"
+scope = "BLOCKED in CI: no strongly-vortical, time-resolved, independently-annotated PIV is available; the committed biofilm PIV is a shear-dominated single mean field (control)."
+
+[[hypothesis]]
+id = "H25"
+statement = "Different event classes require different ITD channel subsets."
+gate = "none"
+class = "exploratory"
+event_classes = ["merger", "breakdown", "fragmentation"]
+
+[[hypothesis]]
+id = "H26"
+statement = "The complete streaming pipeline (ingest->validate->preprocess->diagnostics->ITD->predict->OOD->log->serialize) meets declared p95/p99 budgets."
+gate = "M"
+class = "primary"
+workloads = ["E2E-2D-S", "E2E-2D-M", "E2E-3D-S", "E2E-3D-M"]
+
+# ---------------------------------------------------------------------------
+# Datasets / sources and their evidence class (locked assignment of role).
+# ---------------------------------------------------------------------------
+[[source]]
+id = "solver2d_merger"
+kind = "local-solver"
+generator = "itd_research.external_validation.spectral_ns"
+event = "co-rotating pairing/merger (core-count 2->1, ITD-independent)"
+role = "development+calibration+final_holdout (split by seed/config)"
+
+[[source]]
+id = "solver3d_taylorgreen"
+kind = "local-solver"
+generator = "itd_research.spectral3d"
+event = "Taylor-Green breakdown (enstrophy-production threshold crossing, ITD-independent)"
+role = "development+calibration+final_holdout (split by seed/config)"
+
+[[source]]
+id = "solver3d_tubes"
+kind = "local-solver"
+generator = "itd_research.spectral3d"
+event = "co/anti-parallel tube interaction (Q-component-count change, ITD-independent)"
+role = "cross-solver / OOD probe"
+
+[[source]]
+id = "biofilm_piv"
+kind = "external-experimental-PIV"
+registry_id = "biofilm_piv_boundary_layer"
+event = "none (shear-dominated mean field)"
+role = "OOD control (should trigger abstention or low confidence)"
+
+# ---------------------------------------------------------------------------
+# Event labelling (ITD-INDEPENDENT ONLY -- see guardrail 1.3).
+# ---------------------------------------------------------------------------
+[event_labels]
+allowed_definitions = [
+  "strong-vorticity core-count topology change",
+  "connected components of an established diagnostic (Q>0)",
+  "enstrophy-production threshold crossing",
+  "circulation collapse",
+  "known solver event time",
+]
+forbidden_definitions = [
+  "any ITD channel", "ITD intensity", "ITD localization", "a score containing ITD",
+  "a threshold chosen to maximize ITD performance",
+]
+provenance_required = true
+
+# ---------------------------------------------------------------------------
+# Features and baselines (locked).
+# ---------------------------------------------------------------------------
+[features]
+established_single = [
+  "enstrophy", "vorticity_rms", "palinstrophy", "vorticity_flatness",
+  "q_positive_fraction", "swirl_mean", "strain_mean",
+]
+established_multifeature_locked = [
+  "enstrophy", "palinstrophy", "vorticity_rms", "vorticity_flatness",
+  "q_positive_fraction", "swirl_mean",
+]
+temporal_baselines = ["persistence", "linear_trend", "moving_average"]
+itd_structural = ["heterogeneity", "localization", "roughness", "sign_mixing", "temporal_deformation"]
+itd_full = ["intensity", "heterogeneity", "localization", "roughness", "sign_mixing", "temporal_deformation", "structure_score"]
+added_value_pair = { base = "established_multifeature_locked", augmented = "established_multifeature_locked + itd_full" }
+
+# ---------------------------------------------------------------------------
+# Splits (grouped, leakage-safe). Isolation is by SIMULATION, never frame-random.
+# ---------------------------------------------------------------------------
+[splits]
+isolation = "by_simulation_seed_and_config"
+development_seeds = [10, 11, 12, 13, 14, 15]
+calibration_seeds = [20, 21, 22, 23]
+final_holdout_seeds = [90, 91, 92, 93, 94, 95]
+rule = "no frame of a run appears in more than one split; thresholds/hyperparameters fixed on development+calibration only."
+
+# ---------------------------------------------------------------------------
+# Metrics and statistics (locked).
+# ---------------------------------------------------------------------------
+[metrics]
+prediction = [
+  "roc_auc", "pr_auc", "balanced_accuracy", "sensitivity", "specificity",
+  "precision", "recall", "f1", "false_alarms_per_time", "missed_event_rate",
+  "median_lead_time", "brier", "calibration_error",
+]
+confidence_interval = "grouped bootstrap resampling whole runs, 2000 resamples, seed 4242"
+added_value_test = "paired grouped bootstrap of the AUC difference (augmented - base)"
+horizon_reporting = ["frames", "physical_time", "turnover_normalized"]
+
+# ---------------------------------------------------------------------------
+# Models (locked; interpretable first).
+# ---------------------------------------------------------------------------
+[models]
+primary = ["regularized_logistic_regression", "linear_discriminant_analysis"]
+secondary = ["small_decision_tree"]
+prohibited_as_primary_evidence = ["deep_neural_network"]
+normalization = "train-split statistics only"
+hyperparameters = { logistic_ridge = 0.001, logistic_iters = 40, tree_max_depth = 3 }
+seeds_fixed_before_final = true
+
+# ---------------------------------------------------------------------------
+# Policies.
+# ---------------------------------------------------------------------------
+[policies]
+missing_data = "mask-aware; strict and repaired modes reported separately; repaired vectors never counted as measured"
+preprocessing = "finite-difference derivatives, boundary_mode=finite; degradations applied deterministically at declared levels"
+threshold = "operating point calibrated on the calibration split only; never on final_holdout"
+compute_limits = { max_runs_per_family = 64, final_holdout_evaluations = 1, ci_ensemble = "tiny deterministic fixtures only" }
+prohibited_post_hoc = [
+  "changing features", "changing labels", "changing thresholds",
+  "changing preprocessing", "changing model hyperparameters", "removing difficult cases",
+]
+evidence_classes = [
+  "analytical", "manufactured", "local-solver", "external-CFD", "external-DNS",
+  "experimental-PIV", "cross-source", "performance", "industrial",
+]
+
+# ---------------------------------------------------------------------------
+# Final held-out configuration -- IMMUTABLE once evaluation begins.
+# ---------------------------------------------------------------------------
+[final_holdout]
+frozen = true
+sources = ["solver2d_merger", "solver3d_taylorgreen"]
+seeds = [90, 91, 92, 93, 94, 95]
+horizons_frames = [2, 4, 6]
+degradation_levels_evaluated = { noise = [0.0, 0.05], downsample = [1, 2], mask_fraction = [0.0, 0.2] }
+added_value_margin = 0.02
+evaluations_allowed = 1
+note = "Evaluated exactly once, after development and calibration are frozen. The report records this file's SHA-256 as the preregistration commitment."
