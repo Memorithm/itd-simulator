@@ -70,8 +70,8 @@ def pr_auc(scores: FloatArray, labels: IntArray) -> float:
     """Average precision (area under precision-recall), rank-based."""
     order = np.argsort(-scores, kind="mergesort")
     y = labels[order]
-    tp = np.cumsum(y)
-    fp = np.cumsum(1 - y)
+    tp: FloatArray = np.cumsum(y).astype(np.float64)
+    fp: FloatArray = np.cumsum(1 - y).astype(np.float64)
     total_pos = int(np.sum(labels))
     if total_pos == 0:
         return float("nan")

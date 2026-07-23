@@ -278,7 +278,7 @@ def evaluate_feature_set(
         if not np.isnan(value):
             boot.append(value)
     if boot:
-        boot_array = np.asarray(boot, dtype=np.float64)
+        boot_array: FloatArray = np.asarray(boot, dtype=np.float64)
         ci_low = float(np.quantile(boot_array, 0.025))
         ci_high = float(np.quantile(boot_array, 0.975))
     else:
