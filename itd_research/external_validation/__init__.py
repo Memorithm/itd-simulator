@@ -43,6 +43,7 @@ from itd_research.external_validation.experiments_3d import (
     external_3d_case,
     fluctuation_intensity,
     run_3d_comparison,
+    temporal_intermittency,
     transition_markers,
 )
 from itd_research.external_validation.hypotheses import (
@@ -79,6 +80,7 @@ __all__ = (
     "aggregate_3d_channels",
     "fluctuation_intensity",
     "transition_markers",
+    "temporal_intermittency",
     "TransportDecomposition",
     "transport_decomposition",
     "transport_decomposition_3d",

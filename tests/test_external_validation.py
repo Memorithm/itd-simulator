@@ -25,6 +25,7 @@ from itd_research.external_validation.experiments_3d import (
     analytical_3d_cases,
     fluctuation_intensity,
     run_3d_comparison,
+    temporal_intermittency,
     transition_markers,
 )
 from itd_research.external_validation.hypotheses import (
@@ -369,6 +370,26 @@ def test_transition_markers_laminar_vs_turbulent_like() -> None:
     }
     assert laminar["fluctuation_intensity"] == pytest.approx(0.0, abs=1e-12)
     assert turbulent["fluctuation_intensity"] > laminar["fluctuation_intensity"] + 0.1
+
+
+def test_temporal_intermittency_detects_a_burst() -> None:
+    from itd_research.diagnostics_3d.analytical_fields import finite_grid_3d
+
+    grid = finite_grid_3d(12, -1.0, 1.0)
+    zero = np.zeros(grid.shape)
+    base = np.tanh(2.0 * grid.yy)  # smooth laminar-like shear
+    burst = base + 0.5 * np.sin(3 * grid.xx) * np.cos(3 * grid.zz) * np.cos(2 * grid.yy)
+    # frames: quiet, quiet, BURST, quiet
+    frames = [
+        (base, zero, zero, grid.x, grid.y, grid.z),
+        (base, zero, zero, grid.x, grid.y, grid.z),
+        (burst, 0.3 * burst, zero, grid.x, grid.y, grid.z),
+        (base, zero, zero, grid.x, grid.y, grid.z),
+    ]
+    summary = temporal_intermittency(frames)
+    assert summary["peak_frame"] == 2  # the burst frame
+    assert summary["max_over_min"] > 5.0  # strong temporal modulation
+    assert len(summary["fluctuation_intensity"]) == 4  # type: ignore[arg-type]
 
 
 def test_aggregate_3d_channels_summary() -> None:

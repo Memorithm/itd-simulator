@@ -179,6 +179,38 @@ def transition_markers(
     }
 
 
+def temporal_intermittency(
+    frames: list[tuple[FloatArray, FloatArray, FloatArray, FloatArray, FloatArray, FloatArray]],
+    boundary_mode: str = "finite",
+) -> dict[str, object]:
+    """Temporal intermittency of a fixed station across a time sequence.
+
+    ``frames`` is a list of ``(u, v, w, x, y, z)`` snapshots at one location at
+    successive times. For each frame the ITD-independent fluctuation intensity and
+    the ITD localization are computed; the summary reports the temporal
+    modulation (max/min and coefficient of variation) and the peak frame. A
+    turbulent spot passing a transition-zone station makes the fluctuation
+    intensity burst and the ITD localization dip -- intermittency in time, the
+    temporal counterpart of the streamwise transition scan.
+    """
+    fluctuation: list[float] = []
+    localization: list[float] = []
+    for u, v, w, x, y, z in frames:
+        markers = transition_markers(u, v, w, x, y, z, boundary_mode)
+        fluctuation.append(markers["fluctuation_intensity"])
+        localization.append(markers["itd_localization"])
+    series = np.array(fluctuation, dtype=np.float64)
+    mean = float(np.mean(series)) if series.size else 0.0
+    minimum = float(np.min(series)) if series.size else 0.0
+    return {
+        "fluctuation_intensity": fluctuation,
+        "itd_localization": localization,
+        "max_over_min": float(np.max(series) / minimum) if minimum > 0.0 else float("inf"),
+        "coefficient_of_variation": float(np.std(series) / mean) if mean > 0.0 else 0.0,
+        "peak_frame": int(np.argmax(series)) if series.size else -1,
+    }
+
+
 def aggregate_3d_channels(
     results: list[Comparison3DResult],
     keys: tuple[str, ...] = (

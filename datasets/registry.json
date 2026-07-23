@@ -136,9 +136,9 @@
       "variables": ["u", "v", "w"],
       "units": {"length": "inlet displacement thickness", "velocity": "free-stream"},
       "coordinate_system": "streamwise stations x in [45,900] (domain x in [30.2,1000]); each a 12x16x14 block at y in [0.6,5.6], z in [100,106]; Lag4 (wall stencil forbids Lag6 near the wall)",
-      "time_information": "t=0 snapshot; transition is a spatial (streamwise) phenomenon",
-      "uncertainty_information": "DNS (numerical). Ten streamwise stations retrieved; per-station sha256 varies (not listed). Raw DNS not committed (JHTDB terms). Transition onset near x~250 in this snapshot.",
-      "intended_experiment": "transition_detection_3d (laminar-to-turbulent; externally characterised transition for H2)",
+      "time_information": "time-resolved; transition is spatial (streamwise) and shows temporal intermittency at a fixed station (pass --time to the fetch tool). Streamwise scan at t=0; temporal scan at x=270 over t=0..70.",
+      "uncertainty_information": "DNS (numerical). Ten streamwise stations (t=0) plus temporal sequences at x=350 and x=270; per-query sha256 varies (not listed). Raw DNS not committed (JHTDB terms). Transition onset near x~250; a turbulent spot passes x=270 near t~30.",
+      "intended_experiment": "transition_detection_3d (laminar-to-turbulent in space and time; externally characterised transition for H2)",
       "date_retrieved": "2026-07-23"
     },
     {
