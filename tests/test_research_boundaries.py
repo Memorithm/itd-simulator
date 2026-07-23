@@ -43,6 +43,15 @@ _NUMERICAL_MODULES = (
     "itd_research.external_validation.experiments_3d",
     "itd_research.external_validation.hypotheses",
     "itd_research.external_validation.spectral_ns",
+    "itd_research.spectral3d",
+    "itd_research.spectral3d.grids",
+    "itd_research.spectral3d.operators",
+    "itd_research.spectral3d.initial_conditions",
+    "itd_research.spectral3d.forcing",
+    "itd_research.spectral3d.invariants",
+    "itd_research.spectral3d.simulation",
+    "itd_research.spectral3d.vorticity_budget",
+    "itd_research.spectral3d.checkpoint",
 )
 
 
