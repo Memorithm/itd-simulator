@@ -1,0 +1,165 @@
+# Mission 6 -- preregistered protocol: transferability, calibrated abstention,
+# external evidence, and Rust expansion.
+#
+# Machine-readable preregistration, committed BEFORE final evaluation. Its SHA-256 is
+# recorded in docs/research/MISSION6_FINAL_REPORT.md and checked at runtime. Once final
+# evaluation begins the [final_holdout] section and locked decisions are IMMUTABLE: no
+# feature/label/threshold/preprocessing/model change and no removal of difficult cases.
+# Signs are never reversed after viewing final-holdout labels; the 0.02 added-value
+# margin is not lowered. A below-chance baseline is never used as evidence of value.
+#
+# Environment (re-verified): no OpenFOAM/Nek5000, no CI network, no h5py/netCDF4/vtk/
+# sklearn; cargo/rustc present. Therefore H46 (external cylinder integration) is
+# ATTEMPTED via a manual, network-enabled workflow and is BLOCKED-in-CI; H47/H48 are
+# achievable; H37-H45 are achievable on the two in-repo codes.
+
+schema = "itd-mission6-preregistration/1"
+baseline_commit = "bc39463dfa081ccd403c21e5c22cad22091bf64f"
+model_revision_preserved = "ITD V29.18"
+determinism = { pythonhashseed = 0, threads = 1, dtype = "float64", rng = "numpy.default_rng(seed)" }
+added_value_margin = 0.02
+
+# --- Central questions -----------------------------------------------------------------
+# Q1: Does ITD preserve transferable structural information between numerical methods
+#     AFTER fair temporal, amplitude and resolution normalization (i.e. against a
+#     COMPETENT, non-degenerate established baseline)?
+# Q2: Can the product reduce confidence intelligently under domain shift without
+#     unnecessarily rejecting useful data?
+
+# --- Cross-code campaign (H37-H42) -----------------------------------------------------
+[cross_code]
+solvers = ["spectral3d (pseudo-spectral RK4)", "fd_solver (finite-difference fractional-step)"]
+physics = "Taylor-Green"
+resolutions = [16, 20, 24, 32]
+viscosities = [0.015, 0.02, 0.025]
+seeds_dev = [10, 11, 12, 13, 14, 15]
+seeds_holdout = [90, 91, 92, 93, 94, 95]
+event_definitions = ["enstrophy_production_peak", "dissipation_peak"]  # report disagreement
+time_alignments = ["raw_physical_time", "normalized_turnover", "event_relative"]
+directions = ["spectral_to_fd", "fd_to_spectral"]
+grouping = "by simulation seed and source; frames of one run never split train/test"
+no_holdout_label_fitting = true
+
+[baselines]
+# Competent established baselines; selection uses development folds only.
+A_raw = "raw established diagnostics (the Mission 5 reference)"
+B_rank = "rank/quantile-normalized on the TRAIN source empirical CDF only"
+C_dimensionless = "normalized by declared physical scales (dimensionless ratios)"
+D_phase_derivative = "temporal slopes / changes rather than raw magnitudes"
+E_robust_subset = "established features stable across dev folds only"
+F_orientation_corrected = "magnitude-of-change / train-learned monotonic orientation (never sign-flip on holdout)"
+established_raw = ["enstrophy", "palinstrophy", "vorticity_rms", "vorticity_flatness", "q_positive_fraction", "swirl_mean"]
+
+[features]
+itd_structural = ["heterogeneity", "localization", "roughness", "sign_mixing", "temporal_deformation"]
+itd_full = ["intensity", "heterogeneity", "localization", "roughness", "sign_mixing", "temporal_deformation", "structure_score"]
+also_report = ["simple_scalar", "established_raw", "established_competent", "itd_structural", "itd_full", "established_competent+itd"]
+
+[cross_code_metrics]
+report = ["grouped_roc_auc", "grouped_pr_auc", "balanced_accuracy", "brier", "calibration"]
+confidence_interval = "grouped bootstrap resampling whole runs, 2000 resamples, seed 6060"
+h38_rule = "the COMPETENT established baseline must be above chance; ITD-only compared against it"
+h39_rule = "AUC(competent+ITD) - AUC(competent) must exceed 0.02 with CI excluding 0"
+below_chance_policy = "if a baseline is below chance, report raw AND orientation-corrected descriptive AUC; never use raw below-chance as evidence of ITD value"
+
+# --- Shift-aware OOD + abstention (H43-H45) ---------------------------------------------
+[ood_shift]
+axes = ["amplitude", "circulation", "viscosity", "resolution", "noise", "mask", "solver_source"]
+scores_compared = ["global_mahalanobis", "per_axis_standardized", "pca_residual", "nearest_reference"]
+policy_states = ["accept", "accept_with_reduced_confidence", "abstain"]
+confidence_discount = "monotone in shift severity; transparent inputs (severity, shift type, quality, mask fraction)"
+progressive_sweeps = { circulation = [1.2, 1.25, 1.3, 1.4, 1.55, 1.8, 2.1], viscosity = [0.0025, 0.0028, 0.0032, 0.004, 0.005, 0.0075], resolution = [48, 56, 64, 72, 80] }
+utility = "correct_accepted - false_confident*high_cost - unnecessary_abstention*moderate_cost"
+costs = { high_cost = 4.0, moderate_cost = 1.0 }
+h45_rule = "unnecessary abstention must fall MEANINGFULLY below the Mission 5 ~0.85 while selective risk stays controlled"
+compared_policies = ["no_abstention", "global_binary", "shift_aware_binary", "shift_aware_confidence_degradation", "three_state"]
+
+# --- External cylinder Re=3900 (H46) ---------------------------------------------------
+[cylinder]
+target = "time-resolved cylinder wake Re~3900 (Eulerian+Lagrangian)"
+workflow = "tools/datasets/cylinder_re3900/ (discover/download/verify/inspect/convert/subset/manifest/analyse)"
+labels = ["shedding_phase", "lift_zero_crossing", "lift_peak", "pressure_minimum", "published_core_tracks"]
+ci_status = "BLOCKED-in-CI (no network); manual, provenance-preserving, checksum-verified; no fabricated checksums; no large/restricted raw committed"
+evidence_levels = ["ingestion_verified", "diagnostic_comparison", "temporal_event_analysis", "predictive_development", "locked_external_holdout"]
+
+# --- Rust V29 equivalence (H47) --------------------------------------------------------
+[rust]
+target = "complete certified V29.18 2D signature OR a clearly-defined larger subset"
+elements = ["boundary treatment", "derivative convention", "vorticity", "structural metrics", "normalization", "zero-field", "finite-value validation"]
+fixtures = ["zero_field", "rigid_rotation", "simple_shear", "taylor_green", "lamb_oseen", "vortex_pair", "noisy_field"]
+tolerance = { relative = 1e-9, absolute = 1e-9 }
+equivalence_levels = ["bitwise_equal", "absolute_tolerance", "relative_tolerance", "not_equivalent"]
+note = "tolerance-level equivalence never implies certification"
+
+# --- Full-volume selective computation + optimization (H48) ----------------------------
+[full_volume]
+selective_profiles = { merger = ["localization", "heterogeneity", "roughness", "enstrophy"], stretching = ["orientation_dispersion", "helicity_mean", "stretching_rate", "q_positive_fraction"], full = ["all"] }
+optimizations = ["shared-gradient reuse", "preallocation", "reduced temporaries", "specialized symmetric 3x3 eigensolver"]
+equivalence = "optimized outputs must match the authoritative NumPy reference within 1e-9 relative"
+performance_targets = "improve p95 latency vs the Mission 5 full-channel baseline while preserving numerical equivalence"
+
+# --- Policies --------------------------------------------------------------------------
+[policies]
+prohibited_post_hoc = ["change features/labels/thresholds/preprocessing/hyperparameters", "remove difficult cases", "reverse signs after viewing holdout", "lower the 0.02 margin", "use a below-chance baseline as evidence"]
+compute_limits = { final_holdout_evaluations = 1, ci = "tiny deterministic fixtures only" }
+evidence_classes = ["analytical", "manufactured", "local-solver", "cross-code", "external-DNS", "experimental-PIV", "performance", "software-equivalence"]
+
+# --- Hypotheses H37-H48 (verdict: supported within tested scope | partially supported |
+#     not supported | inconclusive | blocked) --------------------------------------------
+[[hypothesis]]
+id = "H37"
+statement = "ITD-only stays predictive across numerical methods after larger ensembles and time/amplitude/resolution control."
+gate = "W"
+[[hypothesis]]
+id = "H38"
+statement = "ITD transfers better than a COMPETENT (normalized, non-degenerate) established baseline."
+gate = "V"
+[[hypothesis]]
+id = "H39"
+statement = "Adding ITD to a competent established baseline gives a credible cross-code improvement (>= margin, CI excludes 0)."
+gate = "X"
+[[hypothesis]]
+id = "H40"
+statement = "Transfer is useful in BOTH directions (spectral<->finite-difference)."
+gate = "W"
+[[hypothesis]]
+id = "H41"
+statement = "ITD transfer stays useful across controlled resolution changes."
+gate = "W"
+[[hypothesis]]
+id = "H42"
+statement = "The positive cross-code result survives reasonable temporal/phase alignment policies (is not a timing artefact)."
+gate = "W"
+[[hypothesis]]
+id = "H43"
+statement = "A shift-aware detector identifies the axis and severity of shift better than one global Mahalanobis radius."
+gate = "Y"
+[[hypothesis]]
+id = "H44"
+statement = "A three-state accept/reduce/abstain policy beats binary abstention on risk-coverage."
+gate = "Y"
+[[hypothesis]]
+id = "H45"
+statement = "The new policy reduces unnecessary abstention substantially while preserving low false-confidence risk."
+gate = "Y"
+[[hypothesis]]
+id = "H46"
+statement = "A real time-resolved Re~3900 cylinder subset is downloaded, verified, converted and analyzed outside CI."
+gate = "AA"
+[[hypothesis]]
+id = "H47"
+statement = "Rust reproduces the complete certified V29.18 2D signature (or a clearly-defined larger subset) within preregistered tolerances."
+gate = "AC"
+[[hypothesis]]
+id = "H48"
+statement = "Profile-guided/native optimization reduces full-volume 3D latency while preserving numerical equivalence."
+gate = "AB"
+
+# --- Final held-out configuration -- IMMUTABLE once evaluation begins -------------------
+[final_holdout]
+frozen = true
+cross_code_directions = ["spectral_to_fd", "fd_to_spectral"]
+seeds = [90, 91, 92, 93, 94, 95]
+added_value_margin = 0.02
+evaluations_allowed = 1
+note = "Evaluated once after development is frozen. The report records this file's SHA-256."
