@@ -43,6 +43,7 @@ _NUMERICAL_MODULES = (
     "itd_research.external_validation.experiments_3d",
     "itd_research.external_validation.hypotheses",
     "itd_research.external_validation.spectral_ns",
+    "itd_research.external_validation.piv_agreement",
     "itd_research.spectral3d",
     "itd_research.spectral3d.grids",
     "itd_research.spectral3d.operators",
@@ -61,6 +62,15 @@ _NUMERICAL_MODULES = (
     "itd_research.realtime",
     "itd_research.realtime.streaming",
     "itd_research.realtime.benchmarks",
+    "itd_research.prediction",
+    "itd_research.prediction.events",
+    "itd_research.prediction.ensemble",
+    "itd_research.prediction.evaluation",
+    "itd_research.generalization",
+    "itd_research.generalization.baselines",
+    "itd_research.generalization.transfer",
+    "itd_research.industrial",
+    "itd_research.industrial.readiness",
 )
 
 
