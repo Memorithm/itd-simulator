@@ -42,6 +42,7 @@ _NUMERICAL_MODULES = (
     "itd_research.external_validation.experiments",
     "itd_research.external_validation.experiments_3d",
     "itd_research.external_validation.hypotheses",
+    "itd_research.external_validation.spectral_ns",
 )
 
 
