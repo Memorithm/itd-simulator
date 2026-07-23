@@ -32,6 +32,12 @@ class ITDAnalysisResult:
     model_version: str = "itd_research.hard_prediction/logistic"
     solver_or_dataset_provenance: str = "unknown"
     repository_commit: str = "unknown"
+    # Mission 5 additions (section 18): full provenance for a product result.
+    analysis_id: str = "unset"
+    timestamp: str = "unset"
+    flow_profile: str = "unset"
+    protocol_hash: str = "unset"
+    model_hash: str = "unset"
 
     def is_alarm(self) -> bool:
         return (not self.abstained) and self.prediction >= 0.5
@@ -70,4 +76,9 @@ class ITDAnalysisResult:
             "model_version": self.model_version,
             "solver_or_dataset_provenance": self.solver_or_dataset_provenance,
             "repository_commit": self.repository_commit,
+            "analysis_id": self.analysis_id,
+            "timestamp": self.timestamp,
+            "flow_profile": self.flow_profile,
+            "protocol_hash": self.protocol_hash,
+            "model_hash": self.model_hash,
         }

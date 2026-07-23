@@ -90,6 +90,12 @@ _NUMERICAL_MODULES = (
     "itd_research.ood_near.campaign",
     "itd_research.full_volume",
     "itd_research.full_volume.benchmark",
+    "itd_research.profiles",
+    "itd_research.profiles.schema",
+    "itd_research.profiles.registry",
+    "itd_research.profiles.stability",
+    "itd_research.external_validation.cylinder_re3900",
+    "itd_research.external_validation.cylinder_re3900.metadata",
 )
 
 
