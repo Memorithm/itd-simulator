@@ -36,6 +36,12 @@ from itd_research.external_validation.experiments import (
     run_suite,
     synthetic_cfd_cases,
 )
+from itd_research.external_validation.experiments_3d import (
+    Comparison3DResult,
+    analytical_3d_cases,
+    external_3d_case,
+    run_3d_comparison,
+)
 from itd_research.external_validation.hypotheses import (
     equal_enstrophy_separation,
     vortex_merger_sequence,
@@ -62,6 +68,10 @@ __all__ = (
     "external_piv_case",
     "equal_enstrophy_separation",
     "vortex_merger_sequence",
+    "Comparison3DResult",
+    "run_3d_comparison",
+    "analytical_3d_cases",
+    "external_3d_case",
     "TransportDecomposition",
     "transport_decomposition",
     "translate_periodic",

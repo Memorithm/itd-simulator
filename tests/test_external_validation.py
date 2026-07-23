@@ -20,6 +20,10 @@ from itd_research.external_validation.experiments import (
     run_case,
     synthetic_cfd_cases,
 )
+from itd_research.external_validation.experiments_3d import (
+    analytical_3d_cases,
+    run_3d_comparison,
+)
 from itd_research.external_validation.hypotheses import (
     equal_enstrophy_separation,
     vortex_merger_sequence,
@@ -284,6 +288,32 @@ def test_vortex_merger_first_frame_has_no_temporal_deformation() -> None:
     frames = vortex_merger_sequence()
     # The first frame has no predecessor, so temporal deformation is exactly zero.
     assert frames[0]["itd_temporal_deformation"] == pytest.approx(0.0, abs=1e-12)
+
+
+# --------------------------------------------------------------------------- #
+# 3D ITD candidate vs established 3D diagnostics.                             #
+# --------------------------------------------------------------------------- #
+
+
+def test_abc_flow_3d_is_maximally_helical_and_rotation_criteria_agree() -> None:
+    cases = {case.name: case for case in analytical_3d_cases()}
+    abc = cases["abc_flow"]
+    assert abc.itd3d["normalized_helicity"] == pytest.approx(1.0, abs=1e-6)
+    # Q>0 and lambda2<0 both mark rotation, so they should largely agree.
+    assert abc.regions["jaccard_q_lambda2"] > 0.5
+
+
+def test_rigid_rotation_3d_has_no_orientation_dispersion_or_stretching() -> None:
+    from itd_research.diagnostics_3d import analytical_fields as af
+
+    grid = af.finite_grid_3d(17, -2.0, 2.0)
+    u, v, w = af.linear_velocity(af.rigid_rotation_gradient(1.3), grid)
+    result = run_3d_comparison(
+        u, v, w, grid.x, grid.y, grid.z, "finite", "rigid", "analytical", "solid body"
+    )
+    assert result.itd3d["orientation_dispersion"] == pytest.approx(0.0, abs=1e-9)
+    assert result.itd3d["stretching_rate"] == pytest.approx(0.0, abs=1e-9)
+    assert result.regions["rotation_fraction_q"] > 0.99  # rotation everywhere
 
 
 def test_external_piv_field_to_case_crops_masked_region() -> None:

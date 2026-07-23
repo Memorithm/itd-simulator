@@ -44,22 +44,53 @@ from the same 3D velocity-gradient tensor and validated on the same analytical
 fields (`tests/test_diagnostics_3d.py`). Helicity and stretching are
 complementary channels those criteria do not provide.
 
-## 4. Status and what remains
+## 4. Genuine external 3D DNS (JHTDB isotropic turbulence)
+
+A `32^3` block of native grid nodes was retrieved from the JHU Turbulence
+Database forced-isotropic-turbulence DNS (`isotropic1024coarse`, `GetVelocity`
+point query, public testing token) with `tools/datasets/fetch_jhtdb_cutout.py`.
+This is genuine independent 3D CFD data (component rms 0.5524; provenance and
+checksum in `datasets/registry.json`, entry `jhtdb_isotropic1024`). The raw DNS
+is not committed, per JHTDB terms; reproduce it with the fetch tool.
+
+Observed on the DNS field:
+
+| Channel / diagnostic | Value | Physical expectation | Verdict |
+|---|--:|---|---|
+| ITD orientation dispersion | 0.880 | near 1 (near-isotropic vorticity orientation) | as expected |
+| ITD normalized helicity | −0.044 | ≈ 0 (no preferred handedness) | as expected |
+| **ITD vortex-stretching rate** | **+2.88** | **> 0 (net stretching drives the cascade)** | **as expected** |
+| ITD localization | 14.2 | large (intermittent vorticity) | as expected |
+| Q>0 fraction | 0.281 | ~1/4–1/3 rotation-dominated | as expected |
+| lambda_2<0 fraction | 0.266 | close to Q>0 fraction | as expected |
+| Jaccard(Q>0, lambda_2<0) | 0.872 | high (both detect rotation) | as expected |
+| corr(\|omega\|, swirling strength) | 0.890 | high but < 1 | as expected |
+
+The three genuinely 3D channels behave correctly on real turbulence and none has
+a 2D analogue: orientation dispersion recovers the near-isotropic orientation
+(the vector replacement for sign-mixing works on real data), normalized helicity
+recovers the vanishing mean helicity, and the **positive** mean vortex-stretching
+rate recovers the cascade mechanism. That the two independent rotation criteria
+(Q and lambda_2) agree at Jaccard 0.87 also validates the established-diagnostic
+implementations on real data.
+
+## 5. Status and what remains
 
 * **Code verification:** complete on exact 3D analytical inputs.
 * **Numerical validation:** magnitude channels amplitude-invariant; nonlinear
   fields (Burgers, Taylor-Green) recovered to discretisation error.
-* **External validation:** **not done.** No genuine 3D CFD or volumetric
-  experimental dataset was processed (the environment has no solver and no
-  volumetric PIV/tomographic data; the one external field available here is 2D
-  PIV). Hypothesis H6 — that a meaningful 3D extension requires
-  orientation/stretching/helicity channels — is **supported analytically** by the
-  oracles above but awaits confirmation on real 3D data.
+* **External validation:** the candidate was run on a genuine external 3D DNS
+  field (§4) and its genuinely-3D channels are physically correct. This
+  **supports** hypothesis H6 — that a meaningful 3D extension requires
+  orientation/stretching/helicity channels. Remaining: multiple DNS regions/times
+  and datasets for statistics; a *volumetric experimental* (tomographic PIV)
+  field; and independent review. A single `32^3` cutout is evidence, not a full
+  statistical campaign.
 
-## 5. Decision
+## 6. Decision
 
 The 3D candidate **remains experimental**. No scalar aggregation of the channel
 vector is defined or treated as authoritative. Certification is deferred per the
 decision gates in `EXTERNAL_CFD_PIV_3D_VALIDATION_SPEC.md` §8 until the candidate
-is validated on genuine 3D CFD or volumetric experimental data and independently
-reviewed.
+is validated across genuine 3D CFD (multiple regions/datasets) and, ideally,
+volumetric experimental data, and independently reviewed.

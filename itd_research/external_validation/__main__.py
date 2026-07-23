@@ -28,6 +28,10 @@ from itd_research.external_validation.experiments import (
     run_suite,
     synthetic_cfd_cases,
 )
+from itd_research.external_validation.experiments_3d import (
+    analytical_3d_cases,
+    external_3d_case,
+)
 from itd_research.external_validation.hypotheses import (
     equal_enstrophy_separation,
     vortex_merger_sequence,
@@ -174,6 +178,8 @@ def _parse_args(argv: list[str] | None) -> argparse.Namespace:
     mode.add_argument("--full", action="store_true", help="same suite; alias reserved for larger runs.")
     parser.add_argument("--piv-npz", default=None,
                         help="path to an external PIV .npz (default: the committed excerpt fixture).")
+    parser.add_argument("--jhtdb-npz", default=None,
+                        help="path to a 3D DNS .npz (from fetch_jhtdb_cutout.py) for the 3D case.")
     parser.add_argument("--overwrite", action="store_true")
     parser.add_argument("--plots", action="store_true", help="also write a summary figure (needs matplotlib).")
     return parser.parse_args(argv)
@@ -196,10 +202,15 @@ def main(argv: list[str] | None = None) -> int:
     h1 = equal_enstrophy_separation()
     merger = vortex_merger_sequence()
 
+    comparison_3d = analytical_3d_cases()
+    if arguments.jhtdb_npz and Path(arguments.jhtdb_npz).exists():
+        comparison_3d.append(external_3d_case(arguments.jhtdb_npz))
+
     payload: dict[str, object] = {
         "environment": environment_metadata(),
         "external_piv_source": external_note,
         "results": [result.as_dict() for result in results],
+        "comparison_3d": [result.as_dict() for result in comparison_3d],
         "transport_h3": transport,
         "equal_enstrophy_h1": h1,
         "vortex_merger_h2": merger,
@@ -241,14 +252,21 @@ def main(argv: list[str] | None = None) -> int:
             region_counts.append(value)
     if not (region_counts and max(region_counts) >= 2 and region_counts[-1] == 1):
         failures.append("vortex_merger_h2: significant rotation regions should go 2 -> 1")
+    # 3D: the ABC/Beltrami oracle must give normalized helicity 1 and Q>0 ~ lambda2<0.
+    for result in comparison_3d:
+        if result.name == "abc_flow":
+            if abs(result.itd3d["normalized_helicity"] - 1.0) > 1e-6:
+                failures.append("comparison_3d abc_flow: normalized helicity should be 1")
+            if result.regions["jaccard_q_lambda2"] < 0.5:
+                failures.append("comparison_3d abc_flow: Q>0 and lambda2<0 should largely agree")
 
     if failures:
         print("external-validation invariants FAILED:")
         for message in failures:
             print(f"  - {message}")
         return 1
-    print(f"external-validation suite: {len(results)} cases, invariants PASSED "
-          f"(H3 residual fraction {transport['residual_fraction']:.3f}; "
+    print(f"external-validation suite: {len(results)} 2D + {len(comparison_3d)} 3D cases, "
+          f"invariants PASSED (H3 residual fraction {transport['residual_fraction']:.3f}; "
           f"H1 localization ratio {h1['localization_ratio']:.1f}x).")
     return 0
 

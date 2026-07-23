@@ -11,8 +11,9 @@ Reproduce every number with:
 
 ```
 python -m itd_research.external_validation --quick --output <dir>
-# full external field (after downloading, see DATASET_PROVENANCE.md):
-python -m itd_research.external_validation --output <dir> --piv-npz <biofilm_full.npz>
+# full external fields (after downloading, see DATASET_PROVENANCE.md):
+python -m itd_research.external_validation --output <dir> \
+    --piv-npz <biofilm_full.npz> --jhtdb-npz <jhtdb_iso_32.npz>
 ```
 
 ## 1. What each data class can and cannot support
@@ -21,7 +22,8 @@ python -m itd_research.external_validation --output <dir> --piv-npz <biofilm_ful
 |---|---|---|
 | **analytical** | rigid rotation, pure strain, simple shear, strain+shear, Lamb-Oseen, vortex pair | code verification; exact shear-vs-rotation behaviour |
 | **synthetic** | tanh mixing layer, Stuart roll-up, Taylor-Green, Karman street | qualitative diagnostic comparison; **not** empirical validation |
-| **external** | biofilm PIV mean boundary layer (Zenodo 1175014, CC-BY-4.0) | genuine empirical evidence on measured velocities |
+| **external (2D)** | biofilm PIV mean boundary layer (Zenodo 1175014, CC-BY-4.0) | genuine empirical evidence on measured velocities |
+| **external (3D)** | JHTDB isotropic-turbulence DNS cutout (`isotropic1024coarse`) | genuine independent 3D CFD evidence for the 3D candidate |
 
 Synthetic fields stand in for CFD solver output this environment cannot produce
 (no OpenFOAM/VTK). **A synthetic field is never presented as external empirical
@@ -175,19 +177,44 @@ Each status states the evidence class explicitly.
 | **H3** | Transport compensation reduces false temporal response from pure translation | **supported (controlled)** | Residual/Eulerian = 0.033 on an exact spectral translation; demonstrated on synthetic controlled data, not yet on external time series |
 | **H4** | ITD components are stable under reasonable mesh/PIV-processing changes | **supported** | External field metrics stable under 1×/2×/3× decimation (§5); consistent with the Mission-1 convergence/sensitivity studies |
 | **H5** | ITD is complementary to Q/swirling/lambda_2, not a duplicate | **supported** | On real data Jaccard(high|ω|,Q>0)=0.245 and corr(|ω|,swirl)=0.54; on pure shear the overlap is exactly 0. ITD's vorticity basis captures different structure than rotation-based methods |
-| **H6** | A meaningful 3D extension needs orientation/stretching/helicity channels | **supported (analytical)** | The 2D sign-mixing has no scalar 3D analogue; the ABC helicity oracle and Burgers stretching oracle (`tests/test_itd_3d.py`) confirm genuinely 3D channels; validation on external 3D data is still pending |
+| **H6** | A meaningful 3D extension needs orientation/stretching/helicity channels | **supported** | Confirmed on a genuine JHTDB DNS cutout (§9): orientation dispersion 0.88, normalized helicity ≈ 0, and a **positive** mean vortex-stretching rate (+2.9) — all genuinely 3D, physically correct, and without 2D analogue. Analytical oracles (ABC helicity = 1, Burgers stretching = a) confirm the code. Remaining: multiple regions/datasets and volumetric experimental data |
 
 ## 7. Decision gates (unchanged conclusion)
 
 Per `EXTERNAL_CFD_PIV_3D_VALIDATION_SPEC.md` §8, **no new certified revision is
 warranted**. Met: at least one real public PIV dataset processed with complete
-provenance (Zenodo 1175014); complementary diagnostic information demonstrated;
-metrics stable under preprocessing; explicit dimensional conventions; limitations
-documented. **Not met**: reproducible independent CFD executed here (environment
-lacks a solver — synthetic stand-ins only); an externally *annotated* transition
-processed (H2); a time-resolved external series for H2/H3 on real data; the 3D
-candidate validated on volumetric data (H6). Independent review is recommended
-before any certification is considered. The 3D candidate remains experimental.
+provenance (Zenodo 1175014); genuine independent 3D DNS processed (JHTDB, §7b);
+complementary diagnostic information demonstrated; metrics stable under
+preprocessing; explicit dimensional conventions; limitations documented.
+**Not met**: reproducible independent CFD *solver run* executed here (environment
+lacks a solver — the JHTDB DNS is queried, not solved locally; the 2D CFD cases
+are synthetic stand-ins); an externally *annotated* transition processed (H2); a
+time-resolved external series for H2/H3 on real data; the 3D candidate validated
+across *multiple* DNS regions/datasets and on *volumetric experimental* data
+(a single 32³ cutout is evidence, not a campaign). Independent review is
+recommended before any certification is considered. The 3D candidate remains
+experimental.
+
+## 7b. External 3D DNS turbulence (JHTDB)
+
+A `32^3` block of native grid nodes from the JHU Turbulence Database forced
+isotropic turbulence DNS (`isotropic1024coarse`, `GetVelocity` point query,
+public testing token; `tools/datasets/fetch_jhtdb_cutout.py`) — genuine
+independent 3D CFD, component rms 0.5524, raw data not committed per JHTDB terms.
+
+| Quantity | Value | Expectation |
+|---|--:|---|
+| ITD orientation dispersion | 0.880 | ≈ 1 (near-isotropic orientation) |
+| ITD normalized helicity | −0.044 | ≈ 0 (no preferred handedness) |
+| ITD vortex-stretching rate | +2.88 | > 0 (net stretching, the cascade) |
+| Q>0 fraction / lambda_2<0 fraction | 0.281 / 0.266 | comparable |
+| Jaccard(Q>0, lambda_2<0) | 0.872 | high (both detect rotation) |
+| corr(\|omega\|, swirling strength) | 0.890 | high, < 1 |
+
+The genuinely 3D ITD channels — which have no 2D analogue — are all physically
+correct on real turbulence, and the two established rotation criteria (Q and
+lambda_2) agree at Jaccard 0.87. Full details in `ITD_3D_CANDIDATE_REPORT.md`.
+This is one cutout: evidence, not a statistical campaign.
 
 ## 8. Limitations
 

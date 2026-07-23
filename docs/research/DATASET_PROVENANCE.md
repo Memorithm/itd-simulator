@@ -64,12 +64,29 @@ redistributable excerpt is committed as a fixture.
   recorded as a verified, redistributable external field for ingestion/provenance
   completeness and is honestly out of scope for the vector-field study.
 
-### `jhtdb_isotropic1024`, `piv_challenge_candidate` — download recipes
+### `jhtdb_isotropic1024` — used as external 3D empirical evidence
 
-Known genuine external sources (JHU Turbulence Database DNS; PIV Challenge cases)
-kept as verified download recipes for future 3D and additional 2D validation.
-`redistribution_allowed=false`: they must be fetched by the user from their
-portals under their own terms, then checksum-verified.
+* **Title:** JHU Turbulence Database, forced isotropic turbulence DNS
+  (`isotropic1024coarse`). **DOI:** 10.1080/14685240802376389.
+* **Licence:** open for research use under the JHTDB terms and citation policy;
+  `redistribution_allowed=false`, so the raw DNS is **not committed**.
+* **Retrieved here:** a `32^3` block of native grid nodes at origin
+  `(200, 300, 400)`, spacing `2pi/1024`, `t=0`, via the `GetVelocity` SOAP point
+  query with the public testing token, using
+  `tools/datasets/fetch_jhtdb_cutout.py` (standard-library `urllib` only — no
+  SOAP/HDF5 dependency).
+* **SHA-256 (retrieved `.npz`):**
+  `74b81f6d27da64b55cdeb132c0500c9deab01133989a8663c6599c19b9d67186`
+  (component rms 0.5524).
+* **Use:** the 3D ITD candidate vs Q/lambda_2/swirling comparison
+  (`ITD_3D_CANDIDATE_REPORT.md` §4). Reproduce with the fetch tool and verify the
+  checksum; CI itself uses only the analytical 3D oracles (no network).
+
+### `piv_challenge_candidate` — download recipe
+
+PIV Challenge reference cases kept as a verified download recipe for additional
+2D validation. `redistribution_allowed=false`: fetch from the portal under its
+terms, then checksum-verify.
 
 ### `synthetic_piv_small` — CI fixture only
 
