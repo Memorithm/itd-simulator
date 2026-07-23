@@ -36,6 +36,13 @@ from itd_research.external_validation.hypotheses import (
     equal_enstrophy_separation,
     vortex_merger_sequence,
 )
+from itd_research.external_validation.spectral_ns import (
+    energy_enstrophy,
+    gaussian_vortex_pair,
+    simulate_vorticity,
+    spectral_grid,
+    velocity_from_vorticity,
+)
 from itd_research.external_validation.transport import (
     translate_periodic,
     transport_decomposition,
@@ -76,6 +83,46 @@ def _transport_demonstration() -> dict[str, object]:
     record["advecting_velocity"] = [u_advect, v_advect]
     record["delta_time"] = delta_time
     return record
+
+
+def _spectral_ns_demonstration() -> dict[str, object]:
+    """Run the in-environment NS solver: conservation + transport-vs-deformation.
+
+    A short inviscid run checks energy/enstrophy conservation (solver validation);
+    a viscous step checks that the transport-compensated residual recovers the
+    exact viscous material derivative ``nu*laplacian(omega)`` on genuine dynamics.
+    """
+    grid = spectral_grid(48, 2.0 * np.pi)
+    x = grid.coordinates
+    omega0 = gaussian_vortex_pair(grid, circulation=2.0, core=0.6, separation=1.6)
+
+    inviscid = simulate_vorticity(omega0, grid, 0.0, 0.002, steps=150, record_every=150)
+    energy0, enstrophy0 = energy_enstrophy(inviscid.vorticity[0], grid)
+    energy1, enstrophy1 = energy_enstrophy(inviscid.vorticity[-1], grid)
+    energy_drift = abs(energy1 - energy0) / energy0
+    enstrophy_drift = abs(enstrophy1 - enstrophy0) / enstrophy0
+
+    viscosity = 0.01
+    warmed = simulate_vorticity(omega0, grid, viscosity, 0.001, steps=200, record_every=200).vorticity[-1]
+    delta_time = 0.001
+    after = simulate_vorticity(warmed, grid, viscosity, delta_time, steps=1, record_every=1).vorticity[-1]
+    u, v = velocity_from_vorticity(warmed, grid)
+    decomposition = transport_decomposition(warmed, after, u, v, x, x, delta_time, "periodic")
+    expected = viscosity * np.fft.ifft2(-grid.k_squared * np.fft.fft2(warmed)).real
+    residual_rms = decomposition.residual_rms
+    viscous_match = (
+        float(np.sqrt(np.mean((decomposition.material_residual - expected) ** 2))) / residual_rms
+        if residual_rms > 0.0 else 0.0
+    )
+    return {
+        "energy_drift": energy_drift,
+        "enstrophy_drift": enstrophy_drift,
+        "eulerian_rms": decomposition.eulerian_rms,
+        "advective_rms": decomposition.advective_rms,
+        "residual_rms": residual_rms,
+        "residual_fraction": decomposition.residual_fraction,
+        "viscous_match_relative_error": viscous_match,
+    }
 
 
 def _check_invariants(results: list[ExperimentResult]) -> list[str]:
@@ -199,6 +246,7 @@ def main(argv: list[str] | None = None) -> int:
 
     results = run_suite(cases)
     transport = _transport_demonstration()
+    spectral_ns = _spectral_ns_demonstration()
     h1 = equal_enstrophy_separation()
     merger = vortex_merger_sequence()
 
@@ -212,6 +260,7 @@ def main(argv: list[str] | None = None) -> int:
         "results": [result.as_dict() for result in results],
         "comparison_3d": [result.as_dict() for result in comparison_3d],
         "transport_h3": transport,
+        "spectral_ns": spectral_ns,
         "equal_enstrophy_h1": h1,
         "vortex_merger_h2": merger,
     }
@@ -252,6 +301,12 @@ def main(argv: list[str] | None = None) -> int:
             region_counts.append(value)
     if not (region_counts and max(region_counts) >= 2 and region_counts[-1] == 1):
         failures.append("vortex_merger_h2: significant rotation regions should go 2 -> 1")
+    # In-environment NS solver: inviscid conservation and the transport residual
+    # must recover the exact viscous material derivative on genuine dynamics.
+    if spectral_ns["energy_drift"] > 1e-6 or spectral_ns["enstrophy_drift"] > 1e-6:  # type: ignore[operator]
+        failures.append("spectral_ns: inviscid energy/enstrophy not conserved")
+    if spectral_ns["viscous_match_relative_error"] > 0.20:  # type: ignore[operator]
+        failures.append("spectral_ns: transport residual does not recover nu*laplacian(omega)")
     # 3D: the ABC/Beltrami oracle must give normalized helicity 1 and Q>0 ~ lambda2<0.
     for result in comparison_3d:
         if result.name == "abc_flow":

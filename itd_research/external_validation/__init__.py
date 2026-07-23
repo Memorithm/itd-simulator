@@ -52,6 +52,14 @@ from itd_research.external_validation.hypotheses import (
     equal_enstrophy_separation,
     vortex_merger_sequence,
 )
+from itd_research.external_validation.spectral_ns import (
+    SimulationResult,
+    energy_enstrophy,
+    gaussian_vortex_pair,
+    simulate_vorticity,
+    spectral_grid,
+    velocity_from_vorticity,
+)
 from itd_research.external_validation.transport import (
     TransportDecomposition,
     translate_periodic,
@@ -89,4 +97,10 @@ __all__ = (
     "transport_decomposition",
     "transport_decomposition_3d",
     "translate_periodic",
+    "spectral_grid",
+    "gaussian_vortex_pair",
+    "simulate_vorticity",
+    "velocity_from_vorticity",
+    "energy_enstrophy",
+    "SimulationResult",
 )
