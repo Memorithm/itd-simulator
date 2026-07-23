@@ -83,6 +83,13 @@ _NUMERICAL_MODULES = (
     "itd_research.product",
     "itd_research.product.result",
     "itd_research.product.pipeline",
+    "itd_research.cross_code",
+    "itd_research.cross_code.fd_solver",
+    "itd_research.cross_code.comparison",
+    "itd_research.ood_near",
+    "itd_research.ood_near.campaign",
+    "itd_research.full_volume",
+    "itd_research.full_volume.benchmark",
 )
 
 
