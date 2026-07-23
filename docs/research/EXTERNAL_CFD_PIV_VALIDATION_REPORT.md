@@ -173,7 +173,7 @@ Each status states the evidence class explicitly.
 | # | Hypothesis | Status | Evidence |
 |---|---|---|---|
 | **H1** | At similar global enstrophy, the ITD structural vector distinguishes differently organised fields | **supported** | Controlled equal-enstrophy pair (§5b): identical enstrophy (0.49840), ITD localization separated ~55× and heterogeneity 8×. Demonstrated on constructed fields, not yet on an external equal-enstrophy pair |
-| **H2** | ITD channels detect annotated transitions | **supported** | Synthetic vortex merger (§5c) and, on real data, the JHTDB transitional boundary layer (§7c): across streamwise stations the ITD-independent fluctuation intensity rises ~3× at the (externally characterised) transition onset while ITD localization falls monotonically 12 → 2 and ITD intensity peaks. Single-snapshot spatial transition; a time-tracked event is still future work |
+| **H2** | ITD channels detect annotated transitions | **supported** | Synthetic vortex merger (§5c) and, on real data, the JHTDB transitional boundary layer (§7c): in **space**, the fluctuation intensity rises ~3× at the (externally characterised) onset while ITD localization falls 12 → 2; in **time**, a turbulent spot at the transition midpoint bursts the fluctuation intensity 2.1× as it passes the station. ITD channels track both. Still single-station/single-window: indicative, not a statistical intermittency campaign |
 | **H3** | Transport compensation reduces false temporal response from pure translation | **supported** | Synthetic pure translation: residual/Eulerian = 0.033 (~97 % removed). Genuine time-resolved DNS (§7b): 48 % of the raw Eulerian change of \|omega\| removed, the rest genuine deformation (stretching). The transport-vs-deformation split works on real external data |
 | **H4** | ITD components are stable under reasonable mesh/PIV-processing changes | **supported** | External field metrics stable under 1×/2×/3× decimation (§5); consistent with the Mission-1 convergence/sensitivity studies |
 | **H5** | ITD is complementary to Q/swirling/lambda_2, not a duplicate | **supported** | On real data Jaccard(high|ω|,Q>0)=0.245 and corr(|ω|,swirl)=0.54; on pure shear the overlap is exactly 0. ITD's vorticity basis captures different structure than rotation-based methods |
@@ -190,11 +190,11 @@ time-resolved external series for H3 (§7b); complementary diagnostic informatio
 demonstrated; metrics stable under preprocessing; explicit dimensional
 conventions; limitations documented. **Not met**: an independent CFD *solver run*
 executed here (the JHTDB DNS is queried, not solved locally; the 2D CFD cases are
-synthetic stand-ins); a *time-tracked* transition event (the transition results
-are single-snapshot spatial scans); *volumetric experimental* data for the 3D
-candidate; and a full statistical campaign (the ensembles are small). Independent
-review is recommended before any certification is considered. The 3D candidate
-remains experimental.
+synthetic stand-ins); *volumetric experimental* data for the 3D candidate; and
+full statistical campaigns (the ensembles are small, and the time-tracked
+transition is a single station over one window). Independent review is
+recommended before any certification is considered. The 3D candidate remains
+experimental.
 
 ## 7b. External 3D DNS turbulence (JHTDB)
 
@@ -251,6 +251,20 @@ channels track the same transition: intensity peaks at onset and localization
 falls monotonically 12 → 2 as the flow fills with fine-scale vorticity. So an
 ITD-independent marker and the ITD channels agree on an externally characterised
 transition in real data.
+
+### Time-tracked intermittency (a spot passing in time)
+
+The transitional boundary layer is time-resolved, so the same station can be
+queried at successive times. At the transition midpoint (`x = 270`, where the
+flow is laminar part of the time and turbulent when a spot passes), 15 frames
+over `t = 0 … 70` (`temporal_intermittency`) show the fluctuation intensity
+**bursting from ≈ 0.054 to ≈ 0.112 (2.1×) around `t ≈ 30–35`** and quieting
+again, with the ITD localization dipping through the burst. This is the temporal
+counterpart of the streamwise scan — a turbulent spot detected as it passes the
+station in *time*, not just in space — and it addresses the "time-tracked
+transition" item directly, on genuine external DNS. It remains a single station
+over one window: indicative, not a statistical characterisation of the
+intermittency factor.
 
 ## 8. Limitations
 
