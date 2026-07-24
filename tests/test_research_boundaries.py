@@ -110,6 +110,23 @@ _NUMERICAL_MODULES = (
     "itd_research.mission7.analysis",
     "itd_research.mission7.fixtures",
     "itd_research.mission7.campaign",
+    "itd_research.mission8",
+    "itd_research.mission8.schema",
+    "itd_research.mission8.vortex_regions",
+    "itd_research.mission8.structural_features",
+    "itd_research.mission8.statistics",
+    "itd_research.mission8.baselines",
+    "itd_research.mission8.event_labels",
+    "itd_research.mission8.ingestion",
+    "itd_research.mission8.fixtures",
+    "itd_research.mission8.prediction",
+    "itd_research.mission8.campaign",
+    "itd_research.mission8.localization",
+    "itd_research.mission8.transfer",
+    "itd_research.mission8.degradation",
+    "itd_research.mission8.descriptive",
+    "itd_research.mission8.ood",
+    "itd_research.mission8.profiles",
 )
 
 
