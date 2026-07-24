@@ -49,7 +49,7 @@ class StructuralTrajectory:
 
     def matrix(self, names: tuple[str, ...]) -> FloatArray:
         """Column-stack requested channel/temporal names in the given order."""
-        columns = []
+        columns: list[FloatArray] = []
         for name in names:
             if name in self.channels:
                 columns.append(np.asarray(self.channels[name], dtype=np.float64))

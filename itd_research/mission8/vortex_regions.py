@@ -162,8 +162,8 @@ def max_nearest_distance(mask_a: BoolArray, mask_b: BoolArray) -> float:
     O(n_a * n_b) on cell coordinates; only used on the tiny manufactured/oracle fields and
     on downsampled region masks, never on a raw full-resolution external volume.
     """
-    pa = np.argwhere(mask_a).astype(np.float64)
-    pb = np.argwhere(mask_b).astype(np.float64)
+    pa: FloatArray = np.argwhere(mask_a).astype(np.float64)
+    pb: FloatArray = np.argwhere(mask_b).astype(np.float64)
     if pa.size == 0 or pb.size == 0:
         return float("nan")
 

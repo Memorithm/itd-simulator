@@ -79,7 +79,7 @@ def evaluate_topology_response_consistency(
     for name in channels:
         shifts: list[float] = []
         for _sequence_id, traj, event_frames in sequences_with_events:
-            values = np.asarray(traj.channels[name], dtype=np.float64)
+            values: FloatArray = np.asarray(traj.channels[name], dtype=np.float64)
             n = values.size
             for frame in event_frames:
                 pre_lo, pre_hi = max(0, frame - window), frame

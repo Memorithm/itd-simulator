@@ -27,10 +27,10 @@ def temporal_rate(values: list[float], times: list[float]) -> list[float]:
     Shared by ``structural_features`` (ITD_TEMPORAL) and ``baselines``
     (BASELINE_TEMPORAL) so both use the identical, deterministic definition.
     """
-    v = np.asarray(values, dtype=np.float64)
-    t = np.asarray(times, dtype=np.float64)
+    v: FloatArray = np.asarray(values, dtype=np.float64)
+    t: FloatArray = np.asarray(times, dtype=np.float64)
     n = v.size
-    rate = np.zeros(n, dtype=np.float64)
+    rate: FloatArray = np.zeros(n, dtype=np.float64)
     if n < 2:
         return rate.tolist()
     rate[0] = (v[1] - v[0]) / max(t[1] - t[0], 1e-12)

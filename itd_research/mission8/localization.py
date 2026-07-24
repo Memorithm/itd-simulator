@@ -81,12 +81,12 @@ def evaluate_nonredundancy(
     event label after controlling for enstrophy. Per the preregistration, ``|rho| < 0.3``
     alone is explicitly NOT sufficient.
     """
-    enstrophy = np.asarray(baseline.channels["enstrophy"], dtype=np.float64)
+    enstrophy: FloatArray = np.asarray(baseline.channels["enstrophy"], dtype=np.float64)
     label_f = labels.astype(np.float64)
     per_channel = []
     non_redundant = []
     for name in channels:
-        values = np.asarray(structural.channels[name], dtype=np.float64)
+        values: FloatArray = np.asarray(structural.channels[name], dtype=np.float64)
         rho_s = spearman_correlation(values, enstrophy)
         rho_p = pearson_correlation(values, enstrophy)
         partial = partial_correlation(values, label_f, enstrophy)
