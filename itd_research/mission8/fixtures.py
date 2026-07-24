@@ -12,7 +12,7 @@ is exactly the "axis permutation" failure mode Mission 8's oracles exist to catc
 from __future__ import annotations
 
 from pathlib import Path
-from typing import TypeAlias
+from typing import Any, TypeAlias
 
 import numpy as np
 from numpy.typing import NDArray
@@ -39,7 +39,7 @@ def _gaussian_swirl_3d(
     never reintroduces a spurious high-vorticity tail (unlike an algebraic Lamb-Oseen
     ``1/r^2`` tail, which does wrap around on a small periodic box).
     """
-    grids = np.meshgrid(z, y, x, indexing="ij")
+    grids: Any = np.meshgrid(z, y, x, indexing="ij")
     yg: FloatArray = np.asarray(grids[1])
     xg: FloatArray = np.asarray(grids[2])
     dx, dy = xg - cx, yg - cy
@@ -151,7 +151,7 @@ def apply_noise(u: FloatArray, v: FloatArray, w: FloatArray, level: float, seed:
 def pure_shear_control(n: int = 24, rate: float = 1.0) -> tuple[FloatArray, ...]:
     """Oracle J: uniform shear, no vortex core -- Q<=0 everywhere, zero regions expected."""
     x, y, z = _grid(n)
-    shear_grids = np.meshgrid(z, y, x, indexing="ij")
+    shear_grids: Any = np.meshgrid(z, y, x, indexing="ij")
     yg: FloatArray = np.asarray(shear_grids[1])
     u = rate * (yg - np.pi)
     v = np.zeros_like(u)
