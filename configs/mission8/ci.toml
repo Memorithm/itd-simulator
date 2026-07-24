@@ -1,0 +1,26 @@
+# Bounded, offline CI configuration for the Mission 8 structural/topological quick suite.
+# The `validate` subcommand (`python -m itd_research.mission8 validate --config
+# configs/mission8/ci.toml --output ...`) uses tiny deterministic manufactured-oracle
+# fixtures regardless of this file's contents; it is kept so the CI command line matches
+# the documented protocol and so the quick knobs are visible. Never triggers a network
+# fetch. Manufactured fixtures are CODE-VERIFICATION only, never external evidence.
+
+schema = "itd-mission8-ci/1"
+
+[fixture]
+nodes = 24
+n_frames = 16
+n_dev_sequences = 2
+n_holdout_sequences = 2
+min_cells = 8
+horizon = 2
+bootstrap = 200
+note = "tiny CI pipeline check on a manufactured merger oracle, NOT a scientific result"
+
+[modules_exercised]
+primary_test = true          # saturation screen + H61/H62 (expected saturated -> inconclusive on this toy oracle)
+topology_response = true     # H64
+lead_time = true              # H70 (established-only and ITD-only)
+channel_stability = true     # H71
+structural_ood = true        # H73 (itd_research.ood_shift reused)
+profile_benchmark = true     # H74 (profiles.py)

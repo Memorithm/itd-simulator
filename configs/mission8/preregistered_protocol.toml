@@ -1,0 +1,236 @@
+# Mission 8 -- preregistered protocol: non-redundant structural events and external
+# topological validation.
+#
+# Committed BEFORE final external holdout evaluation. Its SHA-256 is recorded in
+# docs/research/MISSION8_FINAL_REPORT.md. Once evaluation begins the [final_holdout]
+# section and locked decisions are IMMUTABLE. Signs are never reversed after viewing
+# holdout labels; the margin is not lowered; a below-chance or saturated baseline is
+# never used as evidence; the event definition is never chosen to flatter ITD; task
+# selection uses physical relevance and this protocol, never final ITD performance.
+
+schema = "itd-mission8-preregistration/1"
+baseline_commit = "6480973a3009c1856ce4907c34a032fb442b7a98"
+model_revision_preserved = "ITD V29.18"
+determinism = { pythonhashseed = 0, threads = 1, dtype = "float64", rng = "numpy.default_rng(seed)" }
+added_value_margin = 0.02
+saturation_threshold = 0.98
+
+# --- Primary scientific question ---------------------------------------------------------
+# Do ITD structural channels (NOT `intensity`) provide reproducible, transferable and
+# incrementally useful information for external vortex-STRUCTURE/TOPOLOGY events that
+# competent established structural diagnostics do not already capture? Mission 7 saturated
+# an enstrophy-MAGNITUDE event (established AUC 1.000, added value +0.000); Mission 8 must
+# not repeat that experiment and instead targets topology (core count changes: merger,
+# split) on genuine external DNS, screened for saturation before being used as the H62 test.
+
+# --- Datasets (real; verified reachable and fetched this session) -----------------------
+[[dataset]]
+id = "jhtdb_isotropic1024coarse_topology"
+role = "primary_external_structural_source"
+institution = "Johns Hopkins University (JHTDB)"
+kind = "DNS, forced isotropic turbulence, 3D velocity, time-resolved"
+access = "public GetVelocity SOAP service, token edu.jhu.pha.turbulence.testing-201406"
+cutout = { origin = [100, 200, 300], size = 24, frames = 40, dt = 0.1 }
+licence = "JHTDB terms of use + citation policy (https://turbulence.pha.jhu.edu)"
+redistribution = "raw NOT committed; reproduced via tools/datasets/fetch_jhtdb_cutout.py"
+evidence_class = "external-DNS"
+independent_of_repo = true
+
+[[dataset]]
+id = "jhtdb_mhd1024_topology"
+role = "second_comparable_source_for_H65"
+institution = "Johns Hopkins University (JHTDB)"
+kind = "DNS, forced MHD turbulence, 3D velocity, time-resolved"
+access = "public GetVelocity SOAP service (same modality as the primary source)"
+cutout = { origin = [100, 200, 300], size = 24, frames = 24, dt = 0.1 }
+licence = "JHTDB terms of use + citation policy"
+evidence_class = "external-DNS"
+independent_of_repo = true
+comparability_note = "Same institution and access modality as the primary source (NOT an \
+  independent institution); different forcing PHYSICS (MHD Lorentz force vs pure \
+  hydrodynamic). Reported honestly as within-institution cross-physics transfer, never \
+  claimed as cross-institution. This is the best comparable second 3D time-resolved \
+  source reachable in this session."
+
+# --- Honestly blocked targets (attempted, not secured) -----------------------------------
+[[blocked_target]]
+id = "cylinder_re3900"
+reason = "GB-scale publication dataset; not fetchable as a manageable file (unchanged since Mission 6/7)"
+status = "blocked"
+[[blocked_target]]
+id = "time_resolved_coherent_vortex_piv"
+reason = "no small redistributable time-resolved coherent-vortex PIV/PTV secured (classic mirrors 403/404, as in Mission 7)"
+status = "blocked"
+[[blocked_target]]
+id = "jhtdb_transition_bl"
+reason = "JHTDB GetVelocity returned HTTP 500 for this dataset from this session (non-uniform grid; node-index mode likely unsupported)"
+status = "blocked-by-format"
+
+# --- Saturation screen (locked; applied on DEVELOPMENT frames only) ----------------------
+[saturation_screen]
+rule = "if established_baseline_roc_auc >= 0.98 or established_baseline_pr_auc >= 0.98 on DEVELOPMENT data, task_status = saturated"
+policy = "a saturated task is retained for descriptive/ingestion/physical/regression use only; it is NEVER the primary H62 test"
+candidate_tasks = [
+  "jhtdb_isotropic_core_topology_change (primary candidate: core merge/split via Q>0 connected components)",
+  "jhtdb_isotropic_enstrophy_burst (Mission 7 task; RETAINED ONLY as a known-saturated regression reference, excluded from H62)",
+]
+selection_policy = "candidates are chosen for physical relevance (topology change is the mission's target phenomenon) BEFORE any ITD score is examined; the saturation screen uses established-only performance, never ITD performance"
+
+# --- Independent structural event (ITD-independent) --------------------------------------
+[event]
+event_types = ["core_merger", "core_split"]
+definition = "connected components of Q(gradient) > 0 (established Q-criterion, NOT ITD); \
+  merger = component count drops to and persistently holds a lower count; split = count \
+  rises to and persistently holds a higher count (mirrors the certified prediction/events.py \
+  2D persistence logic, extended to 3D 6-connectivity)"
+independence = "uses ONLY the established Q-criterion field; ITD channels never participate"
+provenance_fields = ["event_id", "event_type", "event_time", "event_uncertainty",
+  "label_source", "label_method", "source_file", "source_index"]
+disagreement_policy = "if the core-count event and an alternative (lambda2<0 components) disagree, both are reported; the preregistered Q-based label is primary and is not replaced post-hoc"
+
+# --- ITD feature sets (existing channels only; no new channels) --------------------------
+[itd_feature_sets]
+ITD_MAGNITUDE_CONTROL = ["intensity"]
+ITD_STRUCTURAL = ["localization", "heterogeneity", "roughness"]
+ITD_ORIENTATION = ["orientation_dispersion"]
+ITD_TEMPORAL = ["d_localization_dt", "d_heterogeneity_dt", "d_orientation_dispersion_dt"]
+ITD_3D_NONREDUNDANT = ["localization", "heterogeneity", "roughness", "orientation_dispersion",
+  "helicity_mean", "normalized_helicity", "stretching_rate"]
+ITD_ALL_EXISTING = ["intensity", "localization", "heterogeneity", "roughness",
+  "orientation_dispersion", "helicity_mean", "normalized_helicity", "stretching_rate"]
+primary_test_set = "ITD_3D_NONREDUNDANT"
+control_only = "ITD_MAGNITUDE_CONTROL (intensity) is a redundancy/consistency control, never the primary evidence per Mission 8 instructions"
+
+# --- Established baseline groups ----------------------------------------------------------
+[baseline_groups]
+BASELINE_MAGNITUDE = ["enstrophy", "vorticity_rms"]
+BASELINE_STRUCTURAL = ["q_positive_fraction", "lambda2_negative_fraction", "swirl_mean", "region_count"]
+BASELINE_CORE_TRACKING = ["mean_region_volume", "region_volume_std", "centroid_displacement_rate"]
+BASELINE_TEMPORAL = ["d_region_count_dt", "d_q_positive_fraction_dt"]
+BASELINE_COMPETENT_COMBINED = "union of BASELINE_MAGNITUDE + BASELINE_STRUCTURAL + BASELINE_CORE_TRACKING + BASELINE_TEMPORAL"
+primary_comparison = "BASELINE_COMPETENT_COMBINED vs BASELINE_COMPETENT_COMBINED + ITD_STRUCTURAL (ITD_3D_NONREDUNDANT)"
+
+# --- Partitions + statistics --------------------------------------------------------------
+[partitions]
+policy = "temporal blocks per sequence; adjacent frames never split across train/test; grouping unit = sequence (independent unit for bootstrap)"
+development_fraction = 0.625
+holdout_fraction = 0.375
+
+[statistics]
+independent_unit = "DNS sequence (grouped bootstrap resamples whole sequences, never individual frames)"
+bootstrap_resamples = 2000
+bootstrap_seed = 6161
+metrics = ["roc_auc", "pr_auc", "event_recall", "false_alerts_per_unit_time", "iou", "dice",
+  "centroid_error", "core_count_accuracy", "lead_time"]
+h62_rule = "performance(BASELINE_COMPETENT_COMBINED + ITD_STRUCTURAL) - performance(BASELINE_COMPETENT_COMBINED) >= added_value_margin (0.02) with grouped-bootstrap CI excluding 0"
+h63_rule = "non-redundancy requires partial correlation controlling for enstrophy AND a grouped-ablation predictive/localization effect; |rho|<0.3 alone is NOT sufficient"
+below_chance_policy = "a saturated (>=0.98) or below-chance baseline is never used as evidence of ITD value"
+
+# --- Manufactured oracles (software/interpretation, not external evidence) ---------------
+[oracles]
+list = ["A_two_separated_vortices", "B_controlled_merger", "C_splitting_structure",
+  "D_rigid_translation", "E_rotation", "F_amplitude_scaling", "G_resolution_sweep",
+  "H_masking", "I_noise", "J_no_vortex_shear_control"]
+note = "deterministic, offline, no external dependency; validate the region/topology/feature machinery before any external claim is made"
+
+# --- Degradation levels --------------------------------------------------------------------
+[degradation]
+noise_levels = [0.0, 0.01, 0.02, 0.05, 0.10]
+mask_levels = [0.0, 0.05, 0.10, 0.20, 0.40]
+downsample_factors = [1, 2, 4, 8]
+partial_observation = ["full", "central_crop", "upstream_half", "downstream_half", "core_partial", "core_outside_view"]
+report_separately = ["baseline_degradation", "itd_degradation", "combined_degradation", "itd_incremental_value_under_degradation"]
+rule = "H67/H68 require a measured ITD-specific incremental effect under degradation, not merely that the combined model stays accurate"
+
+# --- Cross-source transfer (H65) -----------------------------------------------------------
+[transfer]
+source_a = "jhtdb_isotropic1024coarse_topology"
+source_b = "jhtdb_mhd1024_topology"
+rule = "calibrate (fit) on source A only; evaluate WITHOUT refitting on source B; report performance drop, calibration error, channel stability"
+honesty_note = "both sources are JHTDB (same institution/modality); this is a within-institution cross-physics transfer test, not a cross-institution claim"
+
+# --- Structural OOD (H73) -------------------------------------------------------------------
+[ood]
+shifts = ["valid_structural_variation", "resolution_change", "measurement_degradation", "new_event_phase", "new_source(A->B)", "invalid_input"]
+policy_states = ["accept", "accept_with_reduced_confidence", "abstain"]
+rule = "utility weights and thresholds are NOT tuned after observing the final external holdout"
+
+# --- Policies --------------------------------------------------------------------------
+[policies]
+prohibited_post_hoc = ["change features/labels/thresholds/preprocessing/hyperparameters after freeze",
+  "remove difficult cases", "reverse signs after viewing holdout", "lower the margin",
+  "use a saturated or below-chance baseline as evidence", "choose the event definition or label method that flatters ITD",
+  "search repeatedly for an event until ITD wins", "invent new ITD channels before testing existing ones"]
+guardrails = ["itd_v29_core unchanged", "itd_v29.py unchanged", "MODEL_REVISION unchanged",
+  "itd_simulator unchanged", "oracles/hashes/summaries unchanged", "one-way dependency research->core",
+  "no V29.19/V30/certified-ITD-3D/universal-structural-score/universal-topology-predictor/production-ITD",
+  "Mission 3-7 negatives preserved"]
+compute_limits = { final_holdout_evaluations = 1, ci = "offline, tiny deterministic fixtures only" }
+deviation_policy = "any deviation from this locked protocol is reported explicitly in MISSION8_FINAL_REPORT.md"
+
+# --- Hypotheses H61-H74 --------------------------------------------------------------------
+[[hypothesis]]
+id = "H61"
+statement = "Existing non-magnitude ITD channels predict an independently labelled external structural (topology) vortex event."
+gate = "AF"
+[[hypothesis]]
+id = "H62"
+statement = "Adding non-magnitude ITD channels to BASELINE_COMPETENT_COMBINED improves held-out event prediction by the preregistered margin."
+gate = "AG"
+[[hypothesis]]
+id = "H63"
+statement = "At least one ITD structural channel carries reproducible information not explainable by a magnitude diagnostic."
+gate = "AH"
+[[hypothesis]]
+id = "H64"
+statement = "ITD structural channels respond consistently to independently defined topology changes."
+gate = "AD"
+[[hypothesis]]
+id = "H65"
+statement = "A structural profile calibrated on one external source remains useful on a comparable independent source."
+gate = "AJ"
+[[hypothesis]]
+id = "H66"
+statement = "Structural ITD signals remain useful after controlled spatial-resolution changes."
+gate = "AD"
+[[hypothesis]]
+id = "H67"
+statement = "ITD structural channels retain or gain incremental value when only part of the structure is observable."
+gate = "AK"
+[[hypothesis]]
+id = "H68"
+statement = "ITD structural channels provide incremental value under realistic noise/masking."
+gate = "AK"
+[[hypothesis]]
+id = "H69"
+statement = "ITD structural channels improve localization of independently identified vortex regions."
+gate = "AI"
+[[hypothesis]]
+id = "H70"
+statement = "ITD structural channels change before the independently defined event with useful lead time."
+gate = "AF"
+[[hypothesis]]
+id = "H71"
+statement = "The selected structural ITD channel profile remains stable across runs and sources."
+gate = "AD"
+[[hypothesis]]
+id = "H72"
+statement = "ITD structural channels agree with independently documented coherent-vortex evolution in time-resolved PIV/PTV."
+gate = "AL"
+[[hypothesis]]
+id = "H73"
+statement = "Domain-shift detection distinguishes loss of calibration from valid structural variation without excessive abstention."
+gate = "AM"
+[[hypothesis]]
+id = "H74"
+statement = "A profile-driven implementation computes only necessary structural diagnostics and reduces latency without changing results."
+gate = "AN"
+
+# --- Final held-out configuration -- IMMUTABLE once evaluation begins --------------------
+[final_holdout]
+frozen = true
+primary_source = "jhtdb_isotropic1024coarse_topology"
+event_types = ["core_merger", "core_split"]
+added_value_margin = 0.02
+evaluations_allowed = 1
+note = "Evaluated once after development is frozen and the saturation screen is applied. The report records this file's SHA-256."
