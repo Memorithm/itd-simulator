@@ -16,7 +16,11 @@ echo "[2/7] offline fixture validation (bounded, deterministic; ~10-30s)"
 OUT="$(mktemp -d)"
 "$PY" -m itd_research.mission8 validate --config configs/mission8/ci.toml --output "$OUT"
 
-echo "[3/7] canonical reproducibility digests (must match repro/mission8/expected_checksums.txt)"
+echo "[3/7] canonical reproducibility digests"
+echo "      NOTE: these are environment-stamped. Run this step TWICE in YOUR environment and"
+echo "      compare the two outputs to each other. They are NOT expected to equal the values"
+echo "      in expected_checksums.txt if you are on a different machine/BLAS build -- see the"
+echo "      header of that file for why (~1e-15 round-off in the H73 inversion / H70 threshold)."
 "$PY" - <<'PYEOF'
 from itd_research.mission8.campaign import (
     canonical_result_digest, run_fixture_campaign, run_full_fixture_validation,

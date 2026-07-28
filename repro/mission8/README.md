@@ -45,9 +45,15 @@ PYTHONHASHSEED=0 PYTHONPATH=$PWD \
   python -m itd_research.mission8 validate --config configs/mission8/ci.toml --output /tmp/m8
 ```
 
-Then check the canonical digests against `expected_checksums.txt` (step 3 of
-`commands.sh`). `tests/test_mission8.py` asserts these same digests, so the published
-checksums cannot silently drift from the code.
+Then compute the canonical digests (step 3 of `commands.sh`).
+
+**Run it twice and compare the two digests to each other.** That is the meaningful check.
+The values in `expected_checksums.txt` are **environment-stamped and not portable**: the
+H73 Mahalanobis inversion and the H70 threshold differ at ~1e-15 between BLAS/LAPACK
+builds, so the same code on the same Python and NumPy versions hashes differently on a
+different machine. Comparing against the published digest from another machine is expected
+to differ and is not a failure — see the header of `expected_checksums.txt` for the three
+observed values and the isolated root cause.
 
 ### What "deterministic" means precisely here
 
