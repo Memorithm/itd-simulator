@@ -50,12 +50,45 @@ so they never exercised the bug either way.
 `python -m itd_research.mission8 validate --config configs/mission8/ci.toml --output ...`
 runs the full module set (saturation screen + H61/H62, H64/H70/H71 descriptive checks,
 H73 structural OOD, one profile benchmark) on a manufactured, resolution-honest
-(`nodes=24`) synthetic oracle in ~10-30 seconds, deterministically. Two consecutive runs
-produce identical output (`tests/test_mission8.py::
-test_run_fixture_campaign_is_deterministic_across_runs`, NaN-aware comparison). This is
-CODE-VERIFICATION only, explicitly labelled `"synthetic-code-verification (NOT external
-evidence)"` in every fixture-campaign report — never mixed with, or presented as, the
-real JHTDB results above.
+(`nodes=24`) synthetic oracle in ~10-30 seconds. This is CODE-VERIFICATION only,
+explicitly labelled `"synthetic-code-verification (NOT external evidence)"` in every
+fixture-campaign report — never mixed with, or presented as, the real JHTDB results above.
+Its verdicts are *easier* than the real-data ones by construction (a clean manufactured
+merger is trivially predictable), so they must never be quoted as findings; the
+reproduction bundle's README states this prominently.
+
+### Determinism, stated precisely (corrected)
+
+An earlier draft of this report claimed "two consecutive runs produce identical output."
+**That was too strong and is corrected here.** Building the reproduction bundle surfaced
+the discrepancy: two consecutive full validations hash differently, because the H74
+profile benchmark reports **wall-clock timings** (`full_p95_ms`, `profile_p95_ms`,
+`speedup`), which legitimately vary run to run and machine to machine. The earlier claim
+rested on `test_run_fixture_campaign_is_deterministic_across_runs`, which covers
+`run_fixture_campaign` only — the primary campaign, which *is* fully deterministic — and
+never exercised the benchmark-carrying full validation.
+
+The precise, verified property is:
+
+* **every scientific field is bit-identical** across runs — all verdicts, AUCs,
+  correlations, CI bounds and statistics; and
+* **only the three declared wall-clock fields differ**, plus the `environment` block.
+
+This is enforced by `itd_research.mission8.campaign.canonical_result_digest`, whose
+`NONDETERMINISTIC_FIELDS` set is the single shared definition used by both the pinned
+checksums in `repro/mission8/expected_checksums.txt` and the tests, so the two cannot
+drift apart. `test_full_validation_is_deterministic_except_for_wall_clock_timings` asserts
+**both** directions — identical after stripping, and genuinely differing before it — so
+the strip-set cannot later be widened to mask a real determinism defect, and
+`test_published_reproducibility_digests_match_the_repro_bundle` fails if any code change
+alters a scientific output without the published digest being deliberately re-pinned.
+
+Canonical digests (this environment):
+
+```
+mission8_fixture_campaign.canonical   f75969f06f0dcaea057cfa1ac933e185ea490e1e286609a290e6bb1ad678757c
+mission8_full_validation.canonical    7220974dd51c5389b6446137e8cef5aab09d2ab85f4c17ea3e7f803a44f5d324
+```
 
 ## What is NOT reproducible without network access
 
@@ -67,10 +100,24 @@ byte-for-byte. The ingestion/checksum/provenance machinery (Mission 7's, reused
 unchanged) guarantees that a re-fetch of the same JHTDB cutout coordinates reproduces the
 same frames.
 
+## Reproduction bundle
+
+`repro/mission8/` follows the Mission 7 pattern: `README.md`, `commands.sh` (offline steps
+1-3, network steps 4-7), `environment.txt`, `expected_checksums.txt` (the canonical
+digests above), and `source_manifest.jhtdb.json` — provenance plus per-frame SHA-256 for
+**all six real sequences (152 frames)**, so a re-fetch can be verified frame by frame. Raw
+JHTDB data is not committed, per the repository's established practice.
+
 ## Test coverage this mission
 
-40 tests in `tests/test_mission8.py` + 13 in `tests/test_mission8_oracles.py` (53 total),
-plus all 18 Mission 8 modules added to `tests/test_research_boundaries.py`'s import-safety
-and one-way-dependency checks (117 boundary tests total, all passing). All 53 Mission-8-
-specific tests pass; the full repository test suite and `run_validation.sh` were run
-before any commit (see `MISSION8_FINAL_REPORT.md`).
+29 tests in `tests/test_mission8.py` + 13 in `tests/test_mission8_oracles.py` — **42
+Mission-8-specific tests**, all passing — plus all 18 Mission 8 modules added to
+`tests/test_research_boundaries.py`'s import-safety and one-way-dependency checks. The
+full repository suite and `run_validation.sh` were run before any commit (see
+`MISSION8_FINAL_REPORT.md`).
+
+*Correction:* an earlier draft of this report stated "40 tests in `tests/test_mission8.py`
++ 13 … (53 total)". That was a miscount — 40 was the *combined* total across both files
+(27 + 13), not the count of the first file alone. The figures above are verified by
+`pytest --collect-only` and include the two determinism/digest tests added with the
+reproduction bundle (27 → 29).

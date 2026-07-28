@@ -10,6 +10,8 @@ reported honestly from the manual JHTDB campaigns.
 
 from __future__ import annotations
 
+from pathlib import Path
+
 import numpy as np
 import pytest
 
@@ -19,8 +21,10 @@ from itd_research.mission8.baselines import (
     compute_baseline_trajectory,
 )
 from itd_research.mission8.campaign import (
+    canonical_result_digest,
     run_fixture_campaign,
     run_full_fixture_validation,
+    strip_nondeterministic,
 )
 from itd_research.mission8.degradation import (
     degrade_downsample,
@@ -62,6 +66,8 @@ from itd_research.mission8.vortex_regions import (
     iou,
     label_components_3d,
 )
+
+_ROOT = Path(__file__).resolve().parents[1]
 
 # --------------------------------------------------------------------------------------
 # vortex_regions: connectivity, periodic wraparound, region metrics, topology events
@@ -255,6 +261,53 @@ def test_run_full_fixture_validation_exercises_every_module() -> None:
                 "profile_benchmark"):
         assert key in result
     assert result["evidence_class"] == "synthetic-code-verification (NOT external evidence)"
+
+
+def test_full_validation_is_deterministic_except_for_wall_clock_timings() -> None:
+    """Every scientific field must be bit-identical run to run; only timings may vary.
+
+    The earlier determinism test covered ``run_fixture_campaign`` only. The full
+    validation additionally runs a profile BENCHMARK, whose wall-clock fields genuinely
+    differ between runs -- so a naive whole-tree equality check on it fails for a benign
+    reason. This pins the precise, meaningful property instead: identical after stripping
+    exactly the declared non-deterministic fields, and *still differing* before stripping,
+    so the strip-set can never be quietly widened to mask a real determinism defect.
+    """
+    a = run_full_fixture_validation(nodes=12, n_frames=12)
+    b = run_full_fixture_validation(nodes=12, n_frames=12)
+    assert canonical_result_digest(a) == canonical_result_digest(b)
+
+    scientific_a = strip_nondeterministic(a)
+    scientific_b = strip_nondeterministic(b)
+    assert _nan_aware_equal(scientific_a, scientific_b)
+
+    # The stripped fields are the only ones allowed to move, and they are real timings.
+    timings = a["profile_benchmark"]
+    assert isinstance(timings, dict)
+    for field in ("full_p95_ms", "profile_p95_ms", "speedup"):
+        assert field in timings, f"{field} must exist for the strip-set to be meaningful"
+        assert field not in scientific_a  # type: ignore[operator]
+
+
+def test_published_reproducibility_digests_match_the_repro_bundle() -> None:
+    """The digests pinned in ``repro/mission8/expected_checksums.txt`` must be current.
+
+    Guards the reproduction bundle against silent drift: if a code change alters any
+    scientific output, this fails and the published checksum must be re-pinned
+    deliberately rather than the bundle quietly becoming wrong.
+    """
+    pinned_path = _ROOT / "repro" / "mission8" / "expected_checksums.txt"
+    pinned = {
+        parts[0]: parts[1]
+        for line in pinned_path.read_text(encoding="utf-8").splitlines()
+        if line.strip() and not line.startswith("#") and len(parts := line.split()) == 2
+    }
+    assert canonical_result_digest(run_fixture_campaign().as_dict()) == pinned[
+        "mission8_fixture_campaign.canonical"
+    ]
+    assert canonical_result_digest(run_full_fixture_validation()) == pinned[
+        "mission8_full_validation.canonical"
+    ]
 
 
 # --------------------------------------------------------------------------------------

@@ -1,0 +1,11 @@
+# SHA-256 of the OFFLINE Mission 8 fixture results, canonicalised by
+# itd_research.mission8.campaign.canonical_result_digest (JSON, sorted keys, with the
+# declared non-deterministic fields removed: environment, full_p95_ms, profile_p95_ms,
+# speedup -- see NONDETERMINISTIC_FIELDS).
+#
+# Wall-clock timings are excluded because they legitimately differ run to run and machine
+# to machine. EVERY other field -- every verdict, AUC, correlation and statistic -- is
+# required to be bit-identical, and tests/test_mission8.py asserts both that the digests
+# below are current AND that the pre-strip trees genuinely differ only in those timings.
+mission8_fixture_campaign.canonical    f75969f06f0dcaea057cfa1ac933e185ea490e1e286609a290e6bb1ad678757c
+mission8_full_validation.canonical     7220974dd51c5389b6446137e8cef5aab09d2ab85f4c17ea3e7f803a44f5d324

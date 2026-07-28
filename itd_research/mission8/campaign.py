@@ -9,6 +9,8 @@ No network access occurs here -- the caller supplies already-downloaded director
 
 from __future__ import annotations
 
+import hashlib
+import json
 import tempfile
 from dataclasses import dataclass
 from pathlib import Path
@@ -168,3 +170,37 @@ def run_full_fixture_validation(*, nodes: int = 24, n_frames: int = 16) -> dict[
         "profile_benchmark": bench.as_dict(),
         "evidence_class": "synthetic-code-verification (NOT external evidence)",
     }
+
+
+# Wall-clock measurements are inherently non-reproducible: they vary run to run on the
+# same machine and differ across machines by design. They are therefore excluded from the
+# reproducibility digest, exactly as the environment block is. Every OTHER field -- every
+# scientific quantity, verdict and statistic -- is required to be bit-identical, so
+# stripping these must never be widened to hide a genuine determinism defect.
+NONDETERMINISTIC_FIELDS: frozenset[str] = frozenset({
+    "full_p95_ms", "profile_p95_ms", "speedup", "environment",
+})
+
+
+def strip_nondeterministic(value: object) -> object:
+    """Recursively drop inherently non-reproducible (wall-clock) fields from a result tree."""
+    if isinstance(value, dict):
+        return {
+            key: strip_nondeterministic(item)
+            for key, item in value.items()
+            if key not in NONDETERMINISTIC_FIELDS
+        }
+    if isinstance(value, list):
+        return [strip_nondeterministic(item) for item in value]
+    return value
+
+
+def canonical_result_digest(result: object) -> str:
+    """SHA-256 of a result tree with wall-clock fields removed (the reproducibility digest).
+
+    Pinned in ``repro/mission8/expected_checksums.txt`` and asserted by
+    ``tests/test_mission8.py``; both use THIS function, so the published digest and the
+    test can never drift apart.
+    """
+    stripped = strip_nondeterministic(result)
+    return hashlib.sha256(json.dumps(stripped, sort_keys=True).encode()).hexdigest()
