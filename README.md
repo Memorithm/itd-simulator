@@ -83,6 +83,16 @@ advanced, and legacy compatibility names. The implementation is in
 
 ## Post-V29 research namespace
 
+> **This research line is CLOSED — see [`RESEARCH_CLOSURE.md`](RESEARCH_CLOSURE.md).**
+> Missions 3–8 asked whether ITD provides diagnostic or predictive information that
+> competent established diagnostics do not already capture. The answer, on real external
+> data and on a preregistered *unsaturated* task, is **no**: adding ITD's non-magnitude
+> channels to a competent structural baseline changed held-out performance by
+> **−0.168 (95 % CI [−0.175, −0.153])** — it degrades it. Read the closure note before
+> reopening any question here; the ~90 documents below read like an open programme and are
+> not one. The **infrastructure** (manufactured oracles, saturation screening, grouped
+> statistics, provenance/reproduction bundles) retains value independently of ITD.
+
 `itd_research/` is an isolated research namespace layered on top of the
 certified, immutable `ITD V29.18` baseline. It studies a dimensionless
 reformulation of temporal deformation, provides analytical/manufactured
