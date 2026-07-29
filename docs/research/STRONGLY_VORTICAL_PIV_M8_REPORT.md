@@ -38,6 +38,16 @@ into a positive or negative predictive claim, and the strict-vs-repaired PIV dis
 established in Mission 7 is preserved unchanged (no volumetric λ₂ claim is made from any
 planar field; no shear-dominated field is treated as coherent-vortex validation).
 
+## A later search also failed to unblock it (recorded for completeness)
+
+A further search after the H65 follow-up surfaced **The Well** (Polymathic AI / Flatiron
+Institute, CC-BY-4.0) — the first genuinely cross-institution external source found across
+Missions 3–8, catalogued in `EXTERNAL_SOURCE_PROSPECTS.md`. It does **not** unblock H72:
+The Well is **simulation** data, and H72 asks specifically about agreement with documented
+coherent-vortex evolution in **experimental** time-resolved PIV/PTV. A simulation source,
+however independent its institution, cannot answer an experimental-validation question.
+H72 remains blocked.
+
 ## What would unblock this
 
 A time-resolved, ideally tomographic/volumetric PIV or PTV dataset of an unambiguously
