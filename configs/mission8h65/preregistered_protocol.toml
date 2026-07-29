@@ -1,0 +1,125 @@
+# Mission 8 follow-up -- preregistered protocol: making H65 (cross-source structural
+# transfer) CONCLUSIVE.
+#
+# Committed BEFORE any additional data is fetched and BEFORE any transfer evaluation is
+# run. Its SHA-256 is recorded in docs/research/CROSS_SOURCE_STRUCTURAL_TRANSFER_REPORT.md.
+#
+# WHY THIS EXISTS
+# ---------------
+# Mission 8 returned H65 "inconclusive" for a non-scientific reason: the two JHTDB mhd1024
+# windows fetched happened to contain ZERO qualifying Q-criterion topology events, so no
+# ROC-AUC was computable on source B at all. That is an artefact of data collection, not a
+# finding about transfer. This protocol fixes the acquisition so the question gets a real
+# answer -- favourable or not.
+#
+# THE TRAP THIS PROTOCOL EXISTS TO AVOID
+# -------------------------------------
+# Mission 8 forbids re-searching dataset windows until a target event appears. Fetching
+# MORE data to make a test possible is legitimate; fetching windows one at a time and
+# stopping when the result looks good is not. The binding rule below is therefore:
+# EVERY window listed here is fetched and EVERY window is used, whatever it contains,
+# including windows with zero events. The window list is frozen by this commit.
+
+schema = "itd-mission8-h65/1"
+baseline_commit = "47f30f422c0c2f5c6fbaccaa1b1cc7a6f7bdde11"
+parent_protocol = "configs/mission8/preregistered_protocol.toml"
+parent_protocol_sha256 = "ddd64804b58b6661c22c5911f45832de7c0bc3afe2eed25de96d60ab40ec3206"
+
+# --- What is INHERITED UNCHANGED from the Mission 8 protocol -----------------------------
+# Re-deriving any of these would make the follow-up incomparable with the merged result.
+[inherited]
+event_definition = "Q-criterion connected-component count change (core_merger / core_split)"
+event_parameters = { min_cells = 8, persistence = 2, comparison = "greater", threshold = 0.0 }
+itd_independence = "ITD never participates in labelling; lambda2 kept for disagreement only"
+itd_feature_set = "ITD_3D_NONREDUNDANT (intensity excluded, as in Mission 8)"
+established_feature_set = "BASELINE_COMPETENT_COMBINED"
+model = "LogisticRegression on train-source z-scored features"
+horizon = 2
+source_a_development = ["iso_run1", "iso_run2"]
+note = "Source A development sequences are UNCHANGED from Mission 8; the fitted model is \
+  calibrated on source A only and applied to source B WITHOUT refitting."
+
+# --- Frozen source-B acquisition list ----------------------------------------------------
+# All windows below are fetched and used. Origins are spread across the domain on a fixed,
+# pre-declared lattice (no origin is chosen after inspecting any result). Frame counts are
+# raised from Mission 8's 24/16 to 48 so a persistent topology change has room to occur.
+[acquisition]
+dataset = "mhd1024"
+size = 24
+dt = 0.1
+frames_per_window = 48
+n_windows = 6
+selection_rule = "origins fixed in advance on a spread lattice; NOT chosen by event content"
+binding_rule = "ALL 6 windows are fetched and ALL 6 are used in the evaluation, including \
+  any window containing zero qualifying events. No window may be added, dropped, extended \
+  or re-rolled after any result is seen."
+partial_acquisition_rule = "If a window cannot be fetched (service error), it is reported as \
+  BLOCKED with the error, and the analysis proceeds on the successfully fetched windows -- \
+  the blocked window is NEVER silently replaced by a different origin."
+
+[[acquisition.window]]
+id = "mhd_w1"
+origin = [100, 200, 300]
+[[acquisition.window]]
+id = "mhd_w2"
+origin = [500, 200, 300]
+[[acquisition.window]]
+id = "mhd_w3"
+origin = [100, 600, 300]
+[[acquisition.window]]
+id = "mhd_w4"
+origin = [100, 200, 700]
+[[acquisition.window]]
+id = "mhd_w5"
+origin = [600, 600, 600]
+[[acquisition.window]]
+id = "mhd_w6"
+origin = [300, 800, 500]
+
+# --- The single locked evaluation --------------------------------------------------------
+[evaluation]
+evaluations_allowed = 1
+procedure = "fit established-only and established+ITD_3D_NONREDUNDANT on source A development \
+  sequences; apply WITHOUT refitting to the pooled source-B windows; report ROC-AUC for each."
+grouping_unit = "sequence (window); never a frame"
+report_required = [
+  "per-window event counts (including zeros)",
+  "number of windows with a computable AUC",
+  "established transfer AUC",
+  "ITD-only transfer AUC",
+  "augmented transfer AUC",
+  "transfer drop vs source-A holdout",
+]
+
+[decision_rule]
+# Fixed BEFORE seeing any number. Note the asymmetry is deliberate: H65 asks whether a
+# profile calibrated on A stays USEFUL on B, so "useful" must clear chance by a margin,
+# and the established baseline is the comparison partner for the incremental question.
+conclusive_requires = "at least one source-B window contains >= 1 qualifying event AND the \
+  pooled source-B label set contains both classes (otherwise H65 stays inconclusive and is \
+  reported as such, with the zero-event counts shown)"
+h65_supported = "augmented transfer AUC > 0.5 + 0.05 AND transfer drop vs source-A holdout < 0.20"
+h65_not_supported = "conclusive but the above is not met"
+itd_incremental_note = "augmented vs established transfer AUC is reported alongside, but H65 \
+  is about whether the calibrated profile transfers, NOT a second incremental-value test; \
+  Mission 8's H62 negative is not re-litigated here."
+
+[policies]
+prohibited_post_hoc = [
+  "adding, dropping, extending or re-rolling any window after seeing a result",
+  "changing min_cells / persistence / horizon to manufacture events on source B",
+  "switching the event definition to lambda2 because Q yields no events",
+  "re-fitting the model on source B",
+  "reporting only the windows that contain events",
+  "claiming cross-institution transfer (both sources are JHTDB)",
+]
+honesty_note = "Both sources remain JHTDB (same institution and access modality). Any result \
+  is within-institution CROSS-PHYSICS transfer (isotropic hydrodynamic -> forced MHD), never \
+  a cross-institution generalization claim -- unchanged from Mission 8."
+
+[hypothesis]
+id = "H65"
+statement = "A structural profile calibrated on one external source remains useful on a \
+  comparable independent source."
+prior_status = "inconclusive (Mission 8: zero qualifying events in the two fetched MHD windows)"
+verdicts_allowed = ["supported within tested scope", "not supported", "inconclusive", "blocked"]
