@@ -1,6 +1,16 @@
 # Mission 8 final report — non-redundant structural and topological external validation
 
 Status: **research report**. Not a certified revision; does not modify `ITD V29.18`.
+
+> **Update (H65-conclusive follow-up).** H65 was originally reported *inconclusive* because
+> the two JHTDB MHD windows fetched contained zero qualifying events — a collection
+> artefact, not a finding. A separately preregistered follow-up
+> (`configs/mission8h65/preregistered_protocol.toml`, SHA-256 `83c20f85…`, committed and
+> pushed before any new data was fetched) acquired six windows / 156 frames / 7 events and
+> resolved it to **not supported** (augmented transfer AUC 0.477, below chance). The H65
+> row and final question 8 below are updated; every other verdict is unchanged, and the
+> follow-up did **not** re-litigate H62.
+
 Preregistration `configs/mission8/preregistered_protocol.toml`
 (SHA-256 `ddd64804b58b6661c22c5911f45832de7c0bc3afe2eed25de96d60ab40ec3206`), committed
 `73adbdc`, before final external evaluation. Baseline commit `6480973` (Mission 7 merge).
@@ -36,7 +46,7 @@ H64 pooled — see below).
 | H62 | AG | Adding non-magnitude ITD channels to BASELINE_COMPETENT_COMBINED improves held-out event prediction by the preregistered margin | **not supported** (added value −0.168, CI excludes zero in the negative direction) |
 | H63 | AH | At least one ITD structural channel carries reproducible information not explainable by a magnitude diagnostic | **not supported** (pooled check: no channel has both low correlation with enstrophy AND non-trivial partial correlation with the event) |
 | H64 | AD | ITD structural channels respond consistently to independently defined topology changes | **supported within tested scope** (`helicity_mean`, `normalized_helicity`: 100% sign-consistent across 4 instances / 3 independent sequences) |
-| H65 | AJ | A structural profile calibrated on one external source remains useful on a comparable independent source | **inconclusive** (both fetched MHD sequences have zero qualifying events — blocked by event scarcity, not a transfer failure) |
+| H65 | AJ | A structural profile calibrated on one external source remains useful on a comparable independent source | **not supported** — *updated after the H65-conclusive follow-up* (was inconclusive; six preregistered MHD windows / 156 frames / 7 events now make it computable: augmented transfer AUC 0.477, below chance) |
 | H66 | AD | Structural ITD signals remain useful after controlled spatial-resolution changes | **not supported** (downsample 2× added-value CI `[−0.269, +0.198]` includes zero) |
 | H67 | AK | ITD structural channels retain or gain incremental value when only part of the structure is observable | **not supported / inconclusive** (`central_crop` collapses to an uncomputable AUC — event scarcity under cropping) |
 | H68 | AK | ITD structural channels provide incremental value under realistic noise/masking | **not supported** (`noise=0.05` added value sub-margin; `mask=0.20` uncomputable) |
@@ -80,9 +90,13 @@ documented block.
 7. **Does ITD detect topology changes?** Descriptively, two channels (`helicity_mean`,
    `normalized_helicity`) respond with a consistent sign at every observed event (H64
    supported within tested scope) — but this does not translate into predictive value.
-8. **Does the result transfer across sources?** Inconclusive — the two fetched MHD
-   sequences contain zero qualifying events under the corrected event definition; H65 is
-   blocked by event scarcity, not resolved either way.
+8. **Does the result transfer across sources?** **No** — *answer updated by the
+   H65-conclusive follow-up.* Mission 8 originally left this inconclusive because the two
+   MHD windows fetched contained zero qualifying events. Six preregistered windows (156
+   frames, 7 events, both classes) now make it computable: the calibrated profile
+   transfers at **0.477 augmented AUC — below chance**. The drop versus source A is small
+   (−0.132), but that reflects a near-chance model staying near-chance, not successful
+   transfer. See `CROSS_SOURCE_STRUCTURAL_TRANSFER_REPORT.md`.
 9. **Is ITD more useful under partial observation?** No — `central_crop` collapses to an
    uncomputable holdout AUC; no level tested shows a margin-exceeding ITD-specific gain
    (H67 not supported/inconclusive).
