@@ -62,6 +62,10 @@ results.
    velocity field — it would correctly flag this data. Whether the Q/λ₂ topology event is
    appropriate for compressible flow is a **real scientific question that must be settled
    before**, not after, any evaluation.
+   **→ Now addressed by `COMPRESSIBILITY_DECISION_NOTE.md`**, which fixes the admission rule
+   in advance: a priori exclusion of the supersonic files (shocks would corrupt the event
+   definition), an empirical relative-divergence gate with the threshold frozen beforehand,
+   and no change to the event definition. That note explicitly allows the gate to fail.
 2. **Format.** The Well ships HDF5 with its own field grouping, not the `frame_*.npz`
    layout `itd_research.mission8.ingestion` consumes. A conversion adapter is required, and
    must preserve the `(nz, ny, nx)` axis convention — the axis-order failure mode Mission
