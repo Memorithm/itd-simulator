@@ -81,35 +81,65 @@ advanced, and legacy compatibility names. The implementation is in
 `itd_v29_core/`; `import itd_v29` remains supported. The packaged namespace
 `itd_simulator` re-exports the same objects.
 
-## Post-V29 research namespace
+## Research status: one line closed, AI laboratory open
 
-> **This research line is CLOSED — see [`RESEARCH_CLOSURE.md`](RESEARCH_CLOSURE.md).**
-> Missions 3–8 asked whether ITD provides diagnostic or predictive information that
-> competent established diagnostics do not already capture. The answer, on real external
-> data and on a preregistered *unsaturated* task, is **no**: adding ITD's non-magnitude
-> channels to a competent structural baseline changed held-out performance by
-> **−0.168 (95 % CI [−0.175, −0.153])** — it degrades it. Read the closure note before
-> reopening any question here; the ~90 documents below read like an open programme and are
-> not one. The **infrastructure** (manufactured oracles, saturation screening, grouped
-> statistics, provenance/reproduction bundles) retains value independently of ITD.
+The **Missions 3–8 fluid-diagnostic research line is CLOSED** — see
+[`RESEARCH_CLOSURE.md`](RESEARCH_CLOSURE.md). It asked whether the existing ITD
+channels provide diagnostic or predictive information about fluid-dynamic
+structure that competent established diagnostics do not already capture. On the
+external tests performed, the answer was negative; on the preregistered
+unsaturated Mission 8 task, adding ITD's non-magnitude channels changed held-out
+performance by **−0.168 (95 % CI [−0.175, −0.153])**.
+
+That conclusion is intentionally preserved. It does **not** close distinct
+questions about artificial intelligence or scientific machine learning. The
+repository is now also an open experimental laboratory for falsifiable research
+on representation value, auxiliary supervision, learned spatial and multiscale
+structure, forecasting, anomaly/change detection, OOD and abstention, control,
+compression/resource-aware AI, and later additional signal domains. The research
+rules and ecosystem boundaries are defined in
+[`docs/ai/AI_RESEARCH_CHARTER.md`](docs/ai/AI_RESEARCH_CHARTER.md).
+
+The goal of the AI line is not to prove that ITD works. Every study must permit a
+negative result and compare against competent established and learned controls.
+`ITD V29.18` remains frozen unless a separate scientific-revision process ever
+justifies changing it.
+
+## Historical post-V29 fluid research namespace
 
 `itd_research/` is an isolated research namespace layered on top of the
-certified, immutable `ITD V29.18` baseline. It studies a dimensionless
-reformulation of temporal deformation, provides analytical/manufactured
-benchmarks, established-diagnostic comparisons, convergence and sensitivity
-runners, and hand-derived analytical oracles. It never modifies V29.18, is never
-imported by `itd_v29_core`, and importing it does not initialize Matplotlib.
+certified, immutable `ITD V29.18` baseline. Its Missions 3–8 material studies a
+dimensionless reformulation of temporal deformation, analytical/manufactured
+benchmarks, established-diagnostic comparisons, convergence and sensitivity,
+and external validation. That fluid-diagnostic programme is historical evidence,
+not an open backlog to rerun.
 
-It is **not** a certified scientific revision; `MODEL_REVISION` remains
-`ITD V29.18`. Run the deterministic research suite into an explicit directory:
+The infrastructure remains reusable: manufactured oracles, saturation screening,
+grouped statistics, provenance/reproduction bundles, degradation tests, and OOD
+machinery can support new hypotheses when their domain assumptions remain valid.
+Future AI work must remain isolated from the certified core with the same one-way
+dependency principle.
+
+For the historical deterministic research suite:
 
 ```bash
 python -m itd_research --quick --output /tmp/itd-research-quick
 python -m itd_research --full  --output /tmp/itd-research-full
 ```
 
-The specification, oracle derivations, and results are in
+The historical specifications, oracle derivations, and results are in
 [`docs/research/`](docs/research/).
+
+## Ecosystem direction
+
+ITD Simulator should reuse rather than duplicate validated scientific capabilities
+from the wider ecosystem. SciRust is the preferred source of relevant scientific
+algorithms when appropriate to a study. ElasticXxx is a natural downstream
+research target for experiments about adaptive observation, representation,
+precision, memory, model choice, and controlled resource decisions. These
+relationships do not make ITD results automatically valid SciRust primitives or
+ElasticXxx runtime policies; each integration requires its own evidence and
+architectural review.
 
 ## Release integrity
 

@@ -1,16 +1,17 @@
-# Research closure — the post-V29 research line is closed
+# Research closure — Missions 3–8 fluid-diagnostic line
 
-Status: **closure note**. This document closes the Missions 3–8 research line. It is not a
-certified revision and does not modify `ITD V29.18` (`MODEL_REVISION` unchanged).
+Status: **scoped closure note**. This document closes the Missions 3–8 fluid-diagnostic research line. It is not a certified revision and does not modify `ITD V29.18` (`MODEL_REVISION` unchanged).
+
+The original closure remains valid for the question actually tested. It must not be read as a claim that every possible ITD-derived representation, every artificial-intelligence use, every signal domain, or every future learned extension has been tested and rejected.
+
+New AI and scientific-machine-learning questions are governed separately by [`docs/ai/AI_RESEARCH_CHARTER.md`](docs/ai/AI_RESEARCH_CHARTER.md). Reopening the *same* fluid-diagnostic claim still requires genuinely new evidence as described below.
 
 Read this before reopening any research question in `itd_research/` or `docs/research/`.
-Those directories contain ~90 documents that read like an *open* programme. They are not.
-The question they were built to answer has been answered.
+Those directories contain ~90 documents that read like an *open* fluid-diagnostic programme. They are not. The question they were built to answer has been answered.
 
-## The question
+## The question that is closed
 
-> Does ITD provide reproducible diagnostic or predictive information about fluid-dynamic
-> structure that competent established diagnostics do not already capture?
+> Does the existing ITD formulation provide reproducible diagnostic or predictive information about fluid-dynamic structure that competent established diagnostics do not already capture?
 
 ## The answer: no — within the evaluated domains, on the evidence assembled
 
@@ -44,7 +45,21 @@ competent established baselines; universal thresholds were not supported; cross-
 transfer was weak; cross-code evidence was promising but confounded; near-OOD abstention
 over-abstained; external incremental value was zero, then negative.
 
-## What would — and would not — change this
+## What this closure does not answer
+
+The experiments above were designed around fluid-diagnostic and event-prediction questions. They do not establish answers to materially different research questions such as:
+
+- whether ITD-derived quantities are useful auxiliary training targets;
+- whether an ITD-derived representation changes sample efficiency, calibration, robustness, compression, or learned latent structure;
+- whether local, patchwise, graph, spectral, or multiscale descendants carry information absent from the existing global per-snapshot scalars;
+- whether ITD-derived temporal representations help forecasting, anomaly detection, change detection, or control;
+- whether a learned representation can use ITD information differently from the transparent classical models used as primary controls in the historical programme;
+- whether structural representations help resource-aware or adaptive AI decisions;
+- whether related constructions are useful in other signal domains such as vibration.
+
+Those are new hypotheses. They require new baselines, leakage controls, datasets, model classes, decision rules, and holdouts. A positive result in one of them would not retroactively overturn the Missions 3–8 negative result; a negative result would be equally valid evidence.
+
+## What would — and would not — change the closed fluid-diagnostic conclusion
 
 **Would not.** A cross-institution replication (see `docs/research/EXTERNAL_SOURCE_PROSPECTS.md`
 and `docs/research/COMPRESSIBILITY_DECISION_NOTE.md`). Every external result rests on JHTDB, and The Well
@@ -53,7 +68,7 @@ hydrodynamic → MHD transfer: a Mission 9 would add an independent *institution
 physics. It would make this negative **more robust, not different**. Worth doing for rigour;
 not a path to a different answer.
 
-**Would.** Only genuinely new evidence of a kind not yet obtainable:
+**Would.** Only genuinely new evidence directed at the same fluid-diagnostic claim:
 
 1. **Time-resolved, vortex-dominated experimental PIV/PTV** with open provenance — H72,
    blocked since Mission 3 across repeated searches (`STRONGLY_VORTICAL_PIV_M8_REPORT.md`).
@@ -61,16 +76,15 @@ not a path to a different answer.
    its institution.
 2. **A spatial (per-cell) ITD channel** — H69 is blocked *architecturally*: every existing
    ITD-3D channel is a global per-snapshot scalar, so region-level localization cannot be
-   tested at all. Inventing one to make a hypothesis testable was forbidden by Mission 8's
-   protocol, and rightly: a channel designed to pass a test is not evidence.
+   tested at all. Inventing one to make the old hypothesis testable was forbidden by Mission 8's
+   protocol, and rightly: a channel designed to pass a test is not evidence for the old claim.
 
-**Do not reopen this line without (1) or (2).** Re-running the existing pipeline on more
-simulation data will reproduce the existing negative at real cost.
+**Do not reopen this same fluid-diagnostic line without (1) or (2).** Re-running the existing pipeline on more simulation data will reproduce the existing negative at real cost. This restriction does not prohibit separately preregistered AI research whose target question is different.
 
-## What retains value, independent of ITD
+## What retains value, independent of the closed ITD claim
 
 The scientific conclusion is negative; the **infrastructure is not**. What was built here is
-a reusable validation and comparison laboratory, applicable to any diagnostic:
+a reusable validation and comparison laboratory, applicable to other diagnostics and to new AI research questions when domain assumptions are reviewed:
 
 - manufactured 3D oracles with known ground truth (`itd_research/mission8/fixtures.py`),
   which caught five real bugs during Mission 8 alone;
@@ -84,7 +98,7 @@ a reusable validation and comparison laboratory, applicable to any diagnostic:
   (`repro/mission7/`, `repro/mission8/`, `repro/mission8h65/`).
 
 Mission 8's own conclusion recommended preserving exactly this, and repositioning ITD as an
-**experimental diagnostics framework** rather than a validated observable.
+**experimental diagnostics framework** rather than a validated observable. The AI research charter extends that methodological role without changing the old evidence.
 
 ## Honest record of what went wrong along the way
 
@@ -108,7 +122,7 @@ research line and remains frozen. The one-way dependency was enforced throughout
 tested (`tests/test_research_boundaries.py`): the core never imports `itd_research`.
 
 No certified revision was ever justified by this research. `MODEL_REVISION` remains
-`ITD V29.18`.
+`ITD V29.18`. Future AI research must preserve the same principle: an experiment may consume the frozen core, but the core must not depend on the experiment layer.
 
 ## Reproducing the closing result
 
