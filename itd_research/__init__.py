@@ -42,7 +42,6 @@ from itd_research.attention_lab import (
     scaled_dot_product_weights,
     summarize_attention_weights,
 )
-
 from itd_research.benchmark_runner import (
     FULL,
     QUICK,
