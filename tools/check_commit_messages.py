@@ -7,7 +7,12 @@ import argparse
 import re
 import subprocess
 
-EXPECTED_IDENTITY = "Tarek Zekriti <194770978+CHECKUPAUTO@users.noreply.github.com>"
+EXPECTED_IDENTITIES = frozenset(
+    {
+        "Tarek Zekriti <194770978+CHECKUPAUTO@users.noreply.github.com>",
+        "MEMOPERF <contact@checkupauto.fr>",
+    }
+)
 FORBIDDEN = re.compile(
     r"(?im)^(?:"
     r"co-authored-by:\s*(?:claude|anthropic)\b|"
@@ -24,7 +29,7 @@ def main() -> None:
     parser.add_argument(
         "--require-identity",
         action="store_true",
-        help="also require Tarek Zekriti as author and committer",
+        help="also require an allow-listed author and committer",
     )
     arguments = parser.parse_args()
     result = subprocess.run(
@@ -57,9 +62,9 @@ def main() -> None:
         # nothing about who wrote the code. The policy's subject is authorship, so merges
         # are exempt from it -- and only from it.
         if arguments.require_identity and commit and not is_merge:
-            if author != EXPECTED_IDENTITY:
+            if author not in EXPECTED_IDENTITIES:
                 failures.append(f"{commit}: author is {author!r}")
-            if committer != EXPECTED_IDENTITY:
+            if committer not in EXPECTED_IDENTITIES:
                 failures.append(f"{commit}: committer is {committer!r}")
     if failures:
         raise SystemExit("commit-message policy failed: " + "; ".join(failures))
