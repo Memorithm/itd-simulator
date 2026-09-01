@@ -1,18 +1,3 @@
-from itd_research.attention_lab import (
-    AttentionDescriptor,
-    AttentionForward,
-    AttentionResearchProtocol,
-    AssociativeRecallBatch,
-    GroupedSplit,
-    RecallMetrics,
-    build_attention_protocol,
-    evaluate_associative_recall,
-    grouped_holdout_split,
-    make_associative_recall,
-    scaled_dot_product_attention,
-    scaled_dot_product_weights,
-    summarize_attention_weights,
-)
 """Post-V29 dimensional-validation research package.
 
 This is an isolated *research* namespace layered on top of the certified,
@@ -28,6 +13,22 @@ justifies a reviewed revision.
 """
 
 from __future__ import annotations
+
+from itd_research.attention_lab import (
+    AttentionDescriptor,
+    AttentionForward,
+    AttentionResearchProtocol,
+    AssociativeRecallBatch,
+    GroupedSplit,
+    RecallMetrics,
+    build_attention_protocol,
+    evaluate_associative_recall,
+    grouped_holdout_split,
+    make_associative_recall,
+    scaled_dot_product_attention,
+    scaled_dot_product_weights,
+    summarize_attention_weights,
+)
 
 from itd_research.analytical_cases import (
     Grid,
