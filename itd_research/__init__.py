@@ -27,7 +27,6 @@ from itd_research.analytical_cases import (
     uniform_shear,
     zero_field,
 )
-
 from itd_research.attention_lab import (
     AttentionDescriptor,
     AttentionForward,
