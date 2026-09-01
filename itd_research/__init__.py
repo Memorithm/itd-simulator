@@ -14,6 +14,20 @@ justifies a reviewed revision.
 
 from __future__ import annotations
 
+from itd_research.analytical_cases import (
+    Grid,
+    counter_rotating_pair,
+    finite_grid,
+    lamb_oseen,
+    lamb_oseen_vorticity,
+    periodic_grid,
+    solid_body_rotation,
+    taylor_green,
+    taylor_green_vorticity,
+    uniform_shear,
+    zero_field,
+)
+
 from itd_research.attention_lab import (
     AttentionDescriptor,
     AttentionForward,
@@ -28,19 +42,6 @@ from itd_research.attention_lab import (
     scaled_dot_product_attention,
     scaled_dot_product_weights,
     summarize_attention_weights,
-)
-from itd_research.analytical_cases import (
-    Grid,
-    counter_rotating_pair,
-    finite_grid,
-    lamb_oseen,
-    lamb_oseen_vorticity,
-    periodic_grid,
-    solid_body_rotation,
-    taylor_green,
-    taylor_green_vorticity,
-    uniform_shear,
-    zero_field,
 )
 from itd_research.benchmark_runner import (
     FULL,
