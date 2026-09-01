@@ -28,10 +28,10 @@ from itd_research.analytical_cases import (
     zero_field,
 )
 from itd_research.attention_lab import (
+    AssociativeRecallBatch,
     AttentionDescriptor,
     AttentionForward,
     AttentionResearchProtocol,
-    AssociativeRecallBatch,
     GroupedSplit,
     RecallMetrics,
     build_attention_protocol,
