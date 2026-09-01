@@ -27,6 +27,21 @@ from itd_research.analytical_cases import (
     uniform_shear,
     zero_field,
 )
+from itd_research.attention_lab import (
+    AssociativeRecallBatch,
+    AttentionDescriptor,
+    AttentionForward,
+    AttentionResearchProtocol,
+    GroupedSplit,
+    RecallMetrics,
+    build_attention_protocol,
+    evaluate_associative_recall,
+    grouped_holdout_split,
+    make_associative_recall,
+    scaled_dot_product_attention,
+    scaled_dot_product_weights,
+    summarize_attention_weights,
+)
 from itd_research.benchmark_runner import (
     FULL,
     QUICK,
@@ -50,6 +65,20 @@ from itd_research.temporal_scaling import (
 )
 
 __all__ = (
+    # AI attention research protocol
+    "AttentionForward",
+    "AttentionDescriptor",
+    "AssociativeRecallBatch",
+    "RecallMetrics",
+    "GroupedSplit",
+    "AttentionResearchProtocol",
+    "scaled_dot_product_weights",
+    "scaled_dot_product_attention",
+    "summarize_attention_weights",
+    "make_associative_recall",
+    "evaluate_associative_recall",
+    "grouped_holdout_split",
+    "build_attention_protocol",
     # temporal scaling (the research centrepiece)
     "TemporalScalePolicy",
     "TemporalScaleDefinition",
