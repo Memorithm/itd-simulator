@@ -13,10 +13,10 @@ import hashlib
 import json
 import math
 from dataclasses import dataclass
-from enum import Enum
+from enum import StrEnum
 
 
-class SplitRole(str, Enum):
+class SplitRole(StrEnum):
     """Research-data role with final evaluation structurally separated."""
 
     DEVELOPMENT = "development"
@@ -24,7 +24,7 @@ class SplitRole(str, Enum):
     FINAL = "final"
 
 
-class MetricRole(str, Enum):
+class MetricRole(StrEnum):
     """Declared role of one metric in an experiment."""
 
     PRIMARY = "primary"
@@ -32,7 +32,7 @@ class MetricRole(str, Enum):
     DIAGNOSTIC = "diagnostic"
 
 
-class MetricDirection(str, Enum):
+class MetricDirection(StrEnum):
     """Direction used only when a metric is an optimization objective."""
 
     HIGHER_IS_BETTER = "higher_is_better"
