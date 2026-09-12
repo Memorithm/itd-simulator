@@ -187,3 +187,8 @@ agent_operating_protocol:
     If this roadmap cannot be read, do not make scientific-revision,
     confirmatory-study, cross-repository promotion, or merge decisions. Read-only
     diagnosis is allowed.
+
+# V0 holdout — Orchestrator must not AUTO_MERGE this repository.
+autonomous_merge_policy:
+  schema_version: 1
+  decision: deny
