@@ -7,8 +7,11 @@ not ITD V29.18 components and must not be interpreted as stopping policies.
 from __future__ import annotations
 
 import math
+from collections.abc import Sequence
 from dataclasses import dataclass
 from enum import StrEnum
+
+import numpy as np
 
 
 class TrajectoryDescriptorKind(StrEnum):
@@ -74,3 +77,40 @@ class TrajectorySeries:
     @property
     def descriptor(self) -> TrajectoryDescriptorKind:
         return self.points[0].descriptor
+
+
+def normalized_state_deformation(
+    previous: Sequence[float],
+    current: Sequence[float],
+    *,
+    epsilon: float = 1.0e-12,
+) -> float:
+    """Measure dimensionless per-step deformation of a one-dimensional state.
+
+    This is an ITD-33 research descriptor, not the temporal-deformation
+    component of ITD V29.18. It normalizes RMS state change by the arithmetic
+    mean of endpoint RMS magnitudes.
+    """
+
+    previous_array = np.asarray(previous, dtype=np.float64)
+    current_array = np.asarray(current, dtype=np.float64)
+    if previous_array.ndim != 1 or current_array.ndim != 1:
+        raise ValueError("trajectory states must be one-dimensional.")
+    if previous_array.size == 0 or current_array.size == 0:
+        raise ValueError("trajectory states must be non-empty.")
+    if previous_array.shape != current_array.shape:
+        raise ValueError("trajectory states must have matching shapes.")
+    if not np.all(np.isfinite(previous_array)) or not np.all(
+        np.isfinite(current_array)
+    ):
+        raise ValueError("trajectory states must contain only finite values.")
+    if not math.isfinite(epsilon) or epsilon <= 0.0:
+        raise ValueError("epsilon must be finite and strictly positive.")
+
+    previous_rms = float(np.sqrt(np.mean(previous_array * previous_array)))
+    current_rms = float(np.sqrt(np.mean(current_array * current_array)))
+    reference = 0.5 * (previous_rms + current_rms)
+    deformation = float(
+        np.sqrt(np.mean((current_array - previous_array) ** 2))
+    )
+    return deformation / max(reference, epsilon)
