@@ -6,10 +6,12 @@ modify ITD V29.18 and are not FLAT-ATTENTION execution kernels.
 
 from __future__ import annotations
 
+from typing import TypeAlias
+
 import numpy as np
 from numpy.typing import NDArray
 
-FloatArray = NDArray[np.float64]
+FloatArray: TypeAlias = NDArray[np.float64]
 
 
 def causal_toeplitz_weights(kernel: FloatArray, length: int) -> FloatArray:
@@ -19,7 +21,7 @@ def causal_toeplitz_weights(kernel: FloatArray, length: int) -> FloatArray:
     behind the query. Each non-empty row is normalized independently.
     """
 
-    kernel_array = np.asarray(kernel, dtype=np.float64)
+    kernel_array: FloatArray = np.asarray(kernel, dtype=np.float64)
     if kernel_array.ndim != 1 or kernel_array.size == 0:
         raise ValueError("kernel must be a non-empty one-dimensional array.")
     if length < 1:
@@ -31,7 +33,7 @@ def causal_toeplitz_weights(kernel: FloatArray, length: int) -> FloatArray:
     if not np.any(kernel_array > 0.0):
         raise ValueError("kernel must contain positive mass.")
 
-    weights = np.zeros((length, length), dtype=np.float64)
+    weights: FloatArray = np.zeros((length, length), dtype=np.float64)
     max_lag = int(kernel_array.size - 1)
     for query in range(length):
         first_key = max(0, query - max_lag)
@@ -49,8 +51,8 @@ def causal_toeplitz_weights(kernel: FloatArray, length: int) -> FloatArray:
 def apply_structured_mixer(weights: FloatArray, values: FloatArray) -> FloatArray:
     """Apply an explicit row-normalized structured mixer to value vectors."""
 
-    matrix = np.asarray(weights, dtype=np.float64)
-    value_array = np.asarray(values, dtype=np.float64)
+    matrix: FloatArray = np.asarray(weights, dtype=np.float64)
+    value_array: FloatArray = np.asarray(values, dtype=np.float64)
     if matrix.ndim != 2 or matrix.shape[0] != matrix.shape[1]:
         raise ValueError("weights must be a square two-dimensional matrix.")
     if value_array.ndim != 2 or value_array.shape[0] != matrix.shape[1]:
