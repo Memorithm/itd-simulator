@@ -6,6 +6,7 @@ from itd_research.trajectory_schema import (
     TrajectoryDescriptorKind,
     TrajectoryPoint,
     TrajectorySeries,
+    normalized_state_deformation,
 )
 
 
@@ -29,3 +30,18 @@ def test_trajectory_series_rejects_mixed_semantics() -> None:
                 TrajectoryPoint(1, TrajectoryDescriptorKind.MEMORY_CHURN, 2.0, "events", "memory-v2"),
             ),
         )
+
+
+def test_normalized_state_deformation_is_zero_for_identical_state() -> None:
+    value = normalized_state_deformation((1.0, -2.0, 3.0), (1.0, -2.0, 3.0))
+    assert value == 0.0
+
+
+def test_normalized_state_deformation_tracks_state_change() -> None:
+    value = normalized_state_deformation((1.0, 0.0), (0.0, 1.0))
+    assert value > 0.0
+
+
+def test_normalized_state_deformation_rejects_shape_mismatch() -> None:
+    with pytest.raises(ValueError, match="matching shapes"):
+        normalized_state_deformation((1.0,), (1.0, 2.0))
