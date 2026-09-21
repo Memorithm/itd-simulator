@@ -86,7 +86,7 @@ class CampaignIdentityV1:
         *,
         implementation: SourceIdentity,
         adapters: tuple[AdapterIdentityV1, ...] = (),
-    ) -> "CampaignIdentityV1":
+    ) -> CampaignIdentityV1:
         return cls(
             campaign_id=campaign_id,
             protocol_fingerprint=protocol.fingerprint(),
