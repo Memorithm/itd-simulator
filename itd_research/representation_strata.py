@@ -100,18 +100,18 @@ class RepresentationResourceAccounting:
     cost_unit: str
 
     def __post_init__(self) -> None:
-        for name, value in (
+        for name, integer_value in (
             ("stored_payload_bits", self.stored_payload_bits),
             ("metadata_bits", self.metadata_bits),
             ("peak_working_bytes", self.peak_working_bytes),
         ):
-            if value < 0:
+            if integer_value < 0:
                 raise ValueError(f"{name} must be non-negative.")
-        for name, value in (
+        for name, float_value in (
             ("encode_cost", self.encode_cost),
             ("decode_cost", self.decode_cost),
         ):
-            if not math.isfinite(value) or value < 0.0:
+            if not math.isfinite(float_value) or float_value < 0.0:
                 raise ValueError(f"{name} must be finite and non-negative.")
         if not self.cost_unit.strip():
             raise ValueError("cost_unit must not be empty.")
