@@ -1,6 +1,8 @@
 # ITD Simulator — Model Status
 
-Current scientific model revision: ITD V29.18.
+Current certified scientific model revision: ITD V29.18.
+
+Active research-engine lineage: ITD Research Lab V30.0-alpha / ITD-3X. This research lineage is not a certified replacement for V29.18.
 
 Current source-tree software version: 0.2.0. The latest published GitHub
 software release remains the legacy V10 release 0.1.1; no V29.18 software
@@ -27,3 +29,7 @@ These results are relative to the declared test suites, analytical cases,
 implementation-generated oracle fixture, tolerances, dependencies, and
 experimental configurations. They do not constitute a universal proof of
 correctness or physical validity.
+
+## ITD-3X research-engine boundary
+
+The ITD-30.x through ITD-39.x programme develops new experimental representations, trajectory descriptors, uncertainty methods, adaptive-system evidence, perturbation studies, search adapters and Rust/evidence infrastructure. These mechanisms may consume the frozen V29.18 reference but do not modify its certified numerical semantics. Promotion of any V30+ mechanism to a certified scientific model requires a separate reviewed scientific-revision process.
