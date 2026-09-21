@@ -52,6 +52,9 @@ class RepresentationTransitionGraph:
             raise ValueError("transition graph node identifiers must be unique.")
 
         nodes = set(self.node_ids)
+        cost_units = {transition.cost_unit for transition in self.transitions}
+        if len(cost_units) > 1:
+            raise ValueError("transition graph requires one common transition cost unit.")
         edges: set[tuple[str, str]] = set()
         for transition in self.transitions:
             if transition.source_id not in nodes or transition.target_id not in nodes:
