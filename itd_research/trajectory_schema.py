@@ -10,8 +10,12 @@ import math
 from collections.abc import Sequence
 from dataclasses import dataclass
 from enum import StrEnum
+from typing import TypeAlias
 
 import numpy as np
+from numpy.typing import NDArray
+
+FloatArray: TypeAlias = NDArray[np.float64]
 
 
 class TrajectoryDescriptorKind(StrEnum):
@@ -92,8 +96,8 @@ def normalized_state_deformation(
     mean of endpoint RMS magnitudes.
     """
 
-    previous_array = np.asarray(previous, dtype=np.float64)
-    current_array = np.asarray(current, dtype=np.float64)
+    previous_array: FloatArray = np.asarray(previous, dtype=np.float64)
+    current_array: FloatArray = np.asarray(current, dtype=np.float64)
     if previous_array.ndim != 1 or current_array.ndim != 1:
         raise ValueError("trajectory states must be one-dimensional.")
     if previous_array.size == 0 or current_array.size == 0:
