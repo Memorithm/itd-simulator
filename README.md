@@ -1,17 +1,17 @@
-# ITD Simulator
+# ITD Research Lab
 
-Deterministic research simulator for curvature-weighted rotational intensity
-and a five-component structural signature.
+Comparative research laboratory for structural representations, trajectories, uncertainty, interventions and adaptive systems, built around a frozen deterministic ITD V29.18 scientific reference.
 
 | Version dimension | Value |
 |---|---|
 | Software version in this source tree | `0.2.0` |
 | Scientific model revision | `ITD V29.18` |
 | Latest published GitHub software release | `0.1.1` (legacy V10) |
+| Active research-engine lineage | `ITD Research Lab V30.0-alpha / ITD-3X` |
 
-Software versions describe packaging and repository releases. Scientific model
-revisions describe the numerical model. They are intentionally independent:
-software `0.2.0` packages the unchanged scientific model `ITD V29.18`.
+Software versions describe packaging and repository releases. Scientific model revisions describe certified numerical models. Research-engine versions describe experimental programme evolution. They are intentionally independent: software `0.2.0` packages the unchanged scientific model `ITD V29.18`, while the ITD-3X programme develops V30+ research mechanisms around that frozen baseline.
+
+The project name is now **ITD Research Lab**. The repository/package names remain unchanged during the bootstrap to preserve compatibility. See [`docs/itd3x/ITD_3X_PROGRAMME.md`](docs/itd3x/ITD_3X_PROGRAMME.md).
 
 ## Install
 
