@@ -34,18 +34,18 @@ class RepresentationObservation:
     def __post_init__(self) -> None:
         if not self.representation_id.strip():
             raise ValueError("representation_id must not be empty.")
-        for name, value in (
+        for name, integer_value in (
             ("stored_payload_bits", self.stored_payload_bits),
             ("metadata_bits", self.metadata_bits),
             ("peak_working_bytes", self.peak_working_bytes),
         ):
-            if value < 0:
+            if integer_value < 0:
                 raise ValueError(f"{name} must be non-negative.")
-        for name, value in (
+        for name, float_value in (
             ("task_error", self.task_error),
             ("reconstruction_error", self.reconstruction_error),
         ):
-            if not math.isfinite(value) or value < 0.0:
+            if not math.isfinite(float_value) or float_value < 0.0:
                 raise ValueError(f"{name} must be finite and non-negative.")
 
     @property
