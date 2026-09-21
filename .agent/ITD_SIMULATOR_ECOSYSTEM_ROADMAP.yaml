@@ -1,7 +1,7 @@
 schema_version: 1
 kind: itd_simulator_ecosystem_agent_roadmap
 status: active
-last_updated: "2026-08-31"
+last_updated: "2026-09-21"
 repository: Memorithm/itd-simulator
 intended_consumer: autonomous_coding_agent
 merge_policy: never_merge_this_file_to_default_branch_unless_user_explicitly_requests
@@ -170,6 +170,41 @@ roadmap:
       - stable_experiment_adapter_API
       - reproducible_environment_and_release_evidence
       - compatibility_matrix_with_TDI_SciRust_ElasticXxx_and_FLAT
+
+
+itd3x_programme:
+  research_engine_revision: "ITD Research Lab V30.0-alpha"
+  frozen_scientific_baseline: "ITD V29.18"
+  status: active_bootstrap
+  default_branch_work: research/itd-3x-bootstrap
+  series:
+    ITD-30.x: foundation_protocols_adapters_campaigns
+    ITD-31.x: representation_strata_and_transition_graphs
+    ITD-32.x: AI_SciML_and_NeuralOperator
+    ITD-33.x: trajectory_and_TDI_inference_dynamics
+    ITD-34.x: UQ_OOD_calibration_and_abstention
+    ITD-35.x: structured_attention_FLAT_MAA_spectral_operators
+    ITD-36.x: adaptive_Elastic_shadow_policies
+    ITD-37.x: NoiseLab_perturbation_and_robustness
+    ITD-38.x: Forge_bounded_search
+    ITD-39.x: Rust_SciRust_evidence_and_Hub
+  issue_map:
+    ITD-30.x: 33
+    ITD-31.x: 34
+    ITD-32.x: 35
+    ITD-33.x: 29
+    ITD-34.x: 36
+    ITD-35.x: 26
+    ITD-36.x: 37
+    ITD-37.x: 38
+    ITD-38.x: 39
+    ITD-39.x: 40
+  invariants:
+    - V29_18_remains_frozen_and_separately_certified
+    - V30_plus_research_mechanisms_are_not_certified_replacements_without_revision_review
+    - existing_negative_Missions_3_8_result_is_preserved
+    - final_holdouts_remain_inaccessible_to_selection_and_search
+    - cross_repository_evidence_does_not_transfer_runtime_policy_ownership
 
 agent_operating_protocol:
   must_read_this_file:
