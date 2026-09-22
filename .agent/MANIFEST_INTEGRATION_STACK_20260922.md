@@ -1,5 +1,15 @@
 # ITD manifest integration stack — 2026-09-22
 
+## Latest result: integration completed
+
+Read `.agent/PR_INTEGRATION_COMPLETED_20260922_1926.md` before the historical staging record below. The ten previously open PRs #44, #45, #46, #47, #48, #49, #50, #52, #53 and #56 are now integrated into main `7ba33919d47232a093c882a8ee4b531ecc0f1aeb`. GitHub's open-PR endpoint returned an empty array after the final merge. The final tree is exactly `5d769c75e9b4ff55c57ef77a429264afc922876e`, the tested cumulative source.
+
+Four PRs were merged individually after full candidate CI; #56 then integrated the remaining six as an explicitly disclosed cumulative normal merge after its complete CI 35771720841 passed. All constituent head commits remain ancestors. No PR was merely closed without integration, and no automatic-merge setting was enabled. The post-merge main run remains a separate observation recorded in the completion report.
+
+Do not reapply these repairs or treat the older open/queued states below as current. Refresh actual main for new work. The remainder of this document preserves the pre-integration evidence.
+
+---
+
 Scope: user-requested resolution of recurring PR conflicts. This is not a neural research result or permission to auto-merge.
 
 ## Why the preceding repair did not last
