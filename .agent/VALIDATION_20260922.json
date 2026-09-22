@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "observed_on": "2026-09-22",
+  "programme_revision": "2026-09-22.1",
+  "validated_source_commit": "7f8f08e764dd5f36688533e9f7e7fb2f290f6e17",
+  "validation_environment": {
+    "kind": "assistant_local_container_not_Thor",
+    "python": "3.13.5",
+    "machine": "x86_64"
+  },
+  "unittest_methods_passed": 5,
+  "invalid_mutation_subcases_rejected": 22,
+  "programme_milestones": 26,
+  "itd_families": 10,
+  "programme_canonical_sha256": "ea1c59781fe7df753c68f64b7244ebe534b923ef5e3700a1fd7c0ffacfdcd49d",
+  "source_blob_identities_match_GitHub": {
+    "ITD_RESEARCH_BOOTSTRAP.md": "ad6572bea56bdddcbd4935f4c13efbb8058c7913",
+    "ITD_SIMULATOR_ECOSYSTEM_ROADMAP.yaml": "199b33775bc228f1c9bb52b8ca26b2f1132352ad",
+    "RESEARCH_STATUS_20260922.md": "b4426529dadba5a4e0f4d1152a37d93fad3604f0",
+    "V888_BOOL_PROGRAMME.json": "46a6fd6f25715ff5622a8cd4f3e3bdf58c7bae78",
+    "V888_BOOL_RESEARCH_PROGRAMME.md": "ea505f1e3302655237e44715972402e8a48496db",
+    "test_v888_programme.py": "8ee95fac402d47310367f93afd4bc7c7d5b7ae58",
+    "validate_v888_programme.py": "155b5bddaf3dcc4ed29a047bdc65190e8c6e9fb0"
+  },
+  "strategy_path_checks": "passed",
+  "existing_merge_denial": "preserved",
+  "product_code_changed": false,
+  "Thor_simulation_executed_in_this_update": false,
+  "biological_or_Boolean_task_result_claimed": false,
+  "scope": "metadata consistency, source identity and bootstrap pointers; not live evidence verification or product CI"
+}
