@@ -1,6 +1,6 @@
 # ITD Research Lab — durable research re-entry
 
-Programme revision: **2026-09-22.1**. Engine lineage: **V30.0-alpha / ITD-3X**.
+Programme revision: **2026-09-22.2**. Engine lineage: **V30.0-alpha / ITD-3X**.
 This is a strategy revision, not a software release or a validated new brain model.
 
 ## Mandatory read order
@@ -11,7 +11,8 @@ On the existing `agent/ecosystem-roadmap` branch, read:
 2. `.agent/ITD_RESEARCH_BOOTSTRAP.md` — this resumption procedure.
 3. `.agent/V888_BOOL_PROGRAMME.json` — authoritative milestone dependencies and exit criteria.
 4. `.agent/V888_BOOL_RESEARCH_PROGRAMME.md` — scientific design and comparison rules.
-5. `.agent/RESEARCH_STATUS_20260922.md` — dated observations, not a live status API.
+5. `.agent/RESEARCH_STATUS_20260922_BOOL01.md` — latest scoped execution observation.
+6. `.agent/RESEARCH_STATUS_20260922.md` — preserved earlier checkpoint, not live state.
 
 The root AGENTS.md already points to the first file. Strategy stays off main as before;
 this update does not merge that branch, replace the frozen core, or create another
@@ -32,8 +33,13 @@ and `test_v888_programme.py`. The validator checks metadata consistency and comp
 a canonical fingerprint. It cannot verify external evidence or authorize execution.
 An eligible dependency is not permission to read a final holdout or actuate a runtime.
 
-The next implementation is **V888-BOOL-0.1**: qualify the executable graph identity
-and its boundary. The first functional target remains **V888-BOOL-1.1**, delayed XOR.
+V888-BOOL-0.1 completed source/software qualification in Thor run 35717145115 on
+`d61ffb6a79ebe975c1d867ad1a728fd01126fde0`; exact directed-pair counts agreed and
+the canonical CSR passed independent readback. Code is staged in SciRust PR #1505
+on the PR #1502 branch, not claimed merged into master. Recheck graph hash and
+actual path before reuse. The next implementation is **V888-BOOL-0.2**: deterministic
+subsets and topology-matched controls with complete cut-edge accounting.
+The first functional target remains **V888-BOOL-1.1**, delayed XOR.
 Foundation integration **ITD-30.5** is a separate repair task, not an excuse to mark
 all blocked downstream integrations as completed.
 
