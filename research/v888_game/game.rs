@@ -180,7 +180,7 @@ impl Policy for ForcedPolicy {
             "timeout" => Action::Timeout, _ => Action::Invalid,
         }
     }
-    fn persistent_state_bytes(&self) -> usize { 0 }
+    fn persistent_state_bytes(&self) -> usize { std::mem::size_of::<Self>() + self.name.capacity() }
 }
 
 fn bit(text: &str) -> Result<bool, &'static str> {
