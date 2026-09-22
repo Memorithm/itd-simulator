@@ -72,3 +72,9 @@ def test_structural_descriptor_remains_separately_owned() -> None:
 
     assert record.step_ref.source.source == "Memorithm/TDI"
     assert record.itd_source.source == "Memorithm/itd-simulator"
+
+
+@pytest.mark.parametrize("role", ["final", "unknown", None])
+def test_serialized_role_cannot_bypass_final_boundary(role: object) -> None:
+    with pytest.raises((ValueError, TypeError)):
+        _step(0, role=role)

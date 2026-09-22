@@ -60,6 +60,7 @@ class TdiTrajectoryStepRef:
     action: TdiAdaptiveAction | None = None
 
     def __post_init__(self) -> None:
+        object.__setattr__(self, "role", SplitRole(self.role))
         if not self.trajectory_id.strip():
             raise ValueError("trajectory_id must not be empty.")
         if self.step < 0:

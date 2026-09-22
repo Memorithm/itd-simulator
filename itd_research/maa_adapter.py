@@ -51,6 +51,7 @@ class MaaRouteRef:
     recomposition_policy: str
 
     def __post_init__(self) -> None:
+        object.__setattr__(self, "role", SplitRole(self.role))
         if not self.route_id.strip():
             raise ValueError("route_id must not be empty.")
         if self.source.source != "Memorithm/FLAT-ATTENTION":

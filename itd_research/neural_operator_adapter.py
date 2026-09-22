@@ -42,6 +42,7 @@ class OperatorSampleRef:
     distribution: str
 
     def __post_init__(self) -> None:
+        object.__setattr__(self, "role", SplitRole(self.role))
         if not self.sample_id.strip():
             raise ValueError("sample_id must not be empty.")
         if not self.resolution or any(size <= 0 for size in self.resolution):

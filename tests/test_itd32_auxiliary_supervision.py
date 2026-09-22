@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from dataclasses import replace
+
 import pytest
 
 from itd_research.auxiliary_supervision import (
@@ -138,3 +140,9 @@ def test_sample_efficiency_returns_none_if_threshold_is_not_reached() -> None:
         )
         is None
     )
+
+
+@pytest.mark.parametrize("role", ["final", "unknown", None])
+def test_serialized_role_cannot_bypass_final_boundary(role: object) -> None:
+    with pytest.raises((ValueError, TypeError)):
+        replace(_arm("baseline", None), role=role)

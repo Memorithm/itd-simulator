@@ -91,6 +91,15 @@ class SearchAuthorization:
     search_space_frozen: bool
     compute_budget_frozen: bool
 
+    def __post_init__(self) -> None:
+        object.__setattr__(self, "role", SplitRole(self.role))
+        for name, value in (
+            ("search_space_frozen", self.search_space_frozen),
+            ("compute_budget_frozen", self.compute_budget_frozen),
+        ):
+            if type(value) is not bool:
+                raise ValueError(f"{name} must be a bool.")
+
     def assert_allowed(self) -> None:
         if self.role is SplitRole.FINAL:
             raise ValueError("search on the final split is forbidden.")

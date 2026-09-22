@@ -63,3 +63,9 @@ def test_noiselab_adapter_rejects_wrong_source() -> None:
             raw_observation_sha256="b" * 64,
             perturbed_observation_sha256="c" * 64,
         )
+
+
+@pytest.mark.parametrize("role", ["final", "unknown", None])
+def test_serialized_role_cannot_bypass_final_boundary(role: object) -> None:
+    with pytest.raises((ValueError, TypeError)):
+        _intervention(role)

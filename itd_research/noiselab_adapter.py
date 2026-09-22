@@ -36,6 +36,7 @@ class NoiseInterventionRef:
     filtered_observation_sha256: str | None = None
 
     def __post_init__(self) -> None:
+        object.__setattr__(self, "role", SplitRole(self.role))
         if not self.intervention_id.strip():
             raise ValueError("intervention_id must not be empty.")
         if self.role is SplitRole.FINAL:
