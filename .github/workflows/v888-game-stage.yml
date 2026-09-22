@@ -1,0 +1,90 @@
+name: Stage V888 game source and manifest blobs
+on:
+  push:
+    branches: [research/v888-game-environment-v1]
+    paths: ['research/v888_game/**', '.github/workflows/v888-game-stage.yml']
+permissions:
+  contents: read
+jobs:
+  stage:
+    if: github.repository == 'Memorithm/itd-simulator' && github.ref == 'refs/heads/research/v888-game-environment-v1'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - name: Stage bounded changes as unreferenced blobs only
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import hashlib
+          import json
+          import os
+          from pathlib import Path
+          import subprocess
+          import urllib.request
+
+          source = subprocess.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip()
+          assert source == os.environ['GITHUB_SHA']
+          assert os.environ['GITHUB_REF'] == 'refs/heads/research/v888-game-environment-v1'
+          changes = []
+          game = Path('research/v888_game/game.rs')
+          text = game.read_text()
+          old = '    fn persistent_state_bytes(&self) -> usize { 0 }\n}\n\nfn bit'
+          new = '    fn persistent_state_bytes(&self) -> usize { std::mem::size_of::<Self>() + self.name.capacity() }\n}\n\nfn bit'
+          if old in text:
+              assert text.count(old) == 1
+              text = text.replace(old, new)
+              game.write_text(text)
+          else:
+              assert new in text
+          changes.append(game)
+          oracle = Path('research/v888_game/qualify.py')
+          text = oracle.read_text()
+          old = 'import argparse\nfrom collections import Counter, defaultdict\nimport hashlib\nimport itertools\nimport json\nfrom pathlib import Path\nimport platform\nimport random\nimport subprocess\nimport sys\nimport time\nimport unittest'
+          new = 'import argparse\nimport hashlib\nimport itertools\nimport json\nimport os\nimport platform\nimport random\nimport subprocess\nimport sys\nimport time\nimport unittest\nfrom collections import Counter, defaultdict\nfrom pathlib import Path'
+          if old in text:
+              assert text.count(old) == 1
+              text = text.replace(old, new).replace('__import__("os").environ', 'os.environ')
+              oracle.write_text(text)
+          else:
+              assert new in text and '__import__("os")' not in text
+          changes.append(oracle)
+          subprocess.run(['python3', 'tools/check_manifest.py', '--update'], check=True)
+          subprocess.run(['python3', 'tools/check_manifest.py'], check=True)
+          changes.append(Path('MANIFEST.sha256'))
+          entries = []
+          for path in changes:
+              content = path.read_text()
+              raw = content.encode()
+              expected = hashlib.sha1(b'blob ' + str(len(raw)).encode() + b'\0' + raw).hexdigest()
+              request = urllib.request.Request(
+                  'https://api.github.com/repos/Memorithm/itd-simulator/git/blobs',
+                  data=json.dumps({'content': content, 'encoding': 'utf-8'}).encode(),
+                  headers={'Authorization': 'Bearer ' + os.environ['GH_TOKEN'], 'Accept': 'application/vnd.github+json', 'Content-Type': 'application/json'},
+                  method='POST')
+              with urllib.request.urlopen(request, timeout=60) as response:
+                  blob = json.load(response)
+              assert blob['sha'] == expected
+              entries.append({'path': str(path), 'mode': '100644', 'type': 'blob', 'sha': expected})
+          out = Path(os.environ['RUNNER_TEMP']) / 'itd-game-stage'
+          out.mkdir()
+          result = {'source_commit': source, 'base_tree': subprocess.check_output(['git','rev-parse','HEAD^{tree}'], text=True).strip(), 'tree_elements': entries, 'refs_modified': False, 'tests_run': False}
+          (out / 'staged_blobs.json').write_text(json.dumps(result, indent=2) + '\n')
+          for path in changes:
+              (out / path.name).write_bytes(path.read_bytes())
+          print(json.dumps(result, indent=2))
+          PY
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: itd-game-staged-${{ github.sha }}
+          path: ${{ runner.temp }}/itd-game-stage/
+          if-no-files-found: error
+          retention-days: 14
