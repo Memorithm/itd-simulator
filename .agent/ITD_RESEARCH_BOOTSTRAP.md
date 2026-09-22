@@ -1,16 +1,20 @@
 # ITD Research Lab — durable research re-entry
 
-## Latest integration checkpoint — read before repairing or integrating PRs
+## Latest issue and integration checkpoints
 
-Read `.agent/MANIFEST_INTEGRATION_STACK_20260922.md` alongside the older
-`.agent/PR_CONFLICT_REPAIR_20260922.md`. After #42 and #55 entered main, the remaining
-manifests conflicted again. The ten remaining heads are now a tested cumulative
-stack (#44 -> #45 -> #46 -> #47 -> #48 -> #49 -> #50 -> #52 -> #53 -> #56), all targeting
-main. Source-preserving repairs and TEN sequential normal merge commits were rehearsed
-successfully in run 35771215462. The top includes the entire batch, not only Hub.
-Do not recreate independent repairs against the obsolete 21e034 snapshot. Refresh live
-heads and CI, retain merge ancestry, and distinguish mergeable=true from full CI and
-actual main integration. No automatic-merge authority or neural milestone was changed.
+Read `.agent/ISSUE_TRIAGE_20260922.md` before choosing the next implementation.
+PR #64 integrated the reviewed fixes for #61, #62 and #63 into main
+`8bb6448dec5835dfc99d44a8148c7bc795eea84a`, after complete candidate CI passed.
+The eleven scientific umbrella issues remain open with individual next-step comments.
+These are evidence/measurement software corrections, not new V888 learning results.
+
+Read `.agent/PR_INTEGRATION_COMPLETED_20260922_1926.md` for the earlier completed
+ITD-3X merge backlog. `.agent/MANIFEST_INTEGRATION_STACK_20260922.md` and
+`.agent/PR_CONFLICT_REPAIR_20260922.md` are historical repair/rehearsal records,
+not lists of PRs still awaiting integration. Do not recreate their independent
+branch repairs or reapply their already-integrated changes. Refresh actual main,
+heads and CI; preserve canonical manifests and merge ancestry. No automatic-merge
+authority, final-data authorization or neural milestone was changed.
 
 Core programme revision: **2026-09-22.3**. Engine lineage: **V30.0-alpha / ITD-3X**.
 Application priority: **V888-GAME-FIRST-20260922**.
