@@ -1,0 +1,52 @@
+name: Stage V888 IO manifest blob
+on:
+  push:
+    branches: [research/v888-game-process-io-v1]
+    paths: ['research/v888_game/**', '.github/workflows/v888-io-stage.yml']
+permissions:
+  contents: read
+jobs:
+  stage:
+    if: github.repository == 'Memorithm/itd-simulator' && github.ref == 'refs/heads/research/v888-game-process-io-v1'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - name: Create a manifest blob only, without changing refs
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import hashlib, json, os, subprocess, urllib.request
+          from pathlib import Path
+          assert os.environ['GITHUB_REF'] == 'refs/heads/research/v888-game-process-io-v1'
+          source = subprocess.check_output(['git','rev-parse','HEAD'], text=True).strip()
+          assert source == os.environ['GITHUB_SHA']
+          subprocess.run(['python3','tools/check_manifest.py','--update'],check=True)
+          subprocess.run(['python3','tools/check_manifest.py'],check=True)
+          raw = Path('MANIFEST.sha256').read_bytes()
+          expected = hashlib.sha1(b'blob '+str(len(raw)).encode()+b'\0'+raw).hexdigest()
+          req = urllib.request.Request('https://api.github.com/repos/Memorithm/itd-simulator/git/blobs', data=json.dumps({'content':raw.decode(),'encoding':'utf-8'}).encode(), headers={'Authorization':'Bearer '+os.environ['GH_TOKEN'],'Accept':'application/vnd.github+json','Content-Type':'application/json'},method='POST')
+          with urllib.request.urlopen(req,timeout=60) as response:
+              blob=json.load(response)
+          assert blob['sha']==expected
+          out=Path(os.environ['RUNNER_TEMP'])/'io-stage'
+          out.mkdir()
+          result={'source_commit':source,'base_tree':subprocess.check_output(['git','rev-parse','HEAD^{tree}'],text=True).strip(),'manifest_blob':expected,'manifest_sha256':hashlib.sha256(raw).hexdigest(),'refs_modified':False}
+          (out/'staged.json').write_text(json.dumps(result,indent=2)+'\n')
+          (out/'MANIFEST.sha256').write_bytes(raw)
+          print(json.dumps(result))
+          PY
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: itd-io-staged-${{ github.sha }}
+          path: ${{ runner.temp }}/io-stage/
+          if-no-files-found: error
+          retention-days: 14
