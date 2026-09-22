@@ -1,4 +1,4 @@
-"""Stage reviewed merge resolutions; never move a remote ref or create a PR merge."""
+"""Prepare a serial integration chain; publish no branch and merge no PR."""
 from __future__ import annotations
 
 import hashlib
@@ -10,25 +10,18 @@ import urllib.request
 from pathlib import Path
 
 REPO = "Memorithm/itd-simulator"
-BASE = "21e03405aa19fbeae6d0c083635b7e6fdb306c24"
+BASE = "747e32ad5992fd71256b8fbf309376a9427cb0d8"
 HEADS = {
-    42: "25656914e2f5305d5bbfd6fc4302ada0e3d994ff",
-    44: "08d5650e61defc4016d6df5f2249908eaf31af0e",
-    45: "0db034dff37b7ecade82fe849e8568d7f7975a6d",
-    46: "aaefd8d213b38dedbe18c27c3bd17f2122dc2be4",
-    47: "353a58cb80ffc4622a1d91d70b55225945d94858",
-    48: "55494836cf2c2b2405920994693a4bbfec80e56c",
-    49: "b9916fe61a01cd0a722d2b2e2c9ed0ed2dc5822b",
-    50: "6877c414ec926dbdbdc12a823dd6747bbbb3de1f",
-    52: "c2ffd080d80aa81025641c649335bcfe49bc58c5",
-    53: "c17bcbcb62fe9d9095c46f6cf68d2a01d64d4d6b",
-    55: "7ea3ab8cc230f4bf4843855de3ca5db863169c78",
-    56: "364c6f4e9889d79c940402ccb90c24b21640ad64",
-}
-REVIEWED = {
-    44: "itd_research/representation_strata.py",
-    47: "itd_research/uq.py",
-    49: "itd_research/adaptive_shadow.py",
+    44: "ed18b387ac24a8267ff9b8a3c88513d622ccd6dd",
+    45: "2ebd2db6d9df4fcab0039703ac58509a51eff6f5",
+    46: "b65e9df4c89678302af37bef56236bf6dcdefa7b",
+    47: "d3b64d88e281511dcf472d8287d22d1c277a2eb4",
+    48: "a9af1ffc46172171e9ceeb8168fd20b3e60895ce",
+    49: "7860e37a933ec5150cf3c134a5546c65dc5336ac",
+    50: "3229a839a4837ea37fac71c88dd0a1734e0a982a",
+    52: "8141216f228768cae6e9ade73147aba847bd29bc",
+    53: "462a3b1a94b48ab7caa71978858436f352994342",
+    56: "5ffcc24e7dabffa5074370bb91ac6c81a170b539",
 }
 ROOT = Path(os.environ["REPAIR_ROOT"])
 WORK = ROOT / "work"
@@ -38,7 +31,7 @@ ENV = {k: v for k, v in os.environ.items() if k not in ("GH_TOKEN", "GITHUB_TOKE
 ENV.update(PYTHONDONTWRITEBYTECODE="1", OMP_NUM_THREADS="1", OPENBLAS_NUM_THREADS="1")
 
 
-def api(suffix: str, data: dict | None = None) -> dict:
+def api(suffix: str, data: dict | None = None):
     req = urllib.request.Request(
         f"https://api.github.com/repos/{REPO}/{suffix}",
         data=None if data is None else json.dumps(data).encode(),
@@ -50,7 +43,7 @@ def api(suffix: str, data: dict | None = None) -> dict:
         return json.load(response)
 
 
-def command(args: list[str], *, check: bool = True, log: Path | None = None) -> subprocess.CompletedProcess:
+def command(args, *, check=True, log=None):
     p = subprocess.run(args, cwd=WORK, env=ENV, capture_output=True, text=True, timeout=600)
     if log is not None:
         log.write_text(p.stdout + p.stderr)
@@ -59,99 +52,109 @@ def command(args: list[str], *, check: bool = True, log: Path | None = None) -> 
     return p
 
 
-def git(*args: str, check: bool = True) -> str:
+def git(*args, check=True):
     return command(["git", *args], check=check).stdout.strip()
 
 
-def contents(rev: str, path: str) -> bytes:
-    return subprocess.check_output(["git", "show", f"{rev}:{path}"], cwd=WORK, env=ENV)
+def tree_map(rev):
+    result = {}
+    for entry in git("ls-tree", "-rz", "--full-tree", rev).split("\0"):
+        if not entry:
+            continue
+        spec, path = entry.split("\t", 1)
+        mode, kind, sha = spec.split()
+        if kind != "blob" or mode not in ("100644", "100755"):
+            raise RuntimeError(f"unsupported file kind: {path}")
+        result[path] = (mode, sha)
+    return result
 
 
-def main() -> None:
-    if os.environ["GITHUB_REPOSITORY"] != REPO:
-        raise RuntimeError("wrong repository")
-    if os.environ["GITHUB_REF"] != "refs/heads/repair/itd-pr-conflicts-20260922":
-        raise RuntimeError("wrong staging branch")
-    if api("branches/main")["commit"]["sha"] != BASE:
-        raise RuntimeError("main moved; review a fresh base before staging")
-    subprocess.run(["git", "clone", "--filter=blob:none", "--no-checkout", f"https://github.com/{REPO}.git", str(WORK)], check=True, env=ENV, timeout=300)
+def check_live():
+    assert api("branches/main")["commit"]["sha"] == BASE, "main moved"
+    pulls = api("pulls?state=open&per_page=100")
+    assert {p["number"] for p in pulls} == set(HEADS), "open PR set changed"
+    for p in pulls:
+        assert p["head"]["sha"] == HEADS[p["number"]], "PR head moved"
+        assert p["base"]["ref"] == "main" and p["head"]["repo"]["full_name"] == REPO
+    return {p["number"]: p for p in pulls}
+
+
+def main():
+    assert os.environ["GITHUB_REPOSITORY"] == REPO
+    assert os.environ["GITHUB_REF"] == "refs/heads/repair/itd-pr-conflicts-20260922"
+    pulls = check_live()
+    subprocess.run(["git", "clone", "--no-tags", "--no-checkout", f"https://github.com/{REPO}.git", str(WORK)], check=True, env=ENV, timeout=300)
     git("config", "user.name", "MEMOPERF")
     git("config", "user.email", "contact@checkupauto.fr")
+    git("config", "core.hooksPath", "/dev/null")
     results = []
+    current = BASE
+    expected = tree_map(BASE)
     for number, head in HEADS.items():
         dest = OUT / str(number)
         dest.mkdir()
-        record = {"pr": number, "old_head": head, "main": BASE, "refs_modified": False, "ready": False}
+        record = {"pr": number, "old_head": head, "main": BASE, "branch": pulls[number]["head"]["ref"], "ready": False, "refs_modified": False,
+                  "predecessor_pr": results[-1]["pr"] if results else None}
         results.append(record)
-        try:
-            pr = api(f"pulls/{number}")
-            assert pr["state"] == "open" and not pr["merged"]
-            assert pr["head"]["sha"] == head and pr["head"]["repo"]["full_name"] == REPO
-            assert pr["base"]["ref"] == "research/itd-3x-bootstrap"
-            record.update(branch=pr["head"]["ref"], previous_base=pr["base"]["ref"])
-            git("fetch", "--no-tags", "origin", head, BASE)
-            git("checkout", "--force", "--detach", head)
-            merge = command(["git", "merge", "--no-commit", "--no-ff", BASE], check=False, log=dest/"merge.log")
-            conflicts = git("diff", "--name-only", "--diff-filter=U").splitlines()
-            expected = ["MANIFEST.sha256"] + ([REVIEWED[number]] if number in REVIEWED else [])
-            assert merge.returncode == 1 and sorted(conflicts) == sorted(expected), conflicts
-            record["resolved_conflicts"] = conflicts
-            if number in REVIEWED:
-                path = REVIEWED[number]
-                main_content = contents(BASE, path)
-                head_content = contents(head, path)
-                assert head_content.startswith(main_content), "resolution is no longer an append-only extension"
-                (WORK/path).write_bytes(head_content)
-                git("add", "--", path)
+        git("fetch", "--no-tags", "origin", head)
+        ancestor = git("merge-base", current, head)
+        head_map, ancestor_map = tree_map(head), tree_map(ancestor)
+        own_paths = []
+        for line in git("diff", "--name-status", ancestor, head).splitlines():
+            status, path = line.split("\t")
+            if path == "MANIFEST.sha256":
+                continue
+            assert status in ("A", "M"), (status, path)
+            assert path.startswith(("itd_research/", "tests/test_itd", "docs/itd3x/")), path
+            assert expected.get(path) in (ancestor_map.get(path), head_map[path]), "overlapping source edit requires review"
+            expected[path] = head_map[path]
+            own_paths.append(path)
+        git("checkout", "--force", "--detach", head)
+        merged = command(["git", "merge", "--no-commit", "--no-ff", current], check=False, log=dest/"merge.log")
+        conflicts = git("diff", "--name-only", "--diff-filter=U").splitlines()
+        assert merged.returncode in (0, 1) and set(conflicts) <= {"MANIFEST.sha256"}, conflicts
+        if conflicts:
             git("checkout", "--ours", "--", "MANIFEST.sha256")
             git("add", "--", "MANIFEST.sha256")
-            command([sys.executable, "tools/check_manifest.py", "--update"], log=dest/"manifest-update.log")
-            git("add", "--", "MANIFEST.sha256")
-            assert not git("diff", "--name-only", "--diff-filter=U")
-            assert not git("diff", "--cached", "--name-only", "--diff-filter=D", BASE)
-            paths = git("diff", "--cached", "--name-only", BASE).splitlines()
-            for path in paths:
-                if path == "MANIFEST.sha256":
-                    continue
-                assert (WORK/path).read_bytes() == contents(head, path), f"lost or mixed PR code: {path}"
-                assert path.startswith(("itd_research/", "tests/test_itd", "docs/itd3x/")), path
-            git("diff", "--cached", "--check")
-            for name, args in [
-                ("manifest", [sys.executable, "tools/check_manifest.py"]),
-                ("ruff", ["ruff", "check", "."]),
-                ("mypy", ["mypy", "tools/check_manifest.py", "tools/check_commit_messages.py", "tools/check_v29_summary.py", "tools/deterministic_smoke.py", "itd_research"]),
-                ("tests", [sys.executable, "-m", "pytest", "-q", *sorted(str(p.relative_to(WORK)) for p in (WORK/"tests").glob("test_itd*.py"))]),
-            ]:
-                command(args, log=dest/(name+".log"))
-            assert not git("diff", "--name-only"), "tests changed tracked contents"
-            local_tree = git("write-tree")
-            (dest/"candidate.diff").write_text(git("diff", "--cached", BASE)+"\n")
-            manifest = (WORK/"MANIFEST.sha256").read_bytes()
-            blob = api("git/blobs", {"content": manifest.decode(), "encoding": "utf-8"})["sha"]
-            assert blob == hashlib.sha1(b"blob "+str(len(manifest)).encode()+b"\0"+manifest).hexdigest()
-            entries = []
-            for path in git("diff", "--cached", "--name-only", head).splitlines():
-                stage = git("ls-files", "--stage", "--", path).split(maxsplit=3)
-                mode, sha, level = stage[:3]
-                assert level == "0"
-                if path != "MANIFEST.sha256":
-                    candidates = []
-                    for rev in (head, BASE):
-                        candidates.append(git("rev-parse", f"{rev}:{path}", check=False))
-                    assert sha in candidates, f"unreviewed merge blob: {path}"
-                entries.append({"path": path, "mode": mode, "type": "blob", "sha": sha})
-            tree = api("git/trees", {"base_tree":git("rev-parse", head+"^{tree}"), "tree":entries})["sha"]
-            assert tree == local_tree
-            record.update(ready=True, tree=tree, paths_vs_main=paths, tests="manifest, Ruff, mypy and test_itd*.py passed", source_changes="only reviewed append-only extensions; main files and original PR additions preserved")
-        except Exception as exc:
-            record["error"] = str(exc)
-        finally:
-            git("merge", "--abort", check=False)
-            git("reset", "--hard", head, check=False)
-            (OUT/"staged.json").write_text(json.dumps(results,indent=2)+"\n")
-            print(json.dumps(record),flush=True)
-    if not all(r["ready"] for r in results):
-        raise SystemExit("some candidates need manual correction; no remote refs changed")
+        command([sys.executable, "tools/check_manifest.py", "--update"], log=dest/"manifest-update.log")
+        git("add", "--", "MANIFEST.sha256")
+        assert not git("diff", "--name-only", "--diff-filter=U")
+        git("diff", "--cached", "--check")
+        local_tree = git("write-tree")
+        observed = tree_map(local_tree)
+        assert {k:v for k,v in observed.items() if k != "MANIFEST.sha256"} == {k:v for k,v in expected.items() if k != "MANIFEST.sha256"}, "merged sources differ from reviewed union"
+        for name, args in [
+            ("manifest", [sys.executable, "tools/check_manifest.py"]),
+            ("ruff", ["ruff", "check", "."]),
+            ("mypy", ["mypy", "tools/check_manifest.py", "tools/check_commit_messages.py", "tools/check_v29_summary.py", "tools/deterministic_smoke.py", "itd_research"]),
+            ("tests", [sys.executable, "-m", "pytest", "-q", *sorted(str(p.relative_to(WORK)) for p in (WORK/"tests").glob("test_itd*.py"))]),
+        ]:
+            command(args, log=dest/(name+".log"))
+        assert not git("diff", "--name-only"), "tests modified sources"
+        (dest/"candidate.diff").write_text(git("diff", "--cached", current)+"\n")
+        manifest = (WORK/"MANIFEST.sha256").read_bytes()
+        (dest/"MANIFEST.sha256").write_bytes(manifest)
+        blob = api("git/blobs", {"content": manifest.decode(), "encoding": "utf-8"})["sha"]
+        assert blob == hashlib.sha1(b"blob "+str(len(manifest)).encode()+b"\0"+manifest).hexdigest()
+        entries = [{"path": p, "mode": spec[0], "type": "blob", "sha": spec[1]} for p, spec in observed.items() if head_map.get(p) != spec]
+        assert set(head_map) <= set(observed), "unexpected file deletion"
+        remote_tree = api("git/trees", {"base_tree": git("rev-parse", head+"^{tree}"), "tree": entries})["sha"]
+        assert remote_tree == local_tree
+        previous = current
+        current = git("commit-tree", local_tree, "-p", head, "-p", previous, "-m", f"Local serial integration candidate #{number}")
+        record.update(ready=True, tree=remote_tree, conflicts_resolved=conflicts, own_paths=own_paths,
+                      manifest_sha256=hashlib.sha256(manifest).hexdigest(), files=len(observed),
+                      tests="manifest, Ruff, mypy, cumulative test_itd*.py passed")
+        expected = observed
+        git("merge", "--abort", check=False)
+        git("reset", "--hard", head)
+        (OUT/"staged.json").write_text(json.dumps(results, indent=2)+"\n")
+        print(json.dumps(record), flush=True)
+    check_live()
+    git("checkout", "--force", "--detach", current)
+    git("archive", "-o", str(OUT/"final-source.tar"), current)
+    (OUT/"scope.json").write_text(json.dumps({"base": BASE, "order": list(HEADS), "refs_modified": False, "merges_performed": False,
+        "method": "serial cumulative trees; only generated-manifest conflicts resolved; exact reviewed source union"},indent=2)+"\n")
 
 
 if __name__ == "__main__":
