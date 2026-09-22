@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "programme": "ITD3X-V888-BOOL-GROWTH",
-  "revision": "2026-09-22.1",
+  "revision": "2026-09-22.2",
   "observed_on": "2026-09-22",
   "owner": "Memorithm/itd-simulator",
   "execution_host": "Thor",
@@ -10,7 +10,7 @@
   "raw_data_external": true,
   "authority": {"final_holdout_access": false, "runtime_actuation": false, "model_promotion": false, "automatic_merge": false},
   "issue": 58,
-  "source_scope": {"dataset": "BANC", "materialization": "v888", "detector": "v3", "raw_synapse_bytes": 19733123829, "raw_synapse_rows": 198816365, "raw_synapse_sha256": "0dfb5cf89ba156d076beab2da38d87eaa63dcbe45d76f86b108570fb5b961dd0", "metadata_nodes": 188508, "edgelist_pairs": 13620865, "induced_synapse_contacts": 42309621, "verified_scope": "exact incoming/outgoing node totals, not pairwise equality or synapse-ID uniqueness"},
+  "source_scope": {"dataset": "BANC", "materialization": "v888", "detector": "v3", "raw_synapse_bytes": 19733123829, "raw_synapse_rows": 198816365, "raw_synapse_sha256": "0dfb5cf89ba156d076beab2da38d87eaa63dcbe45d76f86b108570fb5b961dd0", "metadata_nodes": 188508, "edgelist_pairs": 13620865, "induced_synapse_contacts": 42309621, "verified_scope": "exact incoming/outgoing node totals and directed pair multiplicities with canonical CSR; synapse-ID uniqueness not established"},
   "families": [
     {"id": "ITD-30.x", "name": "Foundation", "issue": 33},
     {"id": "ITD-31.x", "name": "Representation", "issue": 34},
@@ -27,7 +27,7 @@
     {"id": "V888-DATA-0", "title": "Audited adult source scope", "itd_series": "ITD-31.x", "owner": "SciRust", "status": "completed", "depends_on": [], "exit_criteria": ["Retain raw SHA-256 and upstream generation.", "Full raw stream and per-node induced-graph totals reconciled; pairwise equality and synapse-ID uniqueness remain unproven."], "evidence": [{"url": "https://github.com/Memorithm/scirust/actions/runs/35710150870", "source_commit": "6c74a9dc42a7b9ae82e6bd0c8499446041ae9bcd", "scope": "data audit: node totals only; not Boolean computation"}]},
     {"id": "ITD-30.4", "title": "Durable programme and dated evidence ledger", "itd_series": "ITD-30.x", "owner": "ITD", "status": "active", "depends_on": [], "exit_criteria": ["Bootstrap loads policy, programme and dated ledger from the agent branch.", "Dependency, lifecycle and false-completion regression tests pass."], "evidence": []},
     {"id": "ITD-30.5", "title": "Reconcile foundation integration", "itd_series": "ITD-30.x", "owner": "ITD", "status": "planned", "depends_on": [], "exit_criteria": ["Inspect PRs 42/43/44 against actual main, rebase only after comparison.", "Do not equate merge into an intermediate branch with main availability.", "Respect existing merge denial and exact-head CI; do not weaken holdout guards."], "evidence": []},
-    {"id": "V888-BOOL-0.1", "title": "Qualify executable graph identity", "itd_series": "ITD-31.x", "owner": "SciRust", "status": "planned", "depends_on": ["V888-DATA-0"], "exit_criteria": ["Record exact ID map, row filters, graph digest and model boundary.", "Reconcile directed pair weights or explicitly publish remaining pairwise differences before claiming full graph identity.", "Preserve integer IDs and unknown endpoints; do not infer missing biological properties."], "evidence": []},
+    {"id": "V888-BOOL-0.1", "title": "Qualify executable graph identity", "itd_series": "ITD-31.x", "owner": "SciRust", "status": "completed", "depends_on": ["V888-DATA-0"], "exit_criteria": ["Record exact ID map, row filters, graph digest and model boundary.", "Reconcile directed pair weights or explicitly publish remaining pairwise differences before claiming full graph identity.", "Preserve integer IDs and unknown endpoints; do not infer missing biological properties."], "evidence": [{"url": "https://github.com/Memorithm/scirust/actions/runs/35717145115", "source_commit": "d61ffb6a79ebe975c1d867ad1a728fd01126fde0", "scope": "198816365 raw endpoint records, zero differences on 13620865 directed pairs, canonical CSR and independent readback; source qualification only; not integrated into master"}]},
     {"id": "V888-BOOL-0.2", "title": "Deterministic subsets and topology controls", "itd_series": "ITD-31.x", "owner": "SciRust", "status": "planned", "depends_on": ["V888-BOOL-0.1"], "exit_criteria": ["Bind source IDs, sampling seed and every severed boundary edge.", "Build edge-, directed-degree-, reciprocity- and module-matched controls; validate achieved invariants.", "Fix nodes, budgets, input/output placement and training rules across arms."], "evidence": []},
     {"id": "V888-BOOL-0.3", "title": "Three independently specified dynamics", "itd_series": "ITD-39.x", "owner": "SciRust", "status": "planned", "depends_on": ["V888-BOOL-0.2"], "exit_criteria": ["CPU Rust oracle for simplified LIF, bounded integer-event and strictly Boolean recurrence.", "Specify update order, reset, refractory period, delays, overflow and event budget; test quiescence/saturation.", "Separate measured synapse multiplicity from assumed conductance/sign/threshold/delay."], "evidence": []},
     {"id": "V888-BOOL-0.4", "title": "Causal stimulation and bounded readout", "itd_series": "ITD-33.x", "owner": "ITD", "status": "planned", "depends_on": ["V888-BOOL-0.3"], "exit_criteria": ["No target-derived encoding, old-bit bypass or hidden history at readout.", "Reset or declare state continuity; test future-input and cross-trial leakage.", "Fixed recurrence first, bounded readout only; report encoder and decoder costs."], "evidence": []},
@@ -52,5 +52,5 @@
     {"id": "V888-GROWTH-3", "title": "Compare biological hypotheses with model interventions", "itd_series": "ITD-36.x", "owner": "ITD", "status": "planned", "depends_on": ["V888-GROWTH-1", "V888-GROWTH-2", "V888-BOOL-3.1"], "exit_criteria": ["Report biological evidence, simulated intervention effects and artificial performance as separate statements.", "Retain rejected mechanisms and competing explanations; no biological-growth law without suitable evidence."], "evidence": []}
   ],
   "first_functional_target": "V888-BOOL-1.1",
-  "next_implementation": "V888-BOOL-0.1"
+  "next_implementation": "V888-BOOL-0.2"
 }
