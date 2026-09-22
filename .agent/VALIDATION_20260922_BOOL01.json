@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "observed_on": "2026-09-22",
+  "programme_revision": "2026-09-22.2",
+  "validated_strategy_commit": "c49a926266e23b94122283416c774c089b6a2919",
+  "metadata_validation_environment": "assistant_local_container_not_Thor",
+  "unittest_methods_passed": 5,
+  "invalid_mutation_subcases_rejected": 22,
+  "milestones": 26,
+  "itd_families": 10,
+  "programme_canonical_sha256": "6942c511df1f81727c6d0c84e66529b8563be1149d7cc30de9b148c8d5e3a82c",
+  "checked_git_blob_identities": {
+    "V888_BOOL_PROGRAMME.json": "89fde507c22f5fb9ac64154b7a7f27e2100e3a91",
+    "ITD_RESEARCH_BOOTSTRAP.md": "265032fa52b98bf28d40e6bba6ababd420c7f6a8",
+    "ITD_SIMULATOR_ECOSYSTEM_ROADMAP.yaml": "44ce9b2344573481a48c273cb9ca3ecfb8091759"
+  },
+  "cross_document_revision_and_next_stage": "passed",
+  "merge_denial_preserved": true,
+  "next_implementation": "V888-BOOL-0.2",
+  "executed_graph_source": "d61ffb6a79ebe975c1d867ad1a728fd01126fde0",
+  "Thor_graph_qualification_run": 35717145115,
+  "graph_qualification_artifact": 10689412746,
+  "retrieved_zip_sha256_verified": "f6758eb1ebc8e540703134433804b3317502222abcff99509c11b1cc053368f3",
+  "canonical_graph_identity_recomputed": true,
+  "canonical_qualification_protocol_recomputed": true,
+  "scope": "programme consistency and independently retrieved evidence identities, not a second graph execution or a Boolean task result"
+}
