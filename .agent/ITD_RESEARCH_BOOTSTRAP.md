@@ -1,5 +1,24 @@
 # ITD Research Lab — durable research re-entry
 
+## Latest source-bound checkpoint — PORTS-DYN1
+
+Read `.agent/RESEARCH_STATUS_20260922_PORTS_DYN1.md` before resuming neural work.
+SciRust #1510 source `6b9714622ddd3f7aae960ce1f6349461e3b27b91` passed Thor run
+**35787751454**: 60 source/control graphs, 1,020 fixed port configurations,
+480 Boolean impulse trials, 61,920 whole-state comparisons, zero oracle mismatches
+and exact replay. The unchanged DYN-REF1 library is bound to the previously qualified
+V888 subset identities. This is actual source-bound simulation, not learned game play.
+The finite port panel is measured; null diversity/mixing and partition diagnostics
+remain open. General CI and PR integration remain separate and must be refreshed.
+
+The existing game, process interface, recurrent core and this graph binding must be
+reused rather than reconstructed. Next application work: explicit current-observation
+encoder/readout and persistent learned checkpoints, separated from activity reset.
+Original disconnected ports remain controls. A new multi-node or topology-informed
+readout is a separately declared matched-budget arm, not a silent port replacement.
+The four-input-state separability diagnostic is descriptive/post-hoc, not learned
+memory capacity or a completed delayed-XOR benchmark. Trading remains deferred.
+
 ## Latest issue and integration checkpoints
 
 Read `.agent/ISSUE_TRIAGE_20260922.md` before choosing the next implementation.
@@ -18,6 +37,7 @@ authority, final-data authorization or neural milestone was changed.
 
 Core programme revision: **2026-09-22.3**. Engine lineage: **V30.0-alpha / ITD-3X**.
 Application priority: **V888-GAME-FIRST-20260922**.
+Latest source-bound diagnostic: **PORTS-DYN1**, observed 2026-09-22.
 Latest independent reference evidence: **DYN-REF1**, observed 2026-09-22.
 Latest application interface evidence: **GAME-IO1**, observed 2026-09-22.
 These are scoped evidence observations, not a release or a validated V888 learner.
@@ -31,11 +51,12 @@ On the existing `agent/ecosystem-roadmap` branch, read:
 3. `.agent/V888_BOOL_PROGRAMME.json` — authoritative neural dependencies and exit criteria.
 4. `.agent/V888_BOOL_RESEARCH_PROGRAMME.md` — scientific design and controls.
 5. `.agent/V888_GAME_FIRST_20260922.md` — original first-game priority; its not-executed label is historical.
-6. `.agent/RESEARCH_STATUS_20260922_DYN_REF1.md` — latest recurrent reference, synthetic circuits only.
-7. `.agent/RESEARCH_STATUS_20260922_GAME_IO1.md` — game process bridge and direct-child lifecycle.
-8. `.agent/RESEARCH_STATUS_20260922_GAME_ENV1.md` — game environment and handwritten controls.
-9. `.agent/RESEARCH_STATUS_20260922_BOOL02A.md` — latest source-graph/control checkpoint.
-10. `.agent/RESEARCH_STATUS_20260922_BOOL01.md` and `.agent/RESEARCH_STATUS_20260922.md` — preserved earlier observations.
+6. `.agent/RESEARCH_STATUS_20260922_PORTS_DYN1.md` — source-bound Boolean impulse/port diagnostics.
+7. `.agent/RESEARCH_STATUS_20260922_DYN_REF1.md` — synthetic recurrent reference qualification.
+8. `.agent/RESEARCH_STATUS_20260922_GAME_IO1.md` — game process bridge and direct-child lifecycle.
+9. `.agent/RESEARCH_STATUS_20260922_GAME_ENV1.md` — game environment and handwritten controls.
+10. `.agent/RESEARCH_STATUS_20260922_BOOL02A.md` — source-graph/control checkpoint.
+11. `.agent/RESEARCH_STATUS_20260922_BOOL01.md` and `.agent/RESEARCH_STATUS_20260922.md` — preserved earlier observations.
 
 The root AGENTS.md points to the policy file. Strategy stays off main. Do not merge
 this branch, replace the frozen core or create an incompatible registry. Public
@@ -64,10 +85,11 @@ V888-BOOL-0.2a passed in run 35726122553 on source
 48 changed controls, independently verified invariants and byte-identical replays.
 Sources were rehashed before/after. Code is in SciRust #1506; refresh integration.
 
-**Parent V888-BOOL-0.2 remains active.** Finish **0.2b**: control diversity/mixing
-diagnostics, anatomical versus structural partitions, and fixed-port reachability.
-Retain sparse and unreachable cases; do not silently change ports or choose favorable
-seeds. Invariant preservation does not prove uniform-null sampling or chain mixing.
+**Parent V888-BOOL-0.2 remains active.** PORTS-DYN1 measured fixed-port reachability
+and sixteen additional declared placements per case. Remaining **0.2b** work includes
+control diversity/mixing and anatomical versus structural partitions. Retain sparse
+and unreachable cases; do not silently change ports or choose favorable seeds.
+Invariant preservation does not prove uniform-null sampling or chain mixing.
 Anatomical blocks are not independently identified functional modules.
 
 ## Recurrent reference: do not start the numerical core again
@@ -77,6 +99,7 @@ SciRust PR #1509, research/v888-dyn-ref1, source
 `75f43ec35b1118c98b23bbde8fc8e1d6bfd42036`, passed Thor run **35761411608**.
 The reusable Rust core is in scripts/v888_dyn01/recurrent.rs; driver.rs is only an
 administrative differential-test surface, never the game learner interface.
+PORTS-DYN1 found this exact library already present on inspected master and reused it.
 
 Available reference families: discrete LIF, signed bounded integer integration,
 affine Boolean parity, and nonlinear Boolean parity/AND. Explicit synchronous ticks,
@@ -89,14 +112,15 @@ not a learned-memory claim or a result from the V888 graph.
 
 The stage is a candidate for later scirust-sim reuse, not a new public API or crate.
 It is fixed-step, scans all edges and retains numeric scratch even in Boolean mode.
-No event-driven speedup, bit-packed memory, physiological calibration, game learning
-or BANC model execution is established. Source and result identities are in the dated
-checkpoint. PR #1509 was open and general CI queued at that checkpoint; refresh it.
+No event-driven speedup, bit-packed memory, physiological calibration or game learning
+is established. DYN-REF1 alone was synthetic; PORTS-DYN1 subsequently added declared
+source-bound Boolean subset execution. Source and result identities are in their
+separate dated checkpoints. Refresh PR integration rather than copying old statuses.
 
-DYN-REF1 is an independent preparation for **BOOL-0.3**, not completion of it.
-Graph/port diagnostics, source-bound model integration and **BOOL-0.4** remain open.
+Full **BOOL-0.3** is not declared complete by PORTS-DYN1. Other reference families,
+remaining control qualifications and **BOOL-0.4** interface requirements remain open.
 First V888 functional target: **BOOL-1.1 delayed XOR**. ITD-30.5 foundation integration
-remains separate. Do not change those statuses from a synthetic equation test.
+remains separate. Do not change those statuses from an impulse or equation test.
 
 ## First application: memory and deduction game
 
@@ -123,13 +147,13 @@ and cleanup are outside the response deadline. Fresh worker per episode currentl
 means no learned-checkpoint transfer. Do not claim persistent learning from feedback
 transport or confuse a reset method with trained checkpoint serialization.
 
-Next computational steps: finish the outstanding graph/port diagnostics, bind a
-source-identified graph and explicit model parameter mapping to the tested recurrent
-core, then connect the candidate to the existing current-observation protocol.
-Implement learned-state/checkpoint retention separately from transient reset. Measure
-unseen-episode learning with frozen-update, shuffled-feedback and parameter-reset
+Next application step uses the measured source binding and existing current-observation
+protocol. Declare encoding and readout separately, preserve negative original-port
+controls, and keep topology-superiority conclusions gated on remaining null/partition
+work. Implement learned-state/checkpoint retention separately from transient reset.
+Measure unseen-episode learning with frozen-update, shuffled-feedback and parameter-reset
 controls. Separate readout learning, internal plasticity and topology adaptation.
-A replay animation or synthetic circuit does not prove learning or topology advantage.
+A replay animation, state separability or synthetic circuit does not prove learning.
 
 V888 trading, including simulation and exchange integration, remains deferred until
 a separate user decision. This does not cancel unrelated ecosystem trading work.
@@ -140,11 +164,16 @@ Use Thor for V888 computation. Confirm actual channel, host, source and runner i
 Never relabel assistant-container validation as Thor or ask the user for routine
 commands when connected tools can execute. Missing access is an explicit blocker.
 
-Runners may have different HOME values. Shared audited source root:
+Runners may have different HOME values and filesystem access. Shared audited source root:
 `/mnt/nvme/github-runners/home/datasets/banc_v888`. Prior subset outputs:
-`/var/lib/github-runner/v888-research-runs/bool02-35726122553-1`. Recheck hashes,
-paths and read permissions. New evidence is runner-owned under `$HOME/v888-research-runs`;
-DYN-REF1 uses `dyn-ref1-35761411608-1` and does not access the BANC root.
+`/var/lib/github-runner/v888-research-runs/bool02-35726122553-1`.
+PORTS-DYN1 provides a verified same-host read-only cache of the 97 consumed subset/receipt
+files under `/dev/shm/memorithm-v888-bool02-<receipt-sha256>`; source permissions are
+unchanged. The cache is disposable/rebuildable from persistent originals, not a new
+scientific source. Do not assume runner-private temporary directories are shared.
+Recheck every source hash before use. New evidence remains runner-owned under
+`$HOME/v888-research-runs`. DYN-REF1 uses `dyn-ref1-35761411608-1` without BANC access;
+PORTS-DYN1 uses `ports-dyn1-35787751454-1` for source-bound subset evidence.
 Isolate per-run checkout/tools/output. Keep failures. Do not change global permissions
 or delete artifacts to repair a HOME/tool mismatch.
 
