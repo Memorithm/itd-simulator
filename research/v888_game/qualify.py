@@ -7,17 +7,18 @@ administrator/oracle and intentionally has access to the private fixture bits.
 from __future__ import annotations
 
 import argparse
-from collections import Counter, defaultdict
 import hashlib
 import itertools
 import json
-from pathlib import Path
+import os
 import platform
 import random
 import subprocess
 import sys
 import time
 import unittest
+from collections import Counter, defaultdict
+from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 BINARY: Path
@@ -234,7 +235,7 @@ def pilot(output):
     dump(output / "protocol.json", PROTOCOL)
     report = {
         "scope": PROTOCOL["scope"], "host": platform.node(), "architecture": platform.machine(),
-        "python": sys.version, "source_commit": __import__("os").environ.get("ITD_SOURCE_SHA"),
+        "python": sys.version, "source_commit": os.environ.get("ITD_SOURCE_SHA"),
         "rust_binary_sha256": sha_file(BINARY),
         "source_sha256": {p.name: sha_file(p) for p in [HERE / "game.rs", HERE / "protocol.json", Path(__file__)]},
         "protocol_canonical_sha256": hashlib.sha256(canonical(PROTOCOL).encode()).hexdigest(),
