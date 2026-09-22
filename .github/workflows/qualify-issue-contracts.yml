@@ -1,0 +1,41 @@
+name: Qualify issue contract corrections
+on:
+  push:
+    branches: [repair/itd-issue-contracts-20260922]
+permissions:
+  contents: read
+jobs:
+  qualify:
+    if: github.repository == 'Memorithm/itd-simulator' && github.ref == 'refs/heads/repair/itd-issue-contracts-20260922'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: write
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+      PYTHONHASHSEED: '0'
+      OMP_NUM_THREADS: '1'
+      OPENBLAS_NUM_THREADS: '1'
+      MKL_NUM_THREADS: '1'
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405
+        with:
+          python-version: '3.12'
+      - name: Install unchanged locked validation tools
+        run: python -m pip install -r requirements-dev.lock
+      - name: Qualify exact reviewed candidate and stage unreferenced objects
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python tools/qualify_issue_fixes.py
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        if: always()
+        with:
+          name: itd-issue-contracts-${{ github.run_id }}
+          path: ${{ runner.temp }}/issue-contracts-${{ github.run_id }}/evidence/
+          if-no-files-found: error
+          retention-days: 14
