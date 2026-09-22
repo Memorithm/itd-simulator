@@ -1,0 +1,51 @@
+name: Verify published cumulative PR stack
+on:
+  push:
+    branches: [repair/itd-pr-conflicts-20260922]
+    paths: ['.github/workflows/verify-manifest-stack-state.yml']
+permissions:
+  contents: read
+  pull-requests: read
+  actions: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Read actual heads, merge state and exact-head CI
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir "$RUNNER_TEMP/stack-state"
+          python3 - <<'PY'
+          import datetime, json, os, time, urllib.request
+          from pathlib import Path
+          repo = 'Memorithm/itd-simulator'
+          expected = {44:'2ca6f5167d0c58459ce6076ce0170bac91f6e08d',45:'25315012580ed851695cc8952a03c3ff0ead3b81',46:'bec74c7b9af72008053f0b815c899fa1ae145da1',47:'71034d45be425a124359cf4d29a2681ca2198bb6',48:'2569c7628be2b2c62763b49ecd146e7c40a08fc8',49:'3ec90f6e815bdd938282d8ee9706e6f42fa5b79a',50:'50c713c739e25b7d6ee9f7e0663c6014c490eb7f',52:'b4906cdba11bb427725f97ff74990ba6c3219472',53:'213e52165a977bfeb6bc5c8c9edc69fb34eb3f56',56:'af79dfc5830899afe6f3b7c899b0ce724486e606'}
+          def get(path):
+              req=urllib.request.Request('https://api.github.com/repos/'+repo+'/'+path,headers={'Authorization':'Bearer '+os.environ['GH_TOKEN'],'Accept':'application/vnd.github+json'})
+              with urllib.request.urlopen(req,timeout=45) as response: return json.load(response)
+          main=get('branches/main')['commit']['sha']
+          rows=[]
+          for n,sha in expected.items():
+              p=get(f'pulls/{n}')
+              for _ in range(5):
+                  if p['mergeable'] is not None or p['merged']: break
+                  time.sleep(2); p=get(f'pulls/{n}')
+              comparison=get(f'compare/{main}...{sha}')
+              runs=get(f'actions/runs?head_sha={sha}&event=pull_request&per_page=100')['workflow_runs']
+              row={'pr':n,'head':p['head']['sha'],'expected_head_matches':p['head']['sha']==sha,'base':p['base']['ref'],'base_sha':p['base']['sha'],'state':p['state'],'merged':p['merged'],'mergeable':p['mergeable'],'mergeable_state':p['mergeable_state'],'behind_main':comparison['behind_by'],'ci':[{'id':r['id'],'name':r['name'],'status':r['status'],'conclusion':r['conclusion'],'head_sha':r['head_sha']} for r in runs]}
+              rows.append(row); print(json.dumps(row),flush=True)
+          report={'observed_at':datetime.datetime.now(datetime.timezone.utc).isoformat(),'main':main,'main_after':get('branches/main')['commit']['sha'],'rows':rows,'remote_refs_changed_by_this_check':False}
+          path=Path(os.environ['RUNNER_TEMP'])/'stack-state'/'status.json'; path.write_text(json.dumps(report,indent=2)+'\n')
+          if report['main_after']!=main or any(not r['expected_head_matches'] or r['base']!='main' or (not r['merged'] and (r['mergeable'] is not True or r['behind_main']!=0)) for r in rows): raise SystemExit('Published state needs fresh reconciliation; see status.json')
+          PY
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        if: always()
+        with:
+          name: itd-stack-live-state-${{ github.run_id }}
+          path: ${{ runner.temp }}/stack-state/
+          if-no-files-found: error
+          retention-days: 14
