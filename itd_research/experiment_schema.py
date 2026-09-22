@@ -74,6 +74,9 @@ class SplitIdentity:
     role: SplitRole
     source: SourceIdentity
 
+    def __post_init__(self) -> None:
+        object.__setattr__(self, "role", SplitRole(self.role))
+
     def as_dict(self) -> dict[str, object]:
         return {"role": self.role.value, "source": self.source.as_dict()}
 
@@ -113,6 +116,8 @@ class MetricContract:
     unit: str
 
     def __post_init__(self) -> None:
+        object.__setattr__(self, "role", MetricRole(self.role))
+        object.__setattr__(self, "direction", MetricDirection(self.direction))
         if not self.name.strip():
             raise ValueError("metric name must not be empty.")
         if not self.unit.strip():
@@ -182,6 +187,8 @@ class ExperimentProtocolV1:
     protocol_version: str = "itd-ai-experiment-v1"
 
     def __post_init__(self) -> None:
+        object.__setattr__(self, "splits", tuple(self.splits))
+        object.__setattr__(self, "metrics", tuple(self.metrics))
         if not self.experiment_id.strip():
             raise ValueError("experiment_id must not be empty.")
         if self.protocol_version != "itd-ai-experiment-v1":
@@ -209,11 +216,12 @@ class ExperimentProtocolV1:
 
     def split(self, role: SplitRole) -> SplitIdentity:
         """Return the unique split identity for one declared role."""
-        return next(split for split in self.splits if split.role is role)
+        resolved_role = SplitRole(role)
+        return next(split for split in self.splits if split.role is resolved_role)
 
     def assert_selection_allowed(self, role: SplitRole) -> None:
         """Forbid fitting, threshold selection, or search on the final split."""
-        if role is SplitRole.FINAL:
+        if SplitRole(role) is SplitRole.FINAL:
             raise ValueError("final split cannot be used for fitting or selection.")
 
     def assert_final_evaluation(self, source: SourceIdentity) -> None:

@@ -64,6 +64,7 @@ class CampaignIdentityV1:
     adapters: tuple[AdapterIdentityV1, ...] = ()
 
     def __post_init__(self) -> None:
+        object.__setattr__(self, "adapters", tuple(self.adapters))
         if not self.campaign_id.strip():
             raise ValueError("campaign_id must not be empty.")
         digest = self.protocol_fingerprint.lower()
@@ -77,6 +78,13 @@ class CampaignIdentityV1:
         )
         if len(set(identities)) != len(identities):
             raise ValueError("campaign adapters must be unique.")
+
+    def assert_matches_protocol(self, protocol: ExperimentProtocolV1) -> None:
+        """Check the protocol and implementation declared for this campaign."""
+        if self.protocol_fingerprint != protocol.fingerprint():
+            raise ValueError("campaign protocol fingerprint does not match protocol.")
+        if self.implementation != protocol.implementation:
+            raise ValueError("campaign implementation does not match protocol.")
 
     @classmethod
     def from_protocol(
@@ -146,6 +154,10 @@ class ExperimentResultV1:
     result_version: str = "itd-ai-result-v1"
 
     def __post_init__(self) -> None:
+        object.__setattr__(self, "study_class", StudyClass(self.study_class))
+        object.__setattr__(self, "outcome", StudyOutcome(self.outcome))
+        object.__setattr__(self, "observations", tuple(self.observations))
+        object.__setattr__(self, "limitations", tuple(self.limitations))
         if not self.experiment_id.strip():
             raise ValueError("experiment_id must not be empty.")
         if self.result_version != "itd-ai-result-v1":
@@ -166,6 +178,17 @@ class ExperimentResultV1:
 
         if self.outcome is StudyOutcome.BLOCKED and self.observations:
             raise ValueError("blocked studies must not report task metric observations.")
+
+    def assert_matches_campaign(self, campaign: CampaignIdentityV1) -> None:
+        """Check both campaign identity and its declared protocol binding.
+
+        Also call assert_matches_protocol with the actual protocol to validate
+        the experiment ID and metric declarations; a digest alone is not proof.
+        """
+        if self.campaign_fingerprint != campaign.fingerprint():
+            raise ValueError("result campaign fingerprint does not match campaign.")
+        if self.protocol_fingerprint != campaign.protocol_fingerprint:
+            raise ValueError("result protocol fingerprint does not match campaign.")
 
     def assert_matches_protocol(self, protocol: ExperimentProtocolV1) -> None:
         if self.experiment_id != protocol.experiment_id:

@@ -80,3 +80,9 @@ def test_prediction_record_rejects_negative_error() -> None:
             inference_cost=1.0,
             inference_cost_unit="milliseconds",
         )
+
+
+@pytest.mark.parametrize("role", ["final", "unknown", None])
+def test_serialized_role_cannot_bypass_final_boundary(role: object) -> None:
+    with pytest.raises((ValueError, TypeError)):
+        _sample(role).assert_selection_allowed()

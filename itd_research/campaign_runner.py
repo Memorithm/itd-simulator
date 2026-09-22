@@ -14,7 +14,11 @@ import math
 from collections.abc import Callable
 from dataclasses import dataclass
 
-from itd_research.experiment_schema import SourceIdentity, SplitRole
+from itd_research.experiment_schema import (
+    ExperimentProtocolV1,
+    SourceIdentity,
+    SplitRole,
+)
 from itd_research.result_schema import CampaignIdentityV1
 
 
@@ -35,6 +39,7 @@ class CampaignCaseV1:
     work_units: float
 
     def __post_init__(self) -> None:
+        object.__setattr__(self, "role", SplitRole(self.role))
         if not self.case_id.strip():
             raise ValueError("case_id must not be empty.")
         if not math.isfinite(self.work_units) or self.work_units <= 0.0:
@@ -81,6 +86,7 @@ class CampaignPlanV1:
     plan_version: str = "itd-campaign-plan-v1"
 
     def __post_init__(self) -> None:
+        object.__setattr__(self, "cases", tuple(self.cases))
         if self.plan_version != "itd-campaign-plan-v1":
             raise ValueError("unsupported campaign plan version.")
         if not self.work_unit.strip():
@@ -116,6 +122,17 @@ class CampaignPlanV1:
 
     def fingerprint(self) -> str:
         return hashlib.sha256(self.canonical_json().encode("utf-8")).hexdigest()
+
+    def assert_matches_protocol(self, protocol: ExperimentProtocolV1) -> None:
+        """Bind a plan to actual source identities and its declared budget."""
+        self.campaign.assert_matches_protocol(protocol)
+        if self.work_unit != protocol.compute_budget.unit:
+            raise ValueError("campaign work unit does not match protocol.")
+        if self.maximum_total_work > protocol.compute_budget.maximum:
+            raise ValueError("campaign budget exceeds protocol budget.")
+        for case in self.cases:
+            if case.input_source != protocol.split(case.role).source:
+                raise ValueError("campaign case source does not match protocol split.")
 
     def assert_final_authorized(
         self,
@@ -169,6 +186,7 @@ class CampaignRunV1:
     run_version: str = "itd-campaign-run-v1"
 
     def __post_init__(self) -> None:
+        object.__setattr__(self, "executions", tuple(self.executions))
         if self.run_version != "itd-campaign-run-v1":
             raise ValueError("unsupported campaign run version.")
         object.__setattr__(
@@ -187,6 +205,12 @@ class CampaignRunV1:
         observed = tuple(item.case_id for item in self.executions)
         if observed != expected:
             raise ValueError("campaign execution order does not match plan.")
+        total_work = 0.0
+        for case, execution in zip(plan.cases, self.executions, strict=True):
+            _assert_case_execution(case, execution)
+            total_work += execution.work_units_used
+        if not math.isfinite(total_work) or total_work > plan.maximum_total_work:
+            raise ValueError("recorded campaign exceeds its total work budget.")
 
     def as_dict(self) -> dict[str, object]:
         return {
@@ -205,6 +229,16 @@ class CampaignRunV1:
         return hashlib.sha256(payload.encode("utf-8")).hexdigest()
 
 
+def _assert_case_execution(case: CampaignCaseV1, execution: CaseExecutionV1) -> None:
+    """One accounting rule for returned and restored execution records."""
+    if not isinstance(execution, CaseExecutionV1):
+        raise ValueError("case evaluator must return CaseExecutionV1.")
+    if execution.case_id != case.case_id:
+        raise ValueError("case evaluator returned a mismatched case_id.")
+    if execution.work_units_used > case.work_units:
+        raise ValueError("case evaluator exceeded its declared work budget.")
+
+
 CaseEvaluator = Callable[[CampaignCaseV1], CaseExecutionV1]
 
 
@@ -213,26 +247,32 @@ def run_bounded_campaign(
     evaluator: CaseEvaluator,
     *,
     final_authorization: FinalEvaluationAuthorizationV1 | None = None,
+    protocol: ExperimentProtocolV1 | None = None,
 ) -> CampaignRunV1:
-    """Run all cases in frozen order while enforcing per-case and total budgets."""
+    """Run cases in frozen order and check reported work against budgets.
 
+    Supply protocol for source/implementation/budget validation before any case
+    runs. Legacy calls without it validate plan metadata only. Neither path
+    authenticates external permission or imposes OS CPU/RAM/time containment.
+    """
+
+    if protocol is not None:
+        plan.assert_matches_protocol(protocol)
     plan.assert_final_authorized(final_authorization)
+    plan_fingerprint = plan.fingerprint()
     executions: list[CaseExecutionV1] = []
     total_work = 0.0
 
     for case in plan.cases:
         execution = evaluator(case)
-        if execution.case_id != case.case_id:
-            raise ValueError("case evaluator returned a mismatched case_id.")
-        if execution.work_units_used > case.work_units:
-            raise ValueError("case evaluator exceeded its declared work budget.")
+        _assert_case_execution(case, execution)
         total_work += execution.work_units_used
         if total_work > plan.maximum_total_work:
             raise ValueError("campaign evaluator exceeded maximum_total_work.")
         executions.append(execution)
 
     run = CampaignRunV1(
-        plan_fingerprint=plan.fingerprint(),
+        plan_fingerprint=plan_fingerprint,
         executions=tuple(executions),
     )
     run.assert_replay_of(plan)

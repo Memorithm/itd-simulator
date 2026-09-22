@@ -74,3 +74,9 @@ def test_forge_result_rejects_candidate_count_overrun() -> None:
 
     with pytest.raises(ValueError, match="maximum_candidates"):
         result.assert_matches_contract(contract)
+
+
+@pytest.mark.parametrize("role", ["final", "unknown", None])
+def test_serialized_role_cannot_bypass_final_boundary(role: object) -> None:
+    with pytest.raises((ValueError, TypeError)):
+        _contract(role)

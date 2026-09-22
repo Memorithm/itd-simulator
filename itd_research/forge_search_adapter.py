@@ -45,6 +45,7 @@ class ForgeSearchContractV1:
     contract_version: str = "itd-forge-search-v1"
 
     def __post_init__(self) -> None:
+        object.__setattr__(self, "role", SplitRole(self.role))
         if self.contract_version != "itd-forge-search-v1":
             raise ValueError("unsupported Forge search contract version.")
         if not self.search_id.strip():

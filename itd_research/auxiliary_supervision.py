@@ -70,6 +70,7 @@ class AuxiliaryTrainingArm:
     seed: int
 
     def __post_init__(self) -> None:
+        object.__setattr__(self, "role", SplitRole(self.role))
         if not self.arm_id.strip():
             raise ValueError("arm_id must not be empty.")
         if self.role is SplitRole.FINAL:
