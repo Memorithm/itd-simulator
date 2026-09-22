@@ -11,7 +11,7 @@ from pathlib import Path
 
 BASE = "7ba33919d47232a093c882a8ee4b531ecc0f1aeb"
 REPO = "Memorithm/itd-simulator"
-EXPECTED = "1a838d034bb8495f2b5f0db51cc040fff9112a09"
+EXPECTED = "96ff0686039ce71deb9968a8ecf0af414e96926c"
 ROOT = Path(os.environ["RUNNER_TEMP"]) / ("issue-contracts-" + os.environ["GITHUB_RUN_ID"])
 WORK = ROOT / "work"
 OUT = ROOT / "evidence"
@@ -47,6 +47,12 @@ def main() -> None:
     subprocess.run(["git", "worktree", "add", "--detach", str(WORK), BASE], cwd=SOURCE, env=ENV, check=True)
     for name in ("apply_issue_fixes.py", "apply_uq_fixes.py"):
         run([sys.executable, str(SOURCE / "tools" / name)])
+    campaign_path = WORK / "itd_research/campaign_runner.py"
+    campaign_text = campaign_path.read_text()
+    old_import = "from itd_research.experiment_schema import ExperimentProtocolV1, SourceIdentity, SplitRole"
+    if campaign_text.count(old_import) != 1:
+        raise RuntimeError("unexpected campaign import")
+    campaign_path.write_text(campaign_text.replace(old_import, "from itd_research.experiment_schema import (\n    ExperimentProtocolV1,\n    SourceIdentity,\n    SplitRole,\n)"))
     for name in ("test_itd30_evidence_integrity.py", "test_itd34_undefined_risk.py"):
         (WORK / "tests" / name).write_bytes((SOURCE / "tools" / "issue-fixtures" / name).read_bytes())
     for name, expression in {
