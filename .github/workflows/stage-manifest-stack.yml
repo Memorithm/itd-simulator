@@ -1,0 +1,50 @@
+name: Stage cumulative manifest integration stack
+on:
+  push:
+    branches: [repair/itd-pr-conflicts-20260922]
+    paths: ['tools/stage_manifest_stack.py', '.github/workflows/stage-manifest-stack.yml']
+permissions:
+  contents: read
+concurrency:
+  group: itd-manifest-stack-stage
+  cancel-in-progress: false
+jobs:
+  stage:
+    if: github.repository == 'Memorithm/itd-simulator' && github.ref == 'refs/heads/repair/itd-pr-conflicts-20260922'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: write
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+      PYTHONHASHSEED: '0'
+      OMP_NUM_THREADS: '1'
+      OPENBLAS_NUM_THREADS: '1'
+      MKL_NUM_THREADS: '1'
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405
+        with:
+          python-version: '3.12'
+      - name: Install the unchanged locked validation environment
+        run: python -m pip install -r requirements-dev.lock
+      - name: Validate and stage cumulative commits without modifying remote refs
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          ROOT="$RUNNER_TEMP/itd-manifest-stack-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          mkdir "$ROOT"
+          echo "REPAIR_ROOT=$ROOT" >> "$GITHUB_ENV"
+          export REPAIR_ROOT="$ROOT"
+          python tools/stage_manifest_stack.py
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        if: always() && env.REPAIR_ROOT != ''
+        with:
+          name: itd-manifest-stack-${{ github.run_id }}
+          path: ${{ env.REPAIR_ROOT }}/evidence/
+          if-no-files-found: error
+          retention-days: 14
