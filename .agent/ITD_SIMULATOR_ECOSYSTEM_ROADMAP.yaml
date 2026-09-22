@@ -1,193 +1,148 @@
 schema_version: 1
 kind: itd_simulator_ecosystem_agent_roadmap
 status: active
-last_updated: "2026-09-21"
+last_updated: '2026-09-22'
+programme_revision: '2026-09-22.1'
 repository: Memorithm/itd-simulator
 intended_consumer: autonomous_coding_agent
 merge_policy: never_merge_this_file_to_default_branch_unless_user_explicitly_requests
 
 mission:
   primary: >-
-    Preserve ITD Simulator as a deterministic scientific reference plus an open,
-    falsifiable AI/SciML laboratory. Keep scientific model ITD V29.18 frozen
-    unless a separate scientific-revision process explicitly justifies a new
-    model revision, while reusing the repository's validation infrastructure for
-    new research questions.
+    Maintain ITD Research Lab as a frozen ITD V29.18 scientific reference plus
+    a falsifiable V30+ AI/SciML, representation, trajectory, UQ and adaptive
+    systems laboratory. Execute the new V888-BOOL programme in Rust on Thor
+    without conflating data audits, model computation and biological growth.
   ecosystem_goal: >-
-    Provide comparative experiment infrastructure and evidence for TDI,
-    FLAT-ATTENTION, SciRust and ElasticXxx without turning ITD results into
-    automatic runtime policies or general scientific primitives.
+    Reuse SciRust primitives and qualify explicit evidence handoffs to
+    SML-GENIUS, TDI, FLAT-ATTENTION, NoiseLab, Forge, ElasticXxx, Verify and Hub.
+    Evidence never transfers model-default, final-holdout or actuation authority.
 
-verified_current_facts:
-  - software_0_2_0_packages_scientific_model_ITD_V29_18
-  - software_version_and_scientific_model_revision_are_intentionally_independent
-  - Missions_3_through_8_fluid_diagnostic_research_line_is_closed_with_a_negative_result
-  - the_AI_research_charter_is_open_and_explicitly_preserves_the_closed_negative_result
-  - ITD_V29_18_is_frozen_and_AI_work_must_live_in_an_isolated_one_way_research_namespace
-  - default_validation_runs_determinism_manifest_Rust_oracle_and_tracked_file_integrity_checks
-  - the_repository_explicitly_names_SciRust_as_preferred_source_of_reusable_scientific_algorithms
-  - the_repository_explicitly_names_ElasticXxx_as_a_downstream_research_target_not_an_automatic_policy_consumer
+current_strategy_sources:
+  branch: agent/ecosystem-roadmap
+  policy: .agent/ITD_SIMULATOR_ECOSYSTEM_ROADMAP.yaml
+  bootstrap: .agent/ITD_RESEARCH_BOOTSTRAP.md
+  machine_programme: .agent/V888_BOOL_PROGRAMME.json
+  scientific_design: .agent/V888_BOOL_RESEARCH_PROGRAMME.md
+  latest_checkpoint: .agent/RESEARCH_STATUS_20260922.md
+  validator: .agent/validate_v888_programme.py
+  validator_tests: .agent/test_v888_programme.py
+  precedence:
+    - this_file_preserves_authorization_and_ownership_policy
+    - machine_programme_owns_current_V888_dependencies_and_exit_criteria
+    - scientific_design_explains_hypotheses_controls_and_measurements
+    - checkpoint_is_a_dated_observation_not_live_GitHub_state
+  historical_reference:
+    prior_strategy_commit: d0e7a6fe173ad4713391810071be9f452d313e02
+    public_programme: docs/itd3x/ITD_3X_PROGRAMME.md
+    legacy_registry: itd_research/itd3x.py
+    note: >-
+      Keep original ITD0..ITD7 and ITD-30.x..39.x definitions as historical
+      planning context. Old active/planned labels are not current execution
+      evidence. Do not renumber existing series or treat the old bootstrap
+      branch as the current default branch.
+
+verified_checkpoint:
+  observed_on: '2026-09-22'
+  main_sha: 875337007cfcf5a1b2e7245f6e1831fa876fe868
+  bootstrap_pr_41: merged_into_main
+  adapter_pr_42: open_against_bootstrap_branch
+  campaign_pr_43: merged_into_pr_42_branch_not_main
+  accounting_pr_44: open_against_bootstrap_branch
+  V888_source_audit: completed_with_explicit_scope
+  V888_Boolean_computation: not_yet_validated
+  V888_topology_advantage: not_established
+  biological_growth_causality: not_established
+  source_details_and_exact_revisions: .agent/RESEARCH_STATUS_20260922.md
+  refresh_before_execution: true
 
 scientific_invariants:
-  - do_not_modify_ITD_V29_18_to_improve_downstream_benchmarks
-  - do_not_reinterpret_Missions_3_8_negative_results_as_positive
-  - every_confirmatory_AI_study_must_be_falsifiable_and_allow_negative_results
-  - competent_established_and_learned_controls_must_not_be_weakened_to_favor_ITD
-  - no_final_holdout_tuning
-  - exploratory_results_are_not_confirmatory_claims
-  - new_local_multiscale_or_learned_representations_are_new_research_representations_not_silent_ITD_revisions
-  - evidence_strength_must_be_labeled_by_actual_scope
+  - ITD_V29_18_remains_frozen_and_is_not_revised_to_improve_benchmarks
+  - software_release_research_programme_and_scientific_model_versions_are_distinct
+  - Missions_3_through_8_negative_fluid_diagnostic_results_remain_closed_in_scope
+  - isolated_one_way_dependency_from_research_to_frozen_core
+  - competent_established_and_learned_controls_are_not_weakened
+  - no_final_holdout_tuning_or_implicit_final_authorization
+  - explicit_uncertainty_and_positive_negative_equivalent_inconclusive_blocked_outcomes
+  - new_local_multiscale_graph_or_learned_representations_are_research_not_silent_ITD_revisions
   - domain_specific_assumptions_do_not_transfer_without_evidence
-  - required_CI_must_be_green_on_exact_PR_head_before_merge
+  - data_integrity_is_not_pairwise_graph_identity_or_functional_model_validation
+  - binary_spikes_do_not_imply_Boolean_only_internal_arithmetic
+  - encoder_readout_hidden_history_and_cross_trial_leakage_are_tested
+  - synapse_multiplicity_is_not_conductance_and_unknown_signs_are_not_invented
+  - adult_allometry_and_simulated_interventions_do_not_establish_biological_growth_causality
+  - no_other_raw_connectome_added_without_separate_source_authorization
+  - required_CI_green_on_exact_candidate_head_before_default_code_merge
+  - intermediate_branch_merge_is_not_default_branch_integration
 
 ownership:
   role: comparative_scientific_and_AI_experiment_laboratory
   owns:
-    - frozen_ITD_V29_18_reference_implementation_and_validation_lineage
-    - ITD_specific_structural_descriptors_and_scientific_interpretation
-    - reusable_experiment_harness_grouped_statistics_provenance_and_negative_result_handling
-    - isolated_AI_research_adapters_and_comparison_ladders
+    - frozen_ITD_V29_18_reference_and_validation_lineage
+    - ITD_structural_descriptors_and_scoped_scientific_interpretation
+    - comparative_protocols_grouped_statistics_provenance_and_outcome_handling
+    - isolated_AI_adapters_and_V888_Boolean_experiments
   does_not_own:
-    - TDI_dynamic_recovery_semantics_or_frozen_TDI_results
-    - FLAT_ATTENTION_execution_or_kernel_semantics
-    - SciRust_general_scientific_primitive_ownership
-    - ElasticXxx_runtime_policy_or_actuation_semantics
-    - SciRust_Verify_general_evidence_dossier_verdict_semantics
+    - TDI_dynamic_recovery_semantics_or_frozen_results
+    - SciRust_general_statistics_graph_event_or_numerical_primitive_ownership
+    - SML_GENIUS_model_and_consumer_semantics
+    - FLAT_ATTENTION_execution_kernel_or_mask_semantics
+    - NoiseLab_perturbation_mechanisms
+    - Forge_candidate_search_strategy
+    - ElasticXxx_runtime_policy_or_actuation
+    - SciRust_Verify_general_dossier_verdicts
     - Hub_global_orchestration
 
-control_loop:
-  - DEFINE_FALSIFIABLE_AI_OR_SCIENTIFIC_QUESTION
-  - CLASSIFY_EXPLORATORY_OR_CONFIRMATORY_SCOPE
-  - DEFINE_DATA_PROVENANCE_SPLITS_BASELINES_METRICS_AND_BUDGETS
-  - FREEZE_CONFIRMATORY_PROTOCOL_BEFORE_FINAL_EVALUATION
-  - IMPLEMENT_WITH_ONE_WAY_DEPENDENCY_FROM_RESEARCH_TO_FROZEN_CORE
-  - RUN_SOFTWARE_ORACLES_AND_LEAKAGE_CHECKS
-  - EVALUATE_COMPETENT_COMPARISON_LADDER
-  - REPORT_UNCERTAINTY_FAILURES_AND_NEGATIVE_RESULTS
-  - EXPORT_EVIDENCE_WITHOUT_PROMOTING_IT_AUTOMATICALLY
-
 ecosystem_interfaces:
-  Memorithm/TDI:
-    relationship: dynamic_recovery_descriptor_research_partner
-    status: active_research_direction
-    contract:
-      - ITD_and_TDI_are_separate_candidate_information_sources
-      - joint_studies_require_explicit_ablation_between_ITD_TDI_and_competent_controls
-      - ITD_harness_must_not_modify_or_reinterpret_TDI_frozen_lineage
-  Memorithm/FLAT-ATTENTION:
-    relationship: candidate_attention_semantics_execution_target
-    status: planned_research_bridge
-    contract:
-      - ITD_may_compare_structural_or_state_descriptors_across_reference_semantics
-      - mechanistic_evidence_may_prioritize_or_reject_research_candidates
-      - FLAT_correctness_and_real_device_performance_gates_remain_independent
   Memorithm/scirust:
-    relationship: preferred_reusable_scientific_algorithm_source_and_promotion_target
-    status: active_direction
-    contract:
-      - reuse_validated_SciRust_statistics_signal_optimization_causal_and_numerical_primitives_when_appropriate
-      - promote_only_general_reusable_primitives_with_independent_review
-      - keep_ITD_specific_scientific_claims_and_frozen_model_semantics_here
+    role: reusable_Rust_graph_event_statistics_and_CPU_reference_primitives
+    next_handoff: V888-BOOL-0.1
+    constraints: [read_current_bootstrap_and_ML_overlay, verify_actual_API_before_dependency_pin, retain_independent_oracles]
+  Memorithm/SML-GENIUS:
+    role: conditional_Boolean_recurrent_model_consumer
+    handoff: V888-BOOL-4.0
+    constraints: [read_consumer_bootstrap, no_private_implementation_copy_into_public_ITD, no_raw_V888_inference_dependency, independent_consumer_qualification]
+  Memorithm/TDI:
+    role: separate_dynamic_recovery_and_comparative_protocol_partner
+    constraints: [resolve_current_contract_not_stale_version_label, ITD_TDI_ablation, no_frozen_lineage_or_holdout_change]
+  Memorithm/FLAT-ATTENTION:
+    role: structured_operator_and_external_attention_reference_partner
+    handoff: V888-BOOL-4.1
+    constraints: [dense_reference_numerical_controls, preserve_negative_MAA_evidence, independent_kernel_and_device_qualification]
+  Memorithm/NoiseLab:
+    role: source_identified_perturbation_partner
+    handoff: V888-BOOL-2.1
+  Memorithm/Forge:
+    role: bounded_development_candidate_search
+    handoff: V888-BOOL-3.0
+    constraints: [ITD_retains_protocol_and_holdout_authority, frozen_domain_and_budget]
   Memorithm/ElasticXxx:
-    relationship: downstream_adaptive_systems_research_target
-    status: active_research_direction
-    candidate_questions:
-      - representation_choice
-      - precision
-      - memory_and_observation_cost
-      - model_selection
-      - compression_and_recomputation
-      - controlled_adaptation
-    constraints:
-      - ITD_evidence_is_not_automatically_an_Elastic_runtime_policy
-      - ElasticXxx_must_revalidate_its_own_invariants_before_actuation
+    role: downstream_adaptive_systems_research
+    handoff: V888-BOOL-4.2
+    candidate_questions: [representation, precision, memory, model_choice, compression, recomputation, controlled_adaptation]
+    constraints: [shadow_first, no_automatic_policy_promotion, separate_Elastic_invariant_validation]
   Memorithm/SciRust-Verify:
-    relationship: future_evidence_normalization_and_integrity_layer
-    status: planned
-    contract:
-      - preserve_frozen_model_revision_experiment_classification_data_provenance_and_negative_results
+    role: conditional_evidence_normalization
+    constraints: [versioned_adapter_required, preserve_scientific_scope_and_negative_outcomes]
   Memorithm/scirust-hub:
-    relationship: future_orchestration_of_reproducible_non_privileged_experiments
-    status: planned_not_assumed
-
-roadmap:
-  - id: ITD0
-    name: Frozen-core and research-boundary audit
-    status: active
-    goals:
-      - ensure_certified_core_never_imports_AI_research_namespace
-      - inventory_public_facade_core_research_and_historical_V10_boundaries
-      - preserve_validation_that_proves_tracked_frozen_files_are_unchanged
-  - id: ITD1
-    name: Reusable AI experiment schema
-    status: active_priority
-    goals:
-      - version_hypothesis_data_provenance_split_model_adapter_metric_uncertainty_and_result_schemas
-      - distinguish_exploratory_and_confirmatory_records
-      - support_blocked_inconclusive_negative_and_positive_outcomes
-      - make_leakage_controls_and_compute_budgets_machine_readable
-  - id: ITD2
-    name: TDI attention research integration
-    status: active_research_direction
-    goals:
-      - ingest_TDI_AI_recovery_records_as_separate_features
-      - implement_competent_static_attention_and_ITD_structural_controls
-      - preserve_TDI_final_holdout_guards_and_never_trigger_confirmatory_runs
-      - provide_ablation_and_grouped_uncertainty_reports
-  - id: ITD3
-    name: FLAT semantic research harness
-    status: conditional_after_reference_contracts
-    goals:
-      - compare_frozen_candidate_attention_semantics_on_deterministic_mechanistic_tasks
-      - collect_ITD_and_TDI_descriptors_without_conflating_them
-      - preserve_quality_cost_and_failure_mode_accounting_separately
-  - id: ITD4
-    name: Resource-aware AI experiments for ElasticXxx
-    status: planned
-    goals:
-      - define_tasks_where_observation_representation_or_compute_cost_is_explicit
-      - test_whether_ITD_or_learned_structure_improves_decisions_beyond_competent_controls
-      - export_evidence_and_error_budgets_not_runtime_policy
-  - id: ITD5
-    name: SciRust reuse and promotion
-    status: ongoing
-    goals:
-      - reuse_before_reinventing_general_algorithms
-      - promote_only_generalized_and_independently_validated_infrastructure
-      - preserve_Python_reference_and_Rust_oracle_equivalence_where_it_is_part_of_validation
-  - id: ITD6
-    name: Ecosystem evidence and reproducibility
-    status: planned
-    goals:
-      - emit_versioned_machine_readable_experiment_envelopes
-      - integrate_with_SciRust_Verify
-      - optionally_package_or_orchestrate_reproducible_runs_through_SciCapsule_and_Hub_after_contracts_exist
-  - id: ITD7
-    name: Stable research laboratory productization
-    status: long_term
-    goals:
-      - documented_scientific_revision_process_separate_from_software_semver
-      - stable_experiment_adapter_API
-      - reproducible_environment_and_release_evidence
-      - compatibility_matrix_with_TDI_SciRust_ElasticXxx_and_FLAT
-
+    role: conditional_bounded_non_privileged_orchestration
+    constraints: [versioned_adapter_required, no_inferred_live_capability]
 
 itd3x_programme:
-  research_engine_revision: "ITD Research Lab V30.0-alpha"
-  frozen_scientific_baseline: "ITD V29.18"
-  status: active_bootstrap
-  default_branch_work: research/itd-3x-bootstrap
+  research_engine_revision: ITD Research Lab V30.0-alpha
+  frozen_scientific_baseline: ITD V29.18
+  status: bootstrap_integrated_research_programme_active
   series:
-    ITD-30.x: foundation_protocols_adapters_campaigns
-    ITD-31.x: representation_strata_and_transition_graphs
-    ITD-32.x: AI_SciML_and_NeuralOperator
-    ITD-33.x: trajectory_and_TDI_inference_dynamics
-    ITD-34.x: UQ_OOD_calibration_and_abstention
-    ITD-35.x: structured_attention_FLAT_MAA_spectral_operators
-    ITD-36.x: adaptive_Elastic_shadow_policies
+    ITD-30.x: foundation_protocols_adapters_campaigns_and_durable_strategy
+    ITD-31.x: representations_graph_identity_low_bit_and_exact_accounting
+    ITD-32.x: AI_SciML_NeuralOperator_and_V888_Boolean_tasks
+    ITD-33.x: trajectory_state_memory_TDI_and_growth_descriptors
+    ITD-34.x: UQ_OOD_calibration_abstention_and_confirmation
+    ITD-35.x: structured_attention_FLAT_MAA_and_topology_controls
+    ITD-36.x: adaptive_shadow_and_artificial_grow_prune_regrow
     ITD-37.x: NoiseLab_perturbation_and_robustness
     ITD-38.x: Forge_bounded_search
-    ITD-39.x: Rust_SciRust_evidence_and_Hub
+    ITD-39.x: Rust_CPU_WGPU_evidence_and_Hub
   issue_map:
     ITD-30.x: 33
     ITD-31.x: 34
@@ -199,29 +154,47 @@ itd3x_programme:
     ITD-37.x: 38
     ITD-38.x: 39
     ITD-39.x: 40
-  invariants:
-    - V29_18_remains_frozen_and_separately_certified
-    - V30_plus_research_mechanisms_are_not_certified_replacements_without_revision_review
-    - existing_negative_Missions_3_8_result_is_preserved
-    - final_holdouts_remain_inaccessible_to_selection_and_search
-    - cross_repository_evidence_does_not_transfer_runtime_policy_ownership
+  V888_umbrella_issue: 58
+  milestones: .agent/V888_BOOL_PROGRAMME.json
+  next_implementation: V888-BOOL-0.1
+  first_functional_target: V888-BOOL-1.1
+  parallel_foundation_repair: ITD-30.5
+  existing_NeuralOperator_representation_UQ_attention_and_other_tracks: retained_not_superseded
+
+control_loop:
+  - READ_POLICY_BOOTSTRAP_PROGRAMME_AND_CHECKPOINT
+  - REFRESH_REAL_GIT_HEADS_PR_DESTINATIONS_AND_SCOPED_EVIDENCE
+  - VALIDATE_DEPENDENCIES_AND_SELECT_SMALLEST_READY_SLICE
+  - DEFINE_FALSIFIABLE_QUESTION_PROVENANCE_SPLITS_CONTROLS_AND_BUDGETS
+  - IMPLEMENT_RUST_REFERENCE_OR_REUSE_QUALIFIED_SHARED_PRIMITIVES
+  - RUN_ORACLES_LEAKAGE_AND_RESOURCE_CHECKS
+  - EVALUATE_WITH_EXPLICIT_SCOPE_AND_UNCERTAINTY
+  - RECORD_POSITIVE_NEGATIVE_EQUIVALENT_INCONCLUSIVE_OR_BLOCKED_OUTCOME
+  - UPDATE_DATED_LEDGER_AND_NEXT_DEPENDENCY
+  - HANDOFF_ONLY_AFTER_INDEPENDENT_CONSUMER_QUALIFICATION
 
 agent_operating_protocol:
   must_read_this_file:
-    - at_start_of_every_agent_session
-    - before_any_frozen_core_or_scientific_revision_change
-    - before_new_confirmatory_AI_study_or_final_holdout_access
-    - before_TDI_FLAT_SciRust_or_ElasticXxx_integration
-    - before_merge_decisions
+    - every_session_start_and_next_major_task_selection
+    - before_frozen_core_scientific_revision_or_confirmatory_work
+    - before_cross_repository_integration_or_promotion
+    - after_user_change_to_strategy
+    - before_any_relevant_PR_or_merge_decision
   must_update_this_file:
-    - when_a_research_phase_changes_status
-    - when_a_new_confirmatory_study_is_frozen_or_completed
-    - when_a_cross_repository_contract_changes
-    - when_a_scientific_revision_process_is_opened_or_closed
+    - when_strategy_phase_dependency_or_ownership_changes
+    - when_a_confirmatory_protocol_or_result_is_frozen
+    - when_an_implementation_is_integrated_or_rejected
+    - when_a_new_dated_checkpoint_is_written
+  must_not:
+    - treat_conversation_memory_as_live_GitHub_status
+    - report_plans_as_executed_work_or_tests_as_biological_results
+    - ask_user_to_type_routine_commands_when_tools_can_execute
+    - claim_unobserved_Thor_execution_or_background_work
+    - put_credentials_raw_data_or_private_consumer_code_in_public_strategy
   fail_closed: >-
-    If this roadmap cannot be read, do not make scientific-revision,
-    confirmatory-study, cross-repository promotion, or merge decisions. Read-only
-    diagnosis is allowed.
+    Missing policy, required checkpoint, provenance or external authorization
+    blocks major scientific-revision, confirmatory, cross-repository promotion
+    and merge decisions. Read-only diagnosis and explicit blocker reports remain allowed.
 
 # V0 holdout — Orchestrator must not AUTO_MERGE this repository.
 autonomous_merge_policy:
