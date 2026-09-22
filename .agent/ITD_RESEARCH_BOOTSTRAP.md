@@ -1,5 +1,17 @@
 # ITD Research Lab — durable research re-entry
 
+## Latest integration checkpoint — read before repairing or integrating PRs
+
+Read `.agent/MANIFEST_INTEGRATION_STACK_20260922.md` alongside the older
+`.agent/PR_CONFLICT_REPAIR_20260922.md`. After #42 and #55 entered main, the remaining
+manifests conflicted again. The ten remaining heads are now a tested cumulative
+stack (#44 -> #45 -> #46 -> #47 -> #48 -> #49 -> #50 -> #52 -> #53 -> #56), all targeting
+main. Source-preserving repairs and TEN sequential normal merge commits were rehearsed
+successfully in run 35771215462. The top includes the entire batch, not only Hub.
+Do not recreate independent repairs against the obsolete 21e034 snapshot. Refresh live
+heads and CI, retain merge ancestry, and distinguish mergeable=true from full CI and
+actual main integration. No automatic-merge authority or neural milestone was changed.
+
 Core programme revision: **2026-09-22.3**. Engine lineage: **V30.0-alpha / ITD-3X**.
 Application priority: **V888-GAME-FIRST-20260922**.
 Latest independent reference evidence: **DYN-REF1**, observed 2026-09-22.
