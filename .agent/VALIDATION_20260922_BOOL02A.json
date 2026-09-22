@@ -1,0 +1,25 @@
+{
+  "observed_on": "2026-09-22",
+  "programme_revision": "2026-09-22.3",
+  "validation_environment": {
+    "kind": "assistant_local_container_not_Thor",
+    "python": "3.13.5",
+    "machine": "x86_64"
+  },
+  "programme_milestones": 26,
+  "itd_families": 10,
+  "unittest_methods_passed": 5,
+  "invalid_mutation_subcases_rejected": 22,
+  "previous_programme_canonical_sha256": "6942c511df1f81727c6d0c84e66529b8563be1149d7cc30de9b148c8d5e3a82c",
+  "programme_canonical_sha256": "659db480e424e610850afe367aab6f89829e128d133738dd49962a9941d27c8d",
+  "published_programme_blob_matches_locally_validated_payload": "a0f244e232fd06e9f76edae214c3bb49f110cb07",
+  "artifact_id": 10693064194,
+  "artifact_zip_sha256": "f425f0d3b5052bc9d994d923d5f4e5458a54364d4c66a15b35bfa4e67edb1908",
+  "artifact_zip_matches_GitHub_digest": true,
+  "executed_protocol_sha256": "4aeee08d94f6e1253d5ce73feab788efb2c5610620763585865d6966b255d2a1",
+  "per_case_summary_consistency_checked": 12,
+  "runtime_source_commit": "b5e0f2a439d6b638a6df295a1cea7cda399c2cae",
+  "scope": "Local metadata/evidence-consistency verification, not a second real-data run or signed build attestation",
+  "parent_0_2_complete": false,
+  "authorization_changes": false
+}
