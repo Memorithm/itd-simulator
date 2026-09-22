@@ -2,6 +2,7 @@
 
 Programme revision: **2026-09-22.3**. Engine lineage: **V30.0-alpha / ITD-3X**.
 This is a strategy/evidence revision, not a software release or a validated brain model.
+Application-priority supplement: **V888-GAME-FIRST-20260922**; no execution-ledger change.
 
 ## Mandatory read order
 
@@ -11,8 +12,9 @@ On the existing `agent/ecosystem-roadmap` branch, read:
 2. `.agent/ITD_RESEARCH_BOOTSTRAP.md` — this resumption procedure.
 3. `.agent/V888_BOOL_PROGRAMME.json` — authoritative milestone dependencies and exit criteria.
 4. `.agent/V888_BOOL_RESEARCH_PROGRAMME.md` — scientific design and comparison rules.
-5. `.agent/RESEARCH_STATUS_20260922_BOOL02A.md` — latest scoped execution observation.
-6. `.agent/RESEARCH_STATUS_20260922_BOOL01.md` and `.agent/RESEARCH_STATUS_20260922.md` — preserved earlier checkpoints, not live state.
+5. `.agent/V888_GAME_FIRST_20260922.md` — user-approved first demonstrator: memory and deduction game; V888 trading deferred.
+6. `.agent/RESEARCH_STATUS_20260922_BOOL02A.md` — latest scoped execution observation.
+7. `.agent/RESEARCH_STATUS_20260922_BOOL01.md` and `.agent/RESEARCH_STATUS_20260922.md` — preserved earlier checkpoints, not live state.
 
 The root AGENTS.md already points to the policy file. Strategy stays off main; do not
 merge that branch, replace the frozen core or create an incompatible product registry.
@@ -49,6 +51,21 @@ uniform null-ensemble or mixing proof. Anatomical region blocks are not function
 The first functional target remains **V888-BOOL-1.1**, delayed XOR, after independent
 dynamics and causal-I/O gates. Foundation integration **ITD-30.5** is separate repair
 work, not an excuse to label blocked downstream integrations completed.
+
+## First application: memory and deduction game
+
+The user selected a small memory/deduction game as the first interactive demonstrator.
+Use `.agent/V888_GAME_FIRST_20260922.md` to connect the existing delayed-XOR, memory
+and contextual-rule milestones to the proposed two-door game. Qualify memory-only,
+logic-only and combined conditions; report learning on unseen episodes and identify
+which internal parameters or readout actually learned. A replay animation is not proof.
+
+V888 trading, including simulated trading and exchange integration, is deferred until
+a separate later user decision; do not start it as part of the first campaign. This
+priority does not cancel unrelated trading projects elsewhere in the ecosystem.
+Environment/oracle construction can proceed independently of graph diagnostics;
+V888 integration still obeys the existing dynamics, I/O and control gates. This
+supplement changes application order, not milestone completion or execution authority.
 
 ## Execution procedure
 
