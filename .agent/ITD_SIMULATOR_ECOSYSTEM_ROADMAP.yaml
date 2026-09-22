@@ -2,7 +2,7 @@ schema_version: 1
 kind: itd_simulator_ecosystem_agent_roadmap
 status: active
 last_updated: '2026-09-22'
-programme_revision: '2026-09-22.2'
+programme_revision: '2026-09-22.3'
 repository: Memorithm/itd-simulator
 intended_consumer: autonomous_coding_agent
 merge_policy: never_merge_this_file_to_default_branch_unless_user_explicitly_requests
@@ -24,7 +24,7 @@ current_strategy_sources:
   bootstrap: .agent/ITD_RESEARCH_BOOTSTRAP.md
   machine_programme: .agent/V888_BOOL_PROGRAMME.json
   scientific_design: .agent/V888_BOOL_RESEARCH_PROGRAMME.md
-  latest_checkpoint: .agent/RESEARCH_STATUS_20260922_BOOL01.md
+  latest_checkpoint: .agent/RESEARCH_STATUS_20260922_BOOL02A.md
   validator: .agent/validate_v888_programme.py
   validator_tests: .agent/test_v888_programme.py
   precedence:
@@ -47,17 +47,25 @@ verified_checkpoint:
   default_branch_snapshot_is_historical_refresh_required: true
   main_sha: 875337007cfcf5a1b2e7245f6e1831fa876fe868
   bootstrap_pr_41: merged_into_main
-  adapter_pr_42: open_against_bootstrap_branch
-  campaign_pr_43: merged_into_pr_42_branch_not_main
-  accounting_pr_44: open_against_bootstrap_branch
+  adapter_pr_42: historical_open_against_bootstrap_branch_refresh_required
+  campaign_pr_43: historical_merge_into_pr_42_branch_not_main
+  accounting_pr_44: historical_open_against_bootstrap_branch_refresh_required
   V888_source_audit: completed_with_explicit_scope
   V888_BOOL_0_1: completed_source_graph_qualification
   V888_BOOL_0_1_run: 35717145115
   V888_BOOL_0_1_source: d61ffb6a79ebe975c1d867ad1a728fd01126fde0
+  V888_BOOL_0_2: active_not_completed
+  V888_BOOL_0_2a: completed_subset_and_control_invariant_pilot
+  V888_BOOL_0_2a_run: 35726122553
+  V888_BOOL_0_2a_source: b5e0f2a439d6b638a6df295a1cea7cda399c2cae
+  V888_BOOL_0_2a_cases: 12
+  V888_BOOL_0_2a_graphs_before_replay: 60
+  V888_BOOL_0_2a_changed_controls: 48
+  V888_BOOL_0_2a_uniform_null_or_mixing_qualified: false
   V888_Boolean_computation: not_yet_validated
   V888_topology_advantage: not_established
   biological_growth_causality: not_established
-  source_details_and_exact_revisions: .agent/RESEARCH_STATUS_20260922_BOOL01.md
+  source_details_and_exact_revisions: .agent/RESEARCH_STATUS_20260922_BOOL02A.md
   refresh_before_execution: true
 
 scientific_invariants:
@@ -78,6 +86,9 @@ scientific_invariants:
   - no_other_raw_connectome_added_without_separate_source_authorization
   - required_CI_green_on_exact_candidate_head_before_default_code_merge
   - intermediate_branch_merge_is_not_default_branch_integration
+  - invariant_preservation_is_not_uniform_null_ensemble_or_mixing_qualification
+  - anatomical_region_blocks_are_not_inferred_functional_modules
+  - sampling_bias_disconnected_ports_and_unchanged_controls_remain_explicit
 
 ownership:
   role: comparative_scientific_and_AI_experiment_laboratory
@@ -101,6 +112,7 @@ ecosystem_interfaces:
   Memorithm/scirust:
     role: reusable_Rust_graph_event_statistics_and_CPU_reference_primitives
     next_handoff: V888-BOOL-0.2
+    current_subslice: V888-BOOL-0.2b_diversity_partition_and_port_sensitivity
     constraints: [read_current_bootstrap_and_ML_overlay, verify_actual_API_before_dependency_pin, retain_independent_oracles]
   Memorithm/SML-GENIUS:
     role: conditional_Boolean_recurrent_model_consumer
@@ -161,6 +173,7 @@ itd3x_programme:
   V888_umbrella_issue: 58
   milestones: .agent/V888_BOOL_PROGRAMME.json
   next_implementation: V888-BOOL-0.2
+  next_subslice: V888-BOOL-0.2b
   first_functional_target: V888-BOOL-1.1
   parallel_foundation_repair: ITD-30.5
   existing_NeuralOperator_representation_UQ_attention_and_other_tracks: retained_not_superseded
