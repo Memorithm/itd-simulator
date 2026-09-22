@@ -4,7 +4,7 @@ Author: Memorithm integration pipeline. Scope: user-requested repair and integra
 
 ## Final observed result
 
-After the final merge at 2026-09-22T19:26:43Z, GitHub's live `pulls?state=open&per_page=100` endpoint returned an empty array. The ten previously open PRs are integrated: #44, #45, #46, #47, #48, #49, #50, #52, #53 and #56. The closed-PR records confirm `merged=true` for the constituent PRs, including the originally reported #48. They were not merely closed or left with an old mergeable flag.
+After the final merge at 2026-09-22T19:26:43Z, GitHub's live `pulls?state=open&per_page=100` endpoint returned an empty array. The ten previously open PRs are integrated: #44, #45, #46, #47, #48, #49, #50, #52, #53 and #56. Closed-PR records confirm `merged=true` for the constituent PRs, including the originally reported #48. They were not merely closed or left with an old mergeable flag.
 
 Final main: `7ba33919d47232a093c882a8ee4b531ecc0f1aeb`.
 Final Git tree: `5d769c75e9b4ff55c57ef77a429264afc922876e`.
@@ -36,8 +36,8 @@ In the assistant container, archived source hashes were checked, every staged pa
 
 Starting main was 747e32ad5992fd71256b8fbf309376a9427cb0d8, after #42 and #55, with 529 manifest entries. The final manifest has 562 entries and SHA-256 `0a52a5246118b49eec68fcabb26b8d1397f861bc637721bd6cde1df704ad6b2f`. No old path was discarded; proposed source changes were preserved rather than rewritten to silence conflicts. Frozen V29.18 and existing game sources are unchanged by the repair. No BANC data was read or modified.
 
-Evidence archives:
-- run 35771327552, artifact 10714715881, SHA-256 44df14675f123822b1c79694921be6cbf0ee3abb90bc0d88faaf5a6f81a2099 is NOT its digest; the verified archive digest is `44df14675f123822b1c79694921be6cbf0ee3abb90bc0d161b772de3851b4aa7`;
+Verified evidence archives:
+- run 35771327552, artifact 10714715881, SHA-256 `44df14675f123822b1c79694921be6cbf0ee3abb90bc0d161b772de3851b4aa7`;
 - run 35771215462, artifact 10713853286, SHA-256 `5e98a8569e8a23aaff8f66131f7899b5556b508f99d595179f4305fbddf71b3b`.
 
 ## Continuation
