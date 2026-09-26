@@ -41,6 +41,7 @@ PLAN_FILENAME = "plan.json"
 LEDGER_FILENAME = "ledger.json"
 ARTIFACT_DIRNAME = "artifacts"
 OUTPUT_FILENAME = "output.bin"
+AUTHORIZATION_FILENAME = "authorization.bin"
 SAFE_CASE_ID = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$")
 
 
@@ -392,6 +393,47 @@ def verify_persisted_artifacts(root: Path, ledger: CampaignLedgerV1) -> None:
             raise ValueError(f"artifact digest mismatch: {record.relative_path}")
 
 
+def persist_authorization_artifact(
+    root: Path,
+    payload: bytes,
+    verification: AuthorizationVerificationV1,
+) -> Path:
+    """Persist the exact authorization bytes bound by the ledger record."""
+
+    verification.assert_matches_declared_authorization()
+    if digest_bytes(payload) != verification.observed_sha256:
+        raise ValueError("authorization payload does not match verification evidence.")
+    destination = root / AUTHORIZATION_FILENAME
+    if destination.exists():
+        if destination.is_symlink() or not destination.is_file():
+            raise ValueError("authorization artifact path must be a regular file.")
+        if destination.read_bytes() != payload:
+            raise ValueError("campaign directory contains a different authorization artifact.")
+        return destination
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    temporary = destination.with_name(destination.name + ".tmp")
+    temporary.write_bytes(payload)
+    temporary.replace(destination)
+    return destination
+
+
+def verify_persisted_authorization(root: Path, ledger: CampaignLedgerV1) -> None:
+    """Re-hash durable authorization bytes instead of trusting ledger digests."""
+
+    record = ledger.authorization_verification
+    if record is None:
+        return
+    path = root / AUTHORIZATION_FILENAME
+    if path.is_symlink() or not path.is_file():
+        raise ValueError("missing persisted authorization artifact.")
+    payload = path.read_bytes()
+    if len(payload) != record.byte_count:
+        raise ValueError("persisted authorization artifact size mismatch.")
+    if digest_bytes(payload) != record.observed_sha256:
+        raise ValueError("persisted authorization artifact digest mismatch.")
+    record.assert_matches_declared_authorization()
+
+
 def verify_plan_sources(
     plan: CampaignPlanV1,
     payloads: dict[tuple[str, str], bytes],
@@ -459,6 +501,7 @@ def run_persisted_campaign(
             final_authorization,
             authorization_payload,
         )
+        persist_authorization_artifact(root, authorization_payload, authorization_verification)
 
     if protocol is not None:
         plan.assert_matches_protocol(protocol)
@@ -543,6 +586,7 @@ def resume_persisted_campaign(
             final_authorization,
             authorization_payload,
         )
+        persist_authorization_artifact(root, authorization_payload, authorization_verification)
     if protocol is not None:
         plan.assert_matches_protocol(protocol)
     plan.assert_final_authorized(final_authorization)
@@ -598,4 +642,5 @@ def completed_run_from_store(root: Path) -> CampaignRunV1:
     plan = load_campaign_plan(root)
     ledger = load_campaign_ledger(root)
     verify_persisted_artifacts(root, ledger)
+    verify_persisted_authorization(root, ledger)
     return ledger.completed_run(plan)
