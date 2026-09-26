@@ -224,6 +224,17 @@ class CampaignLedgerV1:
             if self.authorization_verification is None:
                 raise ValueError("final campaign replay requires authorization verification evidence.")
             self.authorization_verification.assert_matches_declared_authorization()
+            if (
+                self.authorization_verification.protocol_fingerprint
+                != plan.campaign.protocol_fingerprint
+            ):
+                raise ValueError("authorization verification protocol does not match campaign.")
+            for case in plan.cases:
+                if (
+                    case.role is SplitRole.FINAL
+                    and self.authorization_verification.final_source != case.input_source
+                ):
+                    raise ValueError("authorization verification source does not match final case.")
 
 
 def _source_from_dict(payload: dict[str, object]) -> SourceIdentity:
@@ -331,6 +342,8 @@ def load_campaign_ledger(root: Path) -> CampaignLedgerV1:
         authorization = None
     else:
         authorization = AuthorizationVerificationV1(
+            protocol_fingerprint=str(authorization_payload["protocol_fingerprint"]),
+            final_source=_source_from_dict(authorization_payload["final_source"]),
             authorization_sha256=str(authorization_payload["authorization_sha256"]),
             observed_sha256=str(authorization_payload["observed_sha256"]),
             byte_count=int(authorization_payload["byte_count"]),

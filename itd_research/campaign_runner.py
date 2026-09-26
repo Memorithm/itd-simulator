@@ -170,6 +170,7 @@ class CaseExecutionV1:
         )
         if not math.isfinite(self.work_units_used) or self.work_units_used < 0.0:
             raise ValueError("work_units_used must be finite and non-negative.")
+        object.__setattr__(self, "work_units_used", float(self.work_units_used))
 
     def as_dict(self) -> dict[str, object]:
         return {
