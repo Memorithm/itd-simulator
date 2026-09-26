@@ -9,6 +9,7 @@ successes.
 from __future__ import annotations
 
 import json
+import re
 from dataclasses import dataclass
 from enum import StrEnum
 from pathlib import Path
@@ -40,6 +41,18 @@ PLAN_FILENAME = "plan.json"
 LEDGER_FILENAME = "ledger.json"
 ARTIFACT_DIRNAME = "artifacts"
 OUTPUT_FILENAME = "output.bin"
+SAFE_CASE_ID = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$")
+
+
+def _artifact_relative_path(case_id: str) -> str:
+    """Return the canonical artifact path for one safe case identifier."""
+
+    if SAFE_CASE_ID.fullmatch(case_id) is None or case_id in {".", ".."}:
+        raise ValueError(
+            "case_id used for persistence must be 1-128 ASCII letters, digits, '.', '_' or '-' "
+            "and must start with a letter or digit."
+        )
+    return f"{ARTIFACT_DIRNAME}/{case_id}/{OUTPUT_FILENAME}"
 
 
 class CampaignLifecycleStatus(StrEnum):
@@ -65,8 +78,8 @@ class CampaignHalt(Exception):
             raise ValueError("CampaignHalt cannot declare a completed campaign.")
         if not reason.strip():
             raise ValueError("CampaignHalt reason must not be empty.")
-        if artifact is not None and execution is None:
-            raise ValueError("CampaignHalt artifact requires an execution record.")
+        if (execution is None) != (artifact is None):
+            raise ValueError("CampaignHalt execution and artifact bytes must be supplied together.")
         self.status = CampaignLifecycleStatus(status)
         self.reason = reason
         self.execution = execution
@@ -86,7 +99,7 @@ class ArtifactRecordV1:
     def __post_init__(self) -> None:
         if not self.case_id.strip():
             raise ValueError("case_id must not be empty.")
-        expected = f"{ARTIFACT_DIRNAME}/{self.case_id}/{OUTPUT_FILENAME}"
+        expected = _artifact_relative_path(self.case_id)
         if self.relative_path != expected:
             raise ValueError("artifact path must follow artifacts/<case_id>/output.bin.")
         if self.byte_count < 0:
@@ -140,6 +153,10 @@ class CampaignLedgerV1:
             raise ValueError("ledger artifact identifiers must be unique.")
         if set(artifact_ids) != set(execution_ids):
             raise ValueError("every execution must have exactly one artifact record.")
+        execution_digests = {item.case_id: item.output_sha256 for item in self.executions}
+        for artifact in self.artifacts:
+            if artifact.output_sha256 != execution_digests[artifact.case_id]:
+                raise ValueError("artifact digest must match its execution output_sha256.")
         if self.status is CampaignLifecycleStatus.COMPLETED and not self.executions:
             raise ValueError("completed ledger must contain every planned execution.")
 
@@ -312,7 +329,7 @@ def persist_case_artifact(root: Path, execution: CaseExecutionV1, payload: bytes
     digest = digest_bytes(payload)
     if digest != execution.output_sha256:
         raise ValueError("artifact bytes do not match execution output_sha256.")
-    relative = f"{ARTIFACT_DIRNAME}/{execution.case_id}/{OUTPUT_FILENAME}"
+    relative = _artifact_relative_path(execution.case_id)
     destination = root / relative
     destination.parent.mkdir(parents=True, exist_ok=True)
     temporary = destination.with_name(destination.name + ".tmp")
@@ -393,6 +410,8 @@ def run_persisted_campaign(
     is written.
     """
 
+    if (root / LEDGER_FILENAME).exists():
+        raise ValueError("campaign directory already contains a ledger; use resume for interrupted runs.")
     persist_campaign_plan(root, plan)
     source_verifications = verify_plan_sources(plan, source_payloads)
     authorization_verification: AuthorizationVerificationV1 | None = None
@@ -439,10 +458,8 @@ def run_persisted_campaign(
         except CampaignHalt as halt:
             if halt.execution is not None:
                 _assert_case_execution(case, halt.execution)
-                artifact = halt.artifact
-                if artifact is None:
-                    artifact = bytes.fromhex(halt.execution.output_sha256)
-                artifacts.append(persist_case_artifact(root, halt.execution, artifact))
+                assert halt.artifact is not None
+                artifacts.append(persist_case_artifact(root, halt.execution, halt.artifact))
                 executions.append(halt.execution)
             return _persist(halt.status, halt.reason)
         except Exception as error:
@@ -524,10 +541,8 @@ def resume_persisted_campaign(
         except CampaignHalt as halt:
             if halt.execution is not None:
                 _assert_case_execution(case, halt.execution)
-                artifact = halt.artifact
-                if artifact is None:
-                    artifact = bytes.fromhex(halt.execution.output_sha256)
-                artifacts.append(persist_case_artifact(root, halt.execution, artifact))
+                assert halt.artifact is not None
+                artifacts.append(persist_case_artifact(root, halt.execution, halt.artifact))
                 executions.append(halt.execution)
             return _persist(halt.status, halt.reason)
         except Exception as error:

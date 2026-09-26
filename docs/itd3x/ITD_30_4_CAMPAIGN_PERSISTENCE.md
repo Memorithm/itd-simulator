@@ -22,6 +22,9 @@ A campaign directory contains:
 - `artifacts/<case_id>/output.bin` — exact case output whose SHA-256
   equals the execution digest.
 
+Persistent case identifiers are bounded ASCII path components; separators,
+traversal components and other filesystem syntax are rejected before a write.
+
 Writes are atomic (`*.tmp` then replace). Reloaded artifacts are hashed
 again before a completed ledger can be turned into `CampaignRunV1`.
 

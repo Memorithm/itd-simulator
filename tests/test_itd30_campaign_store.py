@@ -12,7 +12,9 @@ from itd_research.campaign_runner import (
 )
 from itd_research.campaign_store import (
     ArtifactEvaluator,
+    ArtifactRecordV1,
     CampaignHalt,
+    CampaignLedgerV1,
     CampaignLifecycleStatus,
     completed_run_from_store,
     load_campaign_ledger,
@@ -144,6 +146,16 @@ def test_blocked_campaign_is_terminal_and_not_resumable(tmp_path: Path) -> None:
             source_payloads={("dev", "v1"): payload, ("val", "v1"): b"val-bytes"},
         )
 
+    evaluator = _ExactBytes({"c1": b"out", "c2": b"out"})
+    with pytest.raises(ValueError, match="already contains a ledger"):
+        run_persisted_campaign(
+            tmp_path,
+            plan,
+            evaluator,
+            source_payloads={("dev", "v1"): payload, ("val", "v1"): b"val-bytes"},
+        )
+    assert evaluator.calls == []
+
 
 def test_inconclusive_prefix_is_recorded_without_becoming_success(tmp_path: Path) -> None:
     payload = b"dev-bytes"
@@ -165,6 +177,46 @@ def test_inconclusive_prefix_is_recorded_without_becoming_success(tmp_path: Path
     assert tuple(item.case_id for item in ledger.executions) == ("c1",)
     with pytest.raises(ValueError, match="only a completed ledger"):
         ledger.completed_run(plan)
+
+
+def test_persistence_rejects_case_ids_that_are_not_safe_path_components(tmp_path: Path) -> None:
+    payload = b"dev-bytes"
+    plan = _plan(
+        CampaignCaseV1("../../outside", SplitRole.DEVELOPMENT, _source("dev", payload), 1.0)
+    )
+    evaluator = _ExactBytes({"../../outside": b"out"})
+    with pytest.raises(ValueError, match="case_id used for persistence"):
+        run_persisted_campaign(
+            tmp_path,
+            plan,
+            evaluator,
+            source_payloads={("dev", "v1"): payload},
+        )
+    assert not (tmp_path.parent / "outside").exists()
+
+
+def test_ledger_rejects_artifact_digest_not_bound_to_execution() -> None:
+    execution = CaseExecutionV1("c1", digest_bytes(b"execution"), 1.0)
+    artifact = ArtifactRecordV1(
+        case_id="c1",
+        relative_path="artifacts/c1/output.bin",
+        output_sha256=digest_bytes(b"different"),
+        byte_count=len(b"different"),
+    )
+    with pytest.raises(ValueError, match="artifact digest must match"):
+        CampaignLedgerV1(
+            plan_fingerprint="a" * 64,
+            status=CampaignLifecycleStatus.COMPLETED,
+            reason="invalid binding",
+            executions=(execution,),
+            artifacts=(artifact,),
+        )
+
+
+def test_halt_execution_requires_exact_artifact_bytes() -> None:
+    execution = CaseExecutionV1("c1", digest_bytes(b"output"), 1.0)
+    with pytest.raises(ValueError, match="supplied together"):
+        CampaignHalt(CampaignLifecycleStatus.BLOCKED, "blocked", execution=execution)
 
 
 def test_exception_persists_interrupted_ledger_then_reraises(tmp_path: Path) -> None:
