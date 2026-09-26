@@ -72,6 +72,8 @@ class SourceVerificationV1:
 class AuthorizationVerificationV1:
     """Observed byte hash for one recorded authorization identity."""
 
+    protocol_fingerprint: str
+    final_source: SourceIdentity
     authorization_sha256: str
     observed_sha256: str
     byte_count: int
@@ -85,6 +87,11 @@ class AuthorizationVerificationV1:
             raise ValueError("unsupported authorization verification method.")
         if self.byte_count < 0:
             raise ValueError("byte_count must be non-negative.")
+        object.__setattr__(
+            self,
+            "protocol_fingerprint",
+            _validate_digest("protocol_fingerprint", self.protocol_fingerprint),
+        )
         object.__setattr__(
             self,
             "authorization_sha256",
@@ -103,6 +110,8 @@ class AuthorizationVerificationV1:
     def as_dict(self) -> dict[str, object]:
         return {
             "verification_version": self.verification_version,
+            "protocol_fingerprint": self.protocol_fingerprint,
+            "final_source": self.final_source.as_dict(),
             "authorization_sha256": self.authorization_sha256,
             "observed_sha256": self.observed_sha256,
             "byte_count": self.byte_count,
@@ -138,6 +147,8 @@ def verify_authorization_bytes(
     """Hash authorization artifact bytes. Matching is not a permission grant."""
 
     record = AuthorizationVerificationV1(
+        protocol_fingerprint=authorization.protocol_fingerprint,
+        final_source=authorization.final_source,
         authorization_sha256=authorization.authorization_sha256,
         observed_sha256=digest_bytes(payload),
         byte_count=len(payload),
