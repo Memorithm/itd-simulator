@@ -360,6 +360,42 @@ def test_final_authorization_bytes_must_match_declared_digest(tmp_path: Path) ->
         completed_run_from_store(tmp_path)
 
 
+def test_rejected_authorization_does_not_leave_an_orphan_artifact(tmp_path: Path) -> None:
+    payload = b"final-source"
+    permit = b"permit"
+    plan = _plan(CampaignCaseV1("final", SplitRole.FINAL, _source("final", payload), 1.0))
+    rejected = FinalEvaluationAuthorizationV1(
+        protocol_fingerprint="b" * 64,
+        final_source=_source("final", payload),
+        authorization_sha256=digest_bytes(permit),
+    )
+    with pytest.raises(ValueError, match="protocol does not match campaign"):
+        run_persisted_campaign(
+            tmp_path,
+            plan,
+            _ExactBytes({"final": b"out"}),
+            source_payloads={("final", "v1"): payload},
+            final_authorization=rejected,
+            authorization_payload=permit,
+        )
+    assert not (tmp_path / "authorization.bin").exists()
+
+    accepted = FinalEvaluationAuthorizationV1(
+        protocol_fingerprint="a" * 64,
+        final_source=_source("final", payload),
+        authorization_sha256=digest_bytes(b"accepted"),
+    )
+    ledger = run_persisted_campaign(
+        tmp_path,
+        plan,
+        _ExactBytes({"final": b"out"}),
+        source_payloads={("final", "v1"): payload},
+        final_authorization=accepted,
+        authorization_payload=b"accepted",
+    )
+    assert ledger.status is CampaignLifecycleStatus.COMPLETED
+
+
 def test_completed_replay_rejects_missing_or_corrupt_verification_evidence(
     tmp_path: Path,
 ) -> None:
