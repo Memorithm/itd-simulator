@@ -493,6 +493,10 @@ def run_persisted_campaign(
         raise ValueError("campaign directory already contains a ledger; use resume for interrupted runs.")
     persist_campaign_plan(root, plan)
     source_verifications = verify_plan_sources(plan, source_payloads)
+    if protocol is not None:
+        plan.assert_matches_protocol(protocol)
+    plan.assert_final_authorized(final_authorization)
+
     authorization_verification: AuthorizationVerificationV1 | None = None
     if final_authorization is not None:
         if authorization_payload is None:
@@ -502,10 +506,6 @@ def run_persisted_campaign(
             authorization_payload,
         )
         persist_authorization_artifact(root, authorization_payload, authorization_verification)
-
-    if protocol is not None:
-        plan.assert_matches_protocol(protocol)
-    plan.assert_final_authorized(final_authorization)
 
     executions: list[CaseExecutionV1] = []
     artifacts: list[ArtifactRecordV1] = []
@@ -578,6 +578,10 @@ def resume_persisted_campaign(
         raise ValueError("interrupted ledger already covers the plan.")
 
     source_verifications = verify_plan_sources(plan, source_payloads)
+    if protocol is not None:
+        plan.assert_matches_protocol(protocol)
+    plan.assert_final_authorized(final_authorization)
+
     authorization_verification: AuthorizationVerificationV1 | None = None
     if final_authorization is not None:
         if authorization_payload is None:
@@ -587,10 +591,6 @@ def resume_persisted_campaign(
             authorization_payload,
         )
         persist_authorization_artifact(root, authorization_payload, authorization_verification)
-    if protocol is not None:
-        plan.assert_matches_protocol(protocol)
-    plan.assert_final_authorized(final_authorization)
-
     executions = list(existing.executions)
     artifacts = list(existing.artifacts)
     total_work = sum(item.work_units_used for item in executions)
