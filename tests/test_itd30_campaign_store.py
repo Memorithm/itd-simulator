@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 from pathlib import Path
 
 import pytest
@@ -113,6 +114,27 @@ def test_persisted_campaign_writes_artifacts_and_completed_run(tmp_path: Path) -
     run.assert_replay_of(plan)
     assert (tmp_path / "artifacts" / "c1" / "output.bin").read_bytes() == b"out-1"
     assert load_campaign_ledger(tmp_path).source_verifications[0].observed_sha256 == digest_bytes(dev)
+
+
+def test_integer_work_budgets_roundtrip_with_stable_plan_fingerprint(tmp_path: Path) -> None:
+    payload = b"dev-bytes"
+    plan = CampaignPlanV1(
+        campaign=CampaignIdentityV1(
+            campaign_id="integer-work",
+            protocol_fingerprint="a" * 64,
+            implementation=SourceIdentity("Memorithm/itd-simulator", "store-test"),
+        ),
+        cases=(CampaignCaseV1("c1", SplitRole.DEVELOPMENT, _source("dev", payload), 1),),
+        work_unit="evaluations",
+        maximum_total_work=1,
+    )
+    run_persisted_campaign(
+        tmp_path,
+        plan,
+        _ExactBytes({"c1": b"out"}),
+        source_payloads={("dev", "v1"): payload},
+    )
+    completed_run_from_store(tmp_path).assert_replay_of(plan)
 
 
 def test_missing_source_bytes_fail_before_evaluation(tmp_path: Path) -> None:
@@ -310,3 +332,36 @@ def test_final_authorization_bytes_must_match_declared_digest(tmp_path: Path) ->
     assert ledger.status is CampaignLifecycleStatus.COMPLETED
     assert ledger.authorization_verification is not None
     assert ledger.authorization_verification.observed_sha256 == digest_bytes(permit)
+    completed_run_from_store(tmp_path).assert_replay_of(plan)
+    ledger_path = tmp_path / "ledger.json"
+    persisted = json.loads(ledger_path.read_text(encoding="utf-8"))
+    persisted["authorization_verification"] = None
+    ledger_path.write_text(json.dumps(persisted), encoding="utf-8")
+    with pytest.raises(ValueError, match="requires authorization verification"):
+        completed_run_from_store(tmp_path)
+
+
+def test_completed_replay_rejects_missing_or_corrupt_verification_evidence(
+    tmp_path: Path,
+) -> None:
+    payload = b"dev-bytes"
+    plan = _plan(CampaignCaseV1("c1", SplitRole.DEVELOPMENT, _source("dev", payload), 1.0))
+    run_persisted_campaign(
+        tmp_path,
+        plan,
+        _ExactBytes({"c1": b"out"}),
+        source_payloads={("dev", "v1"): payload},
+    )
+    ledger_path = tmp_path / "ledger.json"
+    ledger = json.loads(ledger_path.read_text(encoding="utf-8"))
+    original_verifications = ledger["source_verifications"]
+    ledger["source_verifications"] = []
+    ledger_path.write_text(json.dumps(ledger), encoding="utf-8")
+    with pytest.raises(ValueError, match="exactly cover plan sources"):
+        completed_run_from_store(tmp_path)
+
+    ledger["source_verifications"] = original_verifications
+    ledger["source_verifications"][0]["observed_sha256"] = "0" * 64
+    ledger_path.write_text(json.dumps(ledger), encoding="utf-8")
+    with pytest.raises(ValueError, match="do not match declared sha256"):
+        completed_run_from_store(tmp_path)

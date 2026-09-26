@@ -44,6 +44,7 @@ class CampaignCaseV1:
             raise ValueError("case_id must not be empty.")
         if not math.isfinite(self.work_units) or self.work_units <= 0.0:
             raise ValueError("work_units must be finite and positive.")
+        object.__setattr__(self, "work_units", float(self.work_units))
 
     def as_dict(self) -> dict[str, object]:
         return {
@@ -93,6 +94,7 @@ class CampaignPlanV1:
             raise ValueError("work_unit must not be empty.")
         if not math.isfinite(self.maximum_total_work) or self.maximum_total_work <= 0.0:
             raise ValueError("maximum_total_work must be finite and positive.")
+        object.__setattr__(self, "maximum_total_work", float(self.maximum_total_work))
         if not self.cases:
             raise ValueError("campaign plan must contain at least one case.")
 

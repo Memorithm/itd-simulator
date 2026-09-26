@@ -194,12 +194,36 @@ class CampaignLedgerV1:
     def completed_run(self, plan: CampaignPlanV1) -> CampaignRunV1:
         if self.status is not CampaignLifecycleStatus.COMPLETED:
             raise ValueError("only a completed ledger can produce a campaign run.")
+        self.assert_verification_evidence(plan)
         run = CampaignRunV1(
             plan_fingerprint=self.plan_fingerprint,
             executions=self.executions,
         )
         run.assert_replay_of(plan)
         return run
+
+    def assert_verification_evidence(self, plan: CampaignPlanV1) -> None:
+        """Require complete, valid source and final-authorization evidence."""
+
+        expected_sources = {
+            (case.input_source.source, case.input_source.revision, case.input_source.sha256):
+            case.input_source
+            for case in plan.cases
+        }
+        observed_sources: dict[tuple[str, str, str | None], SourceVerificationV1] = {}
+        for record in self.source_verifications:
+            record.assert_matches_declared_identity()
+            key = (record.identity.source, record.identity.revision, record.identity.sha256)
+            if key in observed_sources:
+                raise ValueError("source verification identities must be unique.")
+            observed_sources[key] = record
+        if set(observed_sources) != set(expected_sources):
+            raise ValueError("source verification evidence must exactly cover plan sources.")
+
+        if any(case.role is SplitRole.FINAL for case in plan.cases):
+            if self.authorization_verification is None:
+                raise ValueError("final campaign replay requires authorization verification evidence.")
+            self.authorization_verification.assert_matches_declared_authorization()
 
 
 def _source_from_dict(payload: dict[str, object]) -> SourceIdentity:
