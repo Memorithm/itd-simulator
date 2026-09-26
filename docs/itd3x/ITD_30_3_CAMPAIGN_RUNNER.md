@@ -42,4 +42,6 @@ This contract records authorization identity; it does not create scientific perm
 
 ## Next work
 
-The next foundation work is persistent result/artifact layout, blocked/inconclusive execution records and adapter-specific runners built on this generic boundary.
+Persistent result/artifact layout, blocked/inconclusive execution records
+and source-byte verification are implemented in ITD-30.4. Adapter-specific
+runners remain separate work.
