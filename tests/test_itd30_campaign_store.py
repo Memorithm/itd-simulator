@@ -346,6 +346,19 @@ def test_final_authorization_bytes_must_match_declared_digest(tmp_path: Path) ->
     with pytest.raises(ValueError, match="protocol does not match campaign"):
         completed_run_from_store(tmp_path)
 
+    persisted["authorization_verification"] = ledger.authorization_verification.as_dict()
+    persisted["authorization_verification"]["authorization_sha256"] = "c" * 64
+    persisted["authorization_verification"]["observed_sha256"] = "c" * 64
+    ledger_path.write_text(json.dumps(persisted), encoding="utf-8")
+    with pytest.raises(ValueError, match="authorization artifact digest mismatch"):
+        completed_run_from_store(tmp_path)
+
+    persisted["authorization_verification"] = ledger.authorization_verification.as_dict()
+    ledger_path.write_text(json.dumps(persisted), encoding="utf-8")
+    (tmp_path / "authorization.bin").unlink()
+    with pytest.raises(ValueError, match="missing persisted authorization artifact"):
+        completed_run_from_store(tmp_path)
+
 
 def test_completed_replay_rejects_missing_or_corrupt_verification_evidence(
     tmp_path: Path,
