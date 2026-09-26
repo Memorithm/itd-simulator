@@ -34,6 +34,7 @@ ITD V29.18 is a frozen reference lineage. ITD-3X is a separate research-engine l
 - **30.1** experiment/result/adapter contract consolidation.
 - **30.2** cross-repository adapters and evidence envelopes.
 - **30.3** bounded campaign runner and complete outcome lifecycle.
+- **30.4** persistent artifacts, interrupted/blocked/inconclusive ledgers and source-byte verification.
 
 ### ITD-31.x — ITD-REPRESENTATION
 - **31.0** representation strata foundation.
