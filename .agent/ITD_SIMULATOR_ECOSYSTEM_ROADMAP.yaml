@@ -217,3 +217,22 @@ agent_operating_protocol:
 autonomous_merge_policy:
   schema_version: 1
   decision: deny
+
+
+ax_isolated_research_task_program:
+  source_review_date: "2026-09-27"
+  external_reference: google_ax_architecture_only
+  role: isolated_research_task_consumer
+  objective: >-
+    Execute ITD research campaigns in exact, isolated workspaces with explicit
+    resource envelopes and attempt provenance while preserving the frozen
+    scientific-reference boundary.
+  phases:
+    - AXITD1_pin_reference_code_protocol_and_input_identity
+    - AXITD2_isolate_parallel_development_and_validation_runs
+    - AXITD3_bind_resource_and_environment_identity_to_results
+    - AXITD4_checkpoint_only_side_effect_safe_long_runs
+  invariants:
+    - task_execution_does_not_mutate_frozen_reference_semantics
+    - numerical_evidence_is_not_promoted_by_task_status
+    - validation_boundaries_remain_authoritative
