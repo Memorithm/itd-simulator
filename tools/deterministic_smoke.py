@@ -4,18 +4,22 @@
 from __future__ import annotations
 
 import hashlib
+import importlib
 import json
 import sys
 from pathlib import Path
+
+import numpy as np
 
 ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-import numpy as np
-
-from compare_scenarios import Config, coherent_vortex, multi_vortex_field
-from itd_v29_core.simulation_engine import simulate
+_compare_scenarios = importlib.import_module("compare_scenarios")
+Config = _compare_scenarios.Config
+coherent_vortex = _compare_scenarios.coherent_vortex
+multi_vortex_field = _compare_scenarios.multi_vortex_field
+simulate = importlib.import_module("itd_v29_core.simulation_engine").simulate
 
 
 def array_digest(values: object) -> str:
