@@ -11,6 +11,7 @@ from __future__ import annotations
 import json
 from dataclasses import dataclass
 from pathlib import Path
+from typing import Literal
 
 from itd_research.campaign_runner import CampaignCaseV1, CampaignPlanV1, CaseExecutionV1
 from itd_research.campaign_store import (
@@ -113,19 +114,27 @@ def _canonical_table(variable_count: int) -> tuple[int, ...]:
     return tuple(table)
 
 
+def _checked_byte_order(byte_order: str) -> Literal["little", "big"]:
+    if byte_order == "little":
+        return "little"
+    if byte_order == "big":
+        return "big"
+    raise ValueError(f"unknown R3 byte order: {byte_order}")
+
+
 def _words_to_bytes(words: tuple[int, ...] | list[int], byte_order: str) -> bytes:
-    if byte_order not in _BYTE_ORDERS:
-        raise ValueError(f"unknown R3 byte order: {byte_order}")
-    return b"".join(word.to_bytes(2, byteorder=byte_order, signed=False) for word in words)
+    checked_order = _checked_byte_order(byte_order)
+    return b"".join(
+        word.to_bytes(2, byteorder=checked_order, signed=False) for word in words
+    )
 
 
 def _bytes_to_words(payload: bytes, byte_order: str) -> tuple[int, ...]:
     if len(payload) % 2:
         raise ValueError("packed-u16 payload must contain an even number of bytes.")
-    if byte_order not in _BYTE_ORDERS:
-        raise ValueError(f"unknown R3 byte order: {byte_order}")
+    checked_order = _checked_byte_order(byte_order)
     return tuple(
-        int.from_bytes(payload[offset : offset + 2], byteorder=byte_order, signed=False)
+        int.from_bytes(payload[offset : offset + 2], byteorder=checked_order, signed=False)
         for offset in range(0, len(payload), 2)
     )
 
