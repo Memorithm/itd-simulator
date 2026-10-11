@@ -702,7 +702,9 @@ def _resume_persisted_campaign_unlocked(
             final_authorization,
             authorization_payload,
         )
-        persist_authorization_artifact(root, authorization_payload, authorization_verification)
+        _persist_authorization_artifact_unlocked(
+            root, authorization_payload, authorization_verification
+        )
     executions = list(existing.executions)
     artifacts = list(existing.artifacts)
     total_work = sum(item.work_units_used for item in executions)
@@ -718,7 +720,7 @@ def _resume_persisted_campaign_unlocked(
             authorization_verification=authorization_verification,
         )
         ledger.assert_prefix_of(plan)
-        persist_campaign_ledger(root, ledger)
+        _persist_campaign_ledger_unlocked(root, ledger)
         verify_persisted_artifacts(root, ledger)
         return ledger
 
@@ -729,13 +731,13 @@ def _resume_persisted_campaign_unlocked(
             total_work += execution.work_units_used
             if total_work > plan.maximum_total_work:
                 raise ValueError("campaign evaluator exceeded maximum_total_work.")
-            artifacts.append(persist_case_artifact(root, execution, payload))
+            artifacts.append(_persist_case_artifact_unlocked(root, execution, payload))
             executions.append(execution)
         except CampaignHalt as halt:
             if halt.execution is not None:
                 _assert_case_execution(case, halt.execution)
                 assert halt.artifact is not None
-                artifacts.append(persist_case_artifact(root, halt.execution, halt.artifact))
+                artifacts.append(_persist_case_artifact_unlocked(root, halt.execution, halt.artifact))
                 executions.append(halt.execution)
             return _persist(halt.status, halt.reason)
         except Exception as error:
