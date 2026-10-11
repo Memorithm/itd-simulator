@@ -1,6 +1,10 @@
 from __future__ import annotations
 
 import json
+import os
+import stat
+import subprocess
+import sys
 from pathlib import Path
 
 import pytest
@@ -17,6 +21,9 @@ from itd_research.campaign_store import (
     CampaignHalt,
     CampaignLedgerV1,
     CampaignLifecycleStatus,
+    CampaignStoreBusyError,
+    _campaign_lock,
+    _write_json_atomic,
     completed_run_from_store,
     load_campaign_ledger,
     resume_persisted_campaign,
@@ -420,3 +427,76 @@ def test_completed_replay_rejects_missing_or_corrupt_verification_evidence(
     ledger_path.write_text(json.dumps(ledger), encoding="utf-8")
     with pytest.raises(ValueError, match="do not match declared sha256"):
         completed_run_from_store(tmp_path)
+
+def test_atomic_json_write_uses_unique_temp_and_fsyncs_data_and_directory(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    destination = tmp_path / "ledger.json"
+    fixed_temp = tmp_path / "ledger.json.tmp"
+    fixed_temp.write_text("sentinel", encoding="utf-8")
+    synced_modes: list[int] = []
+    real_fsync = os.fsync
+
+    def record_fsync(descriptor: int) -> None:
+        synced_modes.append(os.fstat(descriptor).st_mode)
+        real_fsync(descriptor)
+
+    monkeypatch.setattr(os, "fsync", record_fsync)
+    _write_json_atomic(destination, {"status": "interrupted"})
+
+    assert destination.read_text(encoding="utf-8").endswith("\n")
+    assert fixed_temp.read_text(encoding="utf-8") == "sentinel"
+    assert stat.S_ISREG(synced_modes[0])
+    assert stat.S_ISDIR(synced_modes[-1])
+    assert not tuple(tmp_path.glob(".ledger.json.*.tmp"))
+
+
+def test_atomic_json_write_preserves_old_file_when_replace_fails(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    destination = tmp_path / "ledger.json"
+    destination.write_text("old", encoding="utf-8")
+
+    def fail_replace(source: os.PathLike[str], target: os.PathLike[str]) -> None:
+        raise OSError(f"simulated replace failure: {source} -> {target}")
+
+    monkeypatch.setattr(os, "replace", fail_replace)
+    with pytest.raises(OSError, match="simulated replace failure"):
+        _write_json_atomic(destination, {"status": "completed"})
+
+    assert destination.read_text(encoding="utf-8") == "old"
+    assert not tuple(tmp_path.glob(".ledger.json.*.tmp"))
+
+
+def test_campaign_writer_lock_rejects_contention_and_recovers(tmp_path: Path) -> None:
+    script = "\n".join(
+        (
+            "import sys, time",
+            "from pathlib import Path",
+            "from itd_research.campaign_store import _campaign_lock",
+            "with _campaign_lock(Path(sys.argv[1])):",
+            "    print('locked', flush=True)",
+            "    time.sleep(30)",
+        )
+    )
+    process = subprocess.Popen(
+        [sys.executable, "-c", script, str(tmp_path)],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+    )
+    try:
+        assert process.stdout is not None
+        assert process.stdout.readline().strip() == "locked"
+        with pytest.raises(CampaignStoreBusyError, match="another campaign writer"):
+            with _campaign_lock(tmp_path):
+                pass
+    finally:
+        process.terminate()
+        process.wait(timeout=5)
+
+    with _campaign_lock(tmp_path):
+        pass
+
