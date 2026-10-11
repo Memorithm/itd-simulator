@@ -8,8 +8,13 @@ successes.
 
 from __future__ import annotations
 
+import fcntl
 import json
+import os
 import re
+import tempfile
+from collections.abc import Iterator
+from contextlib import contextmanager
 from dataclasses import dataclass
 from enum import StrEnum
 from pathlib import Path
@@ -42,6 +47,7 @@ LEDGER_FILENAME = "ledger.json"
 ARTIFACT_DIRNAME = "artifacts"
 OUTPUT_FILENAME = "output.bin"
 AUTHORIZATION_FILENAME = "authorization.bin"
+LOCK_FILENAME = ".campaign.lock"
 SAFE_CASE_ID = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$")
 
 
@@ -247,15 +253,69 @@ def _source_from_dict(payload: dict[str, object]) -> SourceIdentity:
     )
 
 
-def _write_json_atomic(path: Path, payload: dict[str, object]) -> None:
+class CampaignStoreBusyError(RuntimeError):
+    """Raised when another process owns the campaign directory writer lock."""
+
+
+@contextmanager
+def _campaign_lock(root: Path) -> Iterator[None]:
+    """Hold the recoverable, non-blocking single-writer lock for a campaign."""
+
+    root.mkdir(parents=True, exist_ok=True)
+    descriptor = os.open(root / LOCK_FILENAME, os.O_RDWR | os.O_CREAT, 0o600)
+    acquired = False
+    try:
+        try:
+            fcntl.flock(descriptor, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            acquired = True
+        except BlockingIOError as error:
+            raise CampaignStoreBusyError(
+                f"another campaign writer is active for {root}"
+            ) from error
+        yield
+    finally:
+        if acquired:
+            fcntl.flock(descriptor, fcntl.LOCK_UN)
+        os.close(descriptor)
+
+
+def _fsync_directory(path: Path) -> None:
+    flags = os.O_RDONLY | getattr(os, "O_DIRECTORY", 0)
+    descriptor = os.open(path, flags)
+    try:
+        os.fsync(descriptor)
+    finally:
+        os.close(descriptor)
+
+
+def _write_bytes_atomic(path: Path, payload: bytes) -> None:
+    """Replace one file from a unique create-exclusive, fully synced temporary."""
+
     path.parent.mkdir(parents=True, exist_ok=True)
+    descriptor, temporary_name = tempfile.mkstemp(
+        prefix=f".{path.name}.",
+        suffix=".tmp",
+        dir=path.parent,
+    )
+    temporary = Path(temporary_name)
+    try:
+        with os.fdopen(descriptor, "wb") as stream:
+            stream.write(payload)
+            stream.flush()
+            os.fsync(stream.fileno())
+        os.replace(temporary, path)
+        _fsync_directory(path.parent)
+    except BaseException:
+        temporary.unlink(missing_ok=True)
+        raise
+
+
+def _write_json_atomic(path: Path, payload: dict[str, object]) -> None:
     encoded = json.dumps(payload, sort_keys=True, indent=2, ensure_ascii=True) + "\n"
-    temporary = path.with_name(path.name + ".tmp")
-    temporary.write_text(encoded, encoding="utf-8", newline="\n")
-    temporary.replace(path)
+    _write_bytes_atomic(path, encoded.encode("utf-8"))
 
 
-def persist_campaign_plan(root: Path, plan: CampaignPlanV1) -> Path:
+def _persist_campaign_plan_unlocked(root: Path, plan: CampaignPlanV1) -> Path:
     """Write the immutable plan next to later ledger and artifact files."""
 
     destination = root / PLAN_FILENAME
@@ -268,10 +328,20 @@ def persist_campaign_plan(root: Path, plan: CampaignPlanV1) -> Path:
     return destination
 
 
-def persist_campaign_ledger(root: Path, ledger: CampaignLedgerV1) -> Path:
+def persist_campaign_plan(root: Path, plan: CampaignPlanV1) -> Path:
+    with _campaign_lock(root):
+        return _persist_campaign_plan_unlocked(root, plan)
+
+
+def _persist_campaign_ledger_unlocked(root: Path, ledger: CampaignLedgerV1) -> Path:
     destination = root / LEDGER_FILENAME
     _write_json_atomic(destination, ledger.as_dict())
     return destination
+
+
+def persist_campaign_ledger(root: Path, ledger: CampaignLedgerV1) -> Path:
+    with _campaign_lock(root):
+        return _persist_campaign_ledger_unlocked(root, ledger)
 
 
 def load_campaign_plan(root: Path) -> CampaignPlanV1:
@@ -363,22 +433,32 @@ def load_campaign_ledger(root: Path) -> CampaignLedgerV1:
     )
 
 
-def persist_case_artifact(root: Path, execution: CaseExecutionV1, payload: bytes) -> ArtifactRecordV1:
+def _persist_case_artifact_unlocked(
+    root: Path,
+    execution: CaseExecutionV1,
+    payload: bytes,
+) -> ArtifactRecordV1:
     digest = digest_bytes(payload)
     if digest != execution.output_sha256:
         raise ValueError("artifact bytes do not match execution output_sha256.")
     relative = _artifact_relative_path(execution.case_id)
     destination = root / relative
-    destination.parent.mkdir(parents=True, exist_ok=True)
-    temporary = destination.with_name(destination.name + ".tmp")
-    temporary.write_bytes(payload)
-    temporary.replace(destination)
+    _write_bytes_atomic(destination, payload)
     return ArtifactRecordV1(
         case_id=execution.case_id,
         relative_path=relative,
         output_sha256=digest,
         byte_count=len(payload),
     )
+
+
+def persist_case_artifact(
+    root: Path,
+    execution: CaseExecutionV1,
+    payload: bytes,
+) -> ArtifactRecordV1:
+    with _campaign_lock(root):
+        return _persist_case_artifact_unlocked(root, execution, payload)
 
 
 def verify_persisted_artifacts(root: Path, ledger: CampaignLedgerV1) -> None:
@@ -393,7 +473,7 @@ def verify_persisted_artifacts(root: Path, ledger: CampaignLedgerV1) -> None:
             raise ValueError(f"artifact digest mismatch: {record.relative_path}")
 
 
-def persist_authorization_artifact(
+def _persist_authorization_artifact_unlocked(
     root: Path,
     payload: bytes,
     verification: AuthorizationVerificationV1,
@@ -410,11 +490,17 @@ def persist_authorization_artifact(
         if destination.read_bytes() != payload:
             raise ValueError("campaign directory contains a different authorization artifact.")
         return destination
-    destination.parent.mkdir(parents=True, exist_ok=True)
-    temporary = destination.with_name(destination.name + ".tmp")
-    temporary.write_bytes(payload)
-    temporary.replace(destination)
+    _write_bytes_atomic(destination, payload)
     return destination
+
+
+def persist_authorization_artifact(
+    root: Path,
+    payload: bytes,
+    verification: AuthorizationVerificationV1,
+) -> Path:
+    with _campaign_lock(root):
+        return _persist_authorization_artifact_unlocked(root, payload, verification)
 
 
 def verify_persisted_authorization(root: Path, ledger: CampaignLedgerV1) -> None:
@@ -471,7 +557,7 @@ def _invoke_evaluator(
     return evaluator.evaluate(case)
 
 
-def run_persisted_campaign(
+def _run_persisted_campaign_unlocked(
     root: Path,
     plan: CampaignPlanV1,
     evaluator: ArtifactEvaluator,
@@ -491,7 +577,7 @@ def run_persisted_campaign(
 
     if (root / LEDGER_FILENAME).exists():
         raise ValueError("campaign directory already contains a ledger; use resume for interrupted runs.")
-    persist_campaign_plan(root, plan)
+    _persist_campaign_plan_unlocked(root, plan)
     source_verifications = verify_plan_sources(plan, source_payloads)
     if protocol is not None:
         plan.assert_matches_protocol(protocol)
@@ -505,7 +591,9 @@ def run_persisted_campaign(
             final_authorization,
             authorization_payload,
         )
-        persist_authorization_artifact(root, authorization_payload, authorization_verification)
+        _persist_authorization_artifact_unlocked(
+            root, authorization_payload, authorization_verification
+        )
 
     executions: list[CaseExecutionV1] = []
     artifacts: list[ArtifactRecordV1] = []
@@ -522,7 +610,7 @@ def run_persisted_campaign(
             authorization_verification=authorization_verification,
         )
         ledger.assert_prefix_of(plan)
-        persist_campaign_ledger(root, ledger)
+        _persist_campaign_ledger_unlocked(root, ledger)
         verify_persisted_artifacts(root, ledger)
         return ledger
 
@@ -533,13 +621,13 @@ def run_persisted_campaign(
             total_work += execution.work_units_used
             if total_work > plan.maximum_total_work:
                 raise ValueError("campaign evaluator exceeded maximum_total_work.")
-            artifacts.append(persist_case_artifact(root, execution, payload))
+            artifacts.append(_persist_case_artifact_unlocked(root, execution, payload))
             executions.append(execution)
         except CampaignHalt as halt:
             if halt.execution is not None:
                 _assert_case_execution(case, halt.execution)
                 assert halt.artifact is not None
-                artifacts.append(persist_case_artifact(root, halt.execution, halt.artifact))
+                artifacts.append(_persist_case_artifact_unlocked(root, halt.execution, halt.artifact))
                 executions.append(halt.execution)
             return _persist(halt.status, halt.reason)
         except Exception as error:
@@ -554,7 +642,31 @@ def run_persisted_campaign(
     return ledger
 
 
-def resume_persisted_campaign(
+def run_persisted_campaign(
+    root: Path,
+    plan: CampaignPlanV1,
+    evaluator: ArtifactEvaluator,
+    *,
+    source_payloads: dict[tuple[str, str], bytes],
+    protocol: ExperimentProtocolV1 | None = None,
+    final_authorization: FinalEvaluationAuthorizationV1 | None = None,
+    authorization_payload: bytes | None = None,
+) -> CampaignLedgerV1:
+    """Execute one campaign while holding its single-writer transaction lock."""
+
+    with _campaign_lock(root):
+        return _run_persisted_campaign_unlocked(
+            root,
+            plan,
+            evaluator,
+            source_payloads=source_payloads,
+            protocol=protocol,
+            final_authorization=final_authorization,
+            authorization_payload=authorization_payload,
+        )
+
+
+def _resume_persisted_campaign_unlocked(
     root: Path,
     evaluator: ArtifactEvaluator,
     *,
@@ -638,9 +750,32 @@ def resume_persisted_campaign(
     return ledger
 
 
+def resume_persisted_campaign(
+    root: Path,
+    evaluator: ArtifactEvaluator,
+    *,
+    source_payloads: dict[tuple[str, str], bytes],
+    protocol: ExperimentProtocolV1 | None = None,
+    final_authorization: FinalEvaluationAuthorizationV1 | None = None,
+    authorization_payload: bytes | None = None,
+) -> CampaignLedgerV1:
+    """Resume one campaign while holding its single-writer transaction lock."""
+
+    with _campaign_lock(root):
+        return _resume_persisted_campaign_unlocked(
+            root,
+            evaluator,
+            source_payloads=source_payloads,
+            protocol=protocol,
+            final_authorization=final_authorization,
+            authorization_payload=authorization_payload,
+        )
+
+
 def completed_run_from_store(root: Path) -> CampaignRunV1:
-    plan = load_campaign_plan(root)
-    ledger = load_campaign_ledger(root)
-    verify_persisted_artifacts(root, ledger)
-    verify_persisted_authorization(root, ledger)
-    return ledger.completed_run(plan)
+    with _campaign_lock(root):
+        plan = load_campaign_plan(root)
+        ledger = load_campaign_ledger(root)
+        verify_persisted_artifacts(root, ledger)
+        verify_persisted_authorization(root, ledger)
+        return ledger.completed_run(plan)
