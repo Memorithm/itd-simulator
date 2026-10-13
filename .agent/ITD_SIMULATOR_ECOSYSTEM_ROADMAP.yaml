@@ -236,3 +236,21 @@ ax_isolated_research_task_program:
     - task_execution_does_not_mutate_frozen_reference_semantics
     - numerical_evidence_is_not_promoted_by_task_status
     - validation_boundaries_remain_authoritative
+
+audit_distribution_byte_locks_20261013:
+  finding: B-ITD-02
+  status: resolved
+  pull_request: 71
+  candidate_sha: 3c836a570fd95a5774b6ef1ce24f112d0aee6b60
+  integrated_sha: 0820c4057979e3adb05e991e8b0cdedf73f2bbd3
+  integrated_run: 38441919886
+  candidate_checks: 8_success
+  integrated_checks: 4_success
+  qualified_platform: Linux_x86_64_CPython_3_11_3_12_3_13
+  hashes: 76_selected_wheels_52_per_interpreter
+  tests: 751_passed_per_interpreter
+  pip: 26_2_1_audit_clear_after_PYSEC_2026_3721_remediation
+  source_distribution_artifacts: included_and_verified
+  scientific_core_and_holdouts: unchanged
+  merge_authorization: explicit_user_20261013_automatic_engineering_PR_merges
+  limits: byte_identity_not_authorship_or_scientific_validity
