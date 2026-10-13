@@ -31,20 +31,31 @@ libraries.
   tool versions.
 - `requirements.txt` remains a compatibility include of `requirements.lock`.
 
-These lock files pin versions but do not yet record distribution hashes.
-Therefore they prevent silent version drift but do not provide byte-level
-distribution provenance. Adding cross-platform generated hash locks is a future
-hardening option; it must include every supported interpreter/platform wheel
-and a documented resolver rather than a partial hash set.
+These lock files record SHA-256 hashes of every selected wheel for CPython
+3.11, 3.12, and 3.13 on Linux x86_64 (manylinux, glibc >= 2.28).
+`locks/wheels-linux-x86_64.json` records filenames, sizes, interpreter support
+and hashes. Other platforms are not qualified by this lock.
+`requirements-bootstrap.lock` pins and hashes pip 26.2.1 itself (the prior
+26.1.2 pin is rejected by pip-audit for PYSEC-2026-3721). The existing exact
+setuptools/wheel build-backend pins are included in the development lock;
+editable installation disables build isolation to avoid an unhashed download.
+
+CI downloads with `--require-hashes --only-binary=:all:`, checks the exact
+wheel inventory and bytes against the manifest, installs from that verified
+local wheelhouse, and runs `pip check` plus the existing validation on all
+three native interpreters. Each job retains the locks and wheel manifest.
+Hashes establish byte identity, not authorship or scientific correctness.
 
 ## Creating the environment
 
 ```bash
 python3.12 -m venv .venv
 source .venv/bin/activate
-python -m pip install --upgrade pip==26.1.2
-python -m pip install -r requirements-dev.lock
-python -m pip install --no-deps -e .
+python -m pip install --require-hashes --only-binary=:all: -r requirements-bootstrap.lock
+python -m pip download --require-hashes --only-binary=:all: -r requirements-dev.lock -d /tmp/itd-wheels
+python tools/lock_wheels.py --verify /tmp/itd-wheels
+python -m pip install --no-index --find-links /tmp/itd-wheels --require-hashes --only-binary=:all: -r requirements-dev.lock
+python -m pip install --no-deps --no-build-isolation -e .
 python -m pip check
 ```
 
@@ -87,7 +98,12 @@ a temporary directory as part of the standard validation.
 1. Read upstream Python and wheel compatibility metadata for every direct
    scientific dependency.
 2. Resolve and test all three supported Python versions in clean environments.
-3. Update direct and transitive pins in both lock files together.
+3. Update direct and transitive pins in both lock files together, then run
+   `python tools/lock_wheels.py --generate`. The generator downloads the exact
+   pins and wheels only; it executes no distribution code. It preserves the
+   interpreter markers and does not claim to qualify a new resolver result.
+   Review all byte/hash changes before committing the generated locks.
+   A missing wheel or incomplete inventory is an error.
 4. Run `python -m pip check` and `pip-audit -r requirements-dev.lock`.
 5. Run the complete deterministic validation and compare the V29 summary and
    Rust oracle. Never change expected scientific values merely to accommodate a
