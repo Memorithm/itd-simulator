@@ -258,9 +258,9 @@ audit_distribution_byte_locks_20261013:
 
 audit_real_development_exchange_20261013:
   finding: B-ITD-03
-  status: candidate_published_waiting_exact_CI_and_integration
+  status: resolved_integrated_Development_exchange_qualified
   pull_request: 72
-  candidate_sha: 5766fa155d3e410658ff16255d2ca0d4bcd8a4eb
+  candidate_sha: f7ff1e56d01849dfa5e6f697060ee2370e07370f
   base_sha: 0820c4057979e3adb05e991e8b0cdedf73f2bbd3
   contract: itd.hub-neural-development@1.0.0
   owner_sources:
@@ -283,4 +283,16 @@ audit_real_development_exchange_20261013:
     - not_OS_sandbox_physical_performance_or_Hub_ML_maturity
   frozen_sources_and_final_holdouts: unchanged
   merge_authorization: explicit_user_automatic_engineering_merges_scientific_holdouts_preserved
-  next: finish_exact_candidate_gates_review_then_guarded_merge_and_integrated_qualification
+  next: preserve_finite_Development_scope_frozen_core_and_final_holdouts
+  integrated_sha: 384c18e085f682ff90674461693cf8b3ea338978
+  candidate_and_integrated_tree: afed49c3e8ac2299f626794bb60a65801df8730d
+  candidate_checks: 9_success
+  integrated_checks: 5_success
+  review: one_sdist_dependency_finding_corrected_and_resolved
+  unpacked_source_distribution_Rust_build_and_tests: qualified_candidate_and_integrated_Python_3_12
+  integrated_transport_artifact: 11841024700
+  integrated_transport_run: 38454547582
+  integrated_archive_SHA256: da02a80c1ff6653d41db459fa16fef521a5155fe3f64f3011bb6d55a18dc9f8f
+  integrated_archive_source_input_replay_and_causal_oracles: verified_after_download
+  input_SHA256: ef545e1926003bbbb430bcaed8cd9451a256f58a0fb0adaef9db5912168c02f4
+  numerical_output_SHA256: 560fd92b42aaa682ecba394d312b5286d3e64e53a73ddfb62af82ba9c728add7
