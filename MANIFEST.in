@@ -23,3 +23,7 @@ global-exclude *.py[cod]
 include requirements-bootstrap.lock
 include locks/wheels-linux-x86_64.json
 include tools/lock_wheels.py
+recursive-include research-rs *.toml *.lock *.rs
+prune research-rs/target
+recursive-include itd-rs *.toml *.lock *.rs
+prune itd-rs/target
