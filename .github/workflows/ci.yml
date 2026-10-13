@@ -73,6 +73,34 @@ jobs:
           set -o pipefail
           ./run_validation.sh 2>&1 | tee logs/validation.log
 
+      - name: Build and compile the distributed Rust workspace outside Git
+        if: matrix.python-version == '3.12'
+        env:
+          ITD_SOURCE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          set -euo pipefail
+          python -m build --sdist --no-isolation --outdir "${RUNNER_TEMP}/itd-sdist"
+          python - <<'PY'
+          import os
+          import pathlib
+          import subprocess
+          import tarfile
+
+          destination = pathlib.Path(os.environ["RUNNER_TEMP"]) / "itd-sdist"
+          archive, = destination.glob("*.tar.gz")
+          with tarfile.open(archive) as bundle:
+              members = bundle.getmembers()
+              roots = {pathlib.PurePosixPath(item.name).parts[0] for item in members}
+              if len(roots) != 1 or any(not (item.isfile() or item.isdir()) for item in members):
+                  raise ValueError("source distribution must have one root and regular sources")
+              bundle.extractall(destination, filter="data")
+          package = destination / roots.pop()
+          subprocess.run(
+              ["cargo", "test", "--locked", "--manifest-path", str(package / "research-rs/Cargo.toml")],
+              check=True, timeout=300,
+          )
+          PY
+
       - name: Audit dependencies
         if: matrix.python-version == '3.12'
         run: |
