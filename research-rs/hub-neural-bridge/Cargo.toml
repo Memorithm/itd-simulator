@@ -1,0 +1,18 @@
+[package]
+name = "itd-hub-neural-bridge"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.89"
+license = "PolyForm-Noncommercial-1.0.0"
+publish = false
+
+[dependencies]
+itd-field = { path = "../../itd-rs/crates/itd-field" }
+itd-diagnostics = { path = "../../itd-rs/crates/itd-diagnostics" }
+neural-operator-rust = { git = "https://github.com/Memorithm/NeuralOperator", rev = "2eba990da4779aeecfea1c4c288d8a6e552c48d8" }
+serde = { version = "=1.0.229", features = ["derive"] }
+serde_json = "=1.0.151"
+sha2 = "=0.10.9"
+
+[lints]
+workspace = true
