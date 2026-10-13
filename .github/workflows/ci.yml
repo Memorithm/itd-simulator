@@ -36,15 +36,21 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
           cache: pip
-          cache-dependency-path: requirements-dev.lock
+          cache-dependency-path: |
+            requirements.lock
+            requirements-dev.lock
+            requirements-bootstrap.lock
+            locks/wheels-linux-x86_64.json
 
       - name: Install locked dependencies and package
         run: |
           set -o pipefail
           mkdir -p logs
-          python -m pip install --upgrade pip==26.1.2 2>&1 | tee logs/install.log
-          python -m pip install -r requirements-dev.lock 2>&1 | tee -a logs/install.log
-          python -m pip install --no-deps -e . 2>&1 | tee -a logs/install.log
+          python -m pip install --require-hashes --only-binary=:all: -r requirements-bootstrap.lock 2>&1 | tee logs/install.log
+          python -m pip download --require-hashes --only-binary=:all: -r requirements-dev.lock --dest logs/wheels 2>&1 | tee -a logs/install.log
+          python tools/lock_wheels.py --verify logs/wheels
+          python -m pip install --no-index --find-links logs/wheels --require-hashes --only-binary=:all: -r requirements-dev.lock 2>&1 | tee -a logs/install.log
+          python -m pip install --no-deps --no-build-isolation -e . 2>&1 | tee -a logs/install.log
           python -m pip check 2>&1 | tee -a logs/install.log
 
       - name: Compile current sources
@@ -77,6 +83,17 @@ jobs:
         run: |
           git diff --exit-code
           test -z "$(git status --porcelain=v1 --untracked-files=no)"
+
+      - name: Upload verified environment byte manifest
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: wheel-provenance-python-${{ matrix.python-version }}
+          path: |
+            locks/wheels-linux-x86_64.json
+            requirements*.lock
+            logs/install.log
+          if-no-files-found: error
 
       - name: Capture failure diagnostics
         if: failure()
