@@ -254,3 +254,33 @@ audit_distribution_byte_locks_20261013:
   scientific_core_and_holdouts: unchanged
   merge_authorization: explicit_user_20261013_automatic_engineering_PR_merges
   limits: byte_identity_not_authorship_or_scientific_validity
+
+
+audit_real_development_exchange_20261013:
+  finding: B-ITD-03
+  status: candidate_published_waiting_exact_CI_and_integration
+  pull_request: 72
+  candidate_sha: 5766fa155d3e410658ff16255d2ca0d4bcd8a4eb
+  base_sha: 0820c4057979e3adb05e991e8b0cdedf73f2bbd3
+  contract: itd.hub-neural-development@1.0.0
+  owner_sources:
+    Hub: 01cf5f1e6d96573d57eef8d2aea22a5a8b0da02f
+    NeuralOperator: 2eba990da4779aeecfea1c4c288d8a6e552c48d8
+  delivered:
+    - real_HTTP_Hub_materialization_process_dispatch_and_declared_output_ingestion
+    - existing_ITD_periodic_diagnostic_subset_and_NeuralOperator_Darcy_residual
+    - immutable_input_and_output_raw_SHA256_distinct_from_Hub_CAS_digest
+    - source_and_Development_split_binding_with_final_refusal_before_input_open
+    - independent_analytical_oracles_stable_replays_and_causal_forcing_change
+  candidate_transport:
+    run: 38450374270
+    artifact: 11840163289
+    ZIP_SHA256: 12ef40dd76655f73194872b716f2feea8330988be9069257fd1b635b876070c7
+    downloaded_and_source_byte_replay_oracle_verified: true
+  limits:
+    - finite_synthetic_Development_only
+    - not_V29_18_signature_solver_trained_model_or_scientific_promotion
+    - not_OS_sandbox_physical_performance_or_Hub_ML_maturity
+  frozen_sources_and_final_holdouts: unchanged
+  merge_authorization: explicit_user_automatic_engineering_merges_scientific_holdouts_preserved
+  next: finish_exact_candidate_gates_review_then_guarded_merge_and_integrated_qualification
