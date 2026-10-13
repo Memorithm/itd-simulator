@@ -47,9 +47,9 @@ jobs:
           set -o pipefail
           mkdir -p logs
           python -m pip install --require-hashes --only-binary=:all: -r requirements-bootstrap.lock 2>&1 | tee logs/install.log
-          python -m pip download --require-hashes --only-binary=:all: -r requirements-dev.lock --dest logs/wheels 2>&1 | tee -a logs/install.log
-          python tools/lock_wheels.py --verify logs/wheels
-          python -m pip install --no-index --find-links logs/wheels --require-hashes --only-binary=:all: -r requirements-dev.lock 2>&1 | tee -a logs/install.log
+          python -m pip download --require-hashes --only-binary=:all: -r requirements-dev.lock --dest "${RUNNER_TEMP}/itd-wheels" 2>&1 | tee -a logs/install.log
+          python tools/lock_wheels.py --verify "${RUNNER_TEMP}/itd-wheels"
+          python -m pip install --no-index --find-links "${RUNNER_TEMP}/itd-wheels" --require-hashes --only-binary=:all: -r requirements-dev.lock 2>&1 | tee -a logs/install.log
           python -m pip install --no-deps --no-build-isolation -e . 2>&1 | tee -a logs/install.log
           python -m pip check 2>&1 | tee -a logs/install.log
 

@@ -35,7 +35,8 @@ These lock files record SHA-256 hashes of every selected wheel for CPython
 3.11, 3.12, and 3.13 on Linux x86_64 (manylinux, glibc >= 2.28).
 `locks/wheels-linux-x86_64.json` records filenames, sizes, interpreter support
 and hashes. Other platforms are not qualified by this lock.
-`requirements-bootstrap.lock` pins and hashes pip itself. The existing exact
+`requirements-bootstrap.lock` pins and hashes pip 26.2.1 itself (the prior
+26.1.2 pin is rejected by pip-audit for PYSEC-2026-3721). The existing exact
 setuptools/wheel build-backend pins are included in the development lock;
 editable installation disables build isolation to avoid an unhashed download.
 
